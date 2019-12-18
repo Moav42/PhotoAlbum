@@ -12,9 +12,9 @@ namespace BLL.Services
     public class PostService
     {
         private UnitOfWork _unitOfWork;
-        public PostService(UnitOfWork db)
+        public PostService()
         {
-            _unitOfWork = db;
+            _unitOfWork = new UnitOfWork();
         }
         public void AddPost(PostBLL item)
         {

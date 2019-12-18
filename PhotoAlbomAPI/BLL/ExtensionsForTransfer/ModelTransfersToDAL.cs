@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BLL.ExtensionsForTransfer
 {
-    static class ModelTransfers
+    static class ModelTransfersToDAL
     {
         public static Post Transform(this PostBLL postBLL)
         {
@@ -54,6 +54,16 @@ namespace BLL.ExtensionsForTransfer
                 Title = tagBLL.Title
             };
             return tag;
+        }
+
+        public static TagBLL Transform(this Tag tagDAL)
+        {
+            var tagBLL = new TagBLL
+            {
+                Id = tagDAL.Id,
+                Title = tagDAL.Title
+            };
+            return tagBLL;
         }
     }
 }

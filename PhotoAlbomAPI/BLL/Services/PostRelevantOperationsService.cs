@@ -12,9 +12,9 @@ namespace BLL.Services
     public class PostRelevantOperationsService
     {
         private UnitOfWork _unitOfWork;
-        public PostRelevantOperationsService(UnitOfWork db)
+        public PostRelevantOperationsService()
         {
-            _unitOfWork = db;
+            _unitOfWork = new UnitOfWork();
         }
     }
 }

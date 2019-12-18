@@ -12,9 +12,9 @@ namespace BLL.Services
     public class CategoryService
     {
         private UnitOfWork _unitOfWork;
-        public CategoryService(UnitOfWork db)
+        public CategoryService()
         {
-            _unitOfWork = db;
+            _unitOfWork = new UnitOfWork();
         }
     }
 }

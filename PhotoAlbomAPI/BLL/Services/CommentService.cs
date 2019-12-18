@@ -12,9 +12,9 @@ namespace BLL.Services
     public class CommentService
     {
         private UnitOfWork _unitOfWork;
-        public CommentService(UnitOfWork db)
+        public CommentService()
         {
-            _unitOfWork = db;
+            _unitOfWork = new UnitOfWork();
         }
     }
 }
