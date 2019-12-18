@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DAL.Repositories
 {
-    class CategoryRepository : ICategoryRepository<Category>
+    public class CategoryRepository : ICategoryRepository<Category>
     {
         private DbContext DB;
         public CategoryRepository(DbContext context)

@@ -7,10 +7,10 @@ using System.Text;
 
 namespace DAL.Repositories
 {
-    class OrganisationRepository : IOrganisationRepository<Organisation>
+    public class OrganisationRepository : IOrganisationRepository<Organisation>
     {
         private DbContext DB;
-        public PostCategoriesRepository(DbContext context)
+        public OrganisationRepository(DbContext context)
         {
             DB = context;
         }

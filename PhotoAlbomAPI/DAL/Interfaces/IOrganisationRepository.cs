@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Interfaces
 {
-    interface IOrganisationRepository<T>
+    public interface IOrganisationRepository<T>
     {
 
     }

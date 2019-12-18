@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Interfaces
 {
-    interface ICommentRepository<T>
+    public interface ICommentRepository<T>
     {
         IEnumerable<T> ReadAll();
         T Read(int id);

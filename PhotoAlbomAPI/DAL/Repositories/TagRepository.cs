@@ -7,7 +7,7 @@ using DAL.EF;
 
 namespace DAL.Repositories
 {
-    class TagRepository : ITagRepository<Tag>
+    public class TagRepository : ITagRepository<Tag>
     {
         private DbContext DB;
         public TagRepository(DbContext context)

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Interfaces
 {
-    interface ITagRepository<T>
+    public interface ITagRepository<T>
     {
         IEnumerable<T> ReadAll();
         T Read(int id);

@@ -7,7 +7,7 @@ using DAL.EF;
 
 namespace DAL.Repositories
 {
-    class CommentRepository : ICommentRepository<Comment>
+    public class CommentRepository : ICommentRepository<Comment>
     {
         private DbContext DB;
         public CommentRepository(DbContext context)

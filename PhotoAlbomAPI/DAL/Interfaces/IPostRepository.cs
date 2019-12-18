@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DAL.Interfaces
 {
-    interface IPostRepository<T>
+    public interface IPostRepository<T>
     {
         IEnumerable<T> ReadAll();
         T Read(int id);

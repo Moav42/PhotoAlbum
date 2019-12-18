@@ -5,9 +5,10 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace DAL.EF
 {
-    class DbContext : IdentityDbContext<User>
+    public class DbContext : IdentityDbContext<User>
     {
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }

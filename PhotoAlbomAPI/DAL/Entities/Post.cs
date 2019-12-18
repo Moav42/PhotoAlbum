@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DAL.Entities
 {
-    class Post
+    public class Post
     {
         [Key]
         public int Id { get; set; }

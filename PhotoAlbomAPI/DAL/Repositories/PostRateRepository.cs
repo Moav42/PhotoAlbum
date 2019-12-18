@@ -7,7 +7,7 @@ using DAL.EF;
 
 namespace DAL.Repositories
 {
-    class PostRateRepository : IPostRateRepository<PostRate>
+    public class PostRateRepository : IPostRateRepository<PostRate>
     {
         private DbContext DB;
         public PostRateRepository(DbContext context)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DAL.Entities
 {
-    class Tag
+    public class Tag
     {
         [Key]
         public int Id { get; set; }

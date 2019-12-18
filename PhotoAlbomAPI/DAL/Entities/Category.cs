@@ -5,9 +5,9 @@ using System.Text;
 
 namespace DAL.Entities
 {
-    class Category
+    public class Category
     {
-        [Key]
+        [Key]   
         public int Id { get; set; }
         [Required]
         public string Title { get; set; }

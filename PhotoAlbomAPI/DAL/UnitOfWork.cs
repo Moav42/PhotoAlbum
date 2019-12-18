@@ -9,7 +9,7 @@ using DAL.Repositories;
 
 namespace DAL
 {
-    class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
 
 
