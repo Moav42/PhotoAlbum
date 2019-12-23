@@ -4,6 +4,7 @@ using System.Text;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Linq;
 
 namespace DAL.Repositories
 {
@@ -27,12 +28,21 @@ namespace DAL.Repositories
             {
                 DB.Comments.Remove(item);
             }
-
         }
 
         public Comment Read(int id)
         {
             return DB.Comments.Find(id);
+        }
+
+        public IEnumerable<Comment> ReadByPost(int postId)
+        {
+            return DB.Comments.Where(c => c.PostId == postId);
+        }
+
+        public IEnumerable<Comment> ReadByUser(string userId)
+        {
+            return DB.Comments.Where(c => c.UserId == userId);
         }
 
         public IEnumerable<Comment> ReadAll()

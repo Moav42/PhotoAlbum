@@ -20,7 +20,7 @@ namespace API.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<TagModel>> GetTags()
         {
-            var tagsBLL = _tagService.GetTags();
+            var tagsBLL = _tagService.GetAll();
             var tagModels = new List<TagModel>();
 
             foreach (var item in tagsBLL)
@@ -32,7 +32,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public ActionResult<TagModel> GetTag(int id)
         {
-            var tagsBLL = _tagService.GetTag(id);
+            var tagsBLL = _tagService.Get(id);
             return tagsBLL.Transform();
         }
 
@@ -40,7 +40,7 @@ namespace API.Controllers
         public ActionResult<TagModel> PostTag(TagModel model)
         {
             var tag = model.Transform();
-            _tagService.AddTag(tag);
+            _tagService.Add(tag);
 
             return CreatedAtAction("GetTag", new { id = model.Id }, model);
         }

@@ -6,10 +6,11 @@ using BLL.ExtensionsForTransfer;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using BLL.Interfaces;
 
 namespace BLL.Services
 {
-    public class TagService
+    public class TagService : ITagService<TagBLL>
     {
         private UnitOfWork _unitOfWork;
 
@@ -17,30 +18,44 @@ namespace BLL.Services
         {
             _unitOfWork = new UnitOfWork();
         }
-        public void AddTag(TagBLL item)
+
+        public void Add(TagBLL item)
         {
-            var tag = item.Transform();
-            _unitOfWork.TagsRepository.Create(tag);
+            var itemDAL = item.Transform();
+            _unitOfWork.TagsRepository.Create(itemDAL);
             _unitOfWork.SaveChanges();
         }
 
-        public IEnumerable<TagBLL> GetTags()
+        public IEnumerable<TagBLL> GetAll()
         {
-            var tags = _unitOfWork.TagsRepository.ReadAll();
-            var tagsBll = new List<TagBLL>();
+            var itemsDAL = _unitOfWork.TagsRepository.ReadAll();
+            var iemsBLL = new List<TagBLL>();
 
-            foreach (var item in tags)
+            foreach (var item in itemsDAL)
             {
-                tagsBll.Add(item.Transform());
+                iemsBLL.Add(item.Transform());
             }
 
-            return tagsBll;
+            return iemsBLL;
         }
-        public TagBLL GetTag(int id)
-        {
-            var tags = _unitOfWork.TagsRepository.Read(id);
-            return tags.Transform();
 
+        public TagBLL Get(int id)
+        {
+            var item = _unitOfWork.TagsRepository.Read(id);
+            return item.Transform();
         }
+
+        public void Update(TagBLL item)
+        {
+            _unitOfWork.TagsRepository.Update(item.Transform());
+            _unitOfWork.SaveChanges();
+        }
+        
+        public void Delete(int id)
+        {
+            _unitOfWork.TagsRepository.Delete(id);
+            _unitOfWork.SaveChanges();
+        }
+
     }
 }

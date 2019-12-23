@@ -27,7 +27,6 @@ namespace DAL.Repositories
             {
                 DB.Posts.Remove(item);
             }
-
         }
 
         public Post Read(int id)

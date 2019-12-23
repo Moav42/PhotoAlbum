@@ -20,19 +20,9 @@ namespace DAL.Repositories
             DB.PostCategories.Add(item);
         }
 
-        public void Delete(int id)
+        public void Delete(PostCategories item)
         {
-            var item = DB.PostCategories.Find(id);
-            if (item != null)
-            {
-                DB.PostCategories.Remove(item);
-            }
-
-        }
-
-        public PostCategories Read(int id)
-        {
-            return DB.PostCategories.Find(id);
+            DB.PostCategories.Remove(item);
         }
 
         public IEnumerable<PostCategories> ReadAll()
@@ -40,9 +30,5 @@ namespace DAL.Repositories
             return DB.PostCategories;
         }
 
-        public void Update(PostCategories item)
-        {
-            DB.PostCategories.Update(item);
-        }
     }
 }

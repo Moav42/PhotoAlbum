@@ -11,5 +11,8 @@ namespace DAL.Interfaces
         void Create(T item);
         void Update(T item);
         void Delete(int id);
+        IEnumerable<T> ReadByPost(int postId);
+        IEnumerable<T> ReadByUser(string userId);
+    
     }
 }

@@ -20,19 +20,11 @@ namespace DAL.Repositories
             DB.PostTags.Add(item);
         }
 
-        public void Delete(int id)
+        public void Delete(PostTags item)
         {
-            var item = DB.PostTags.Find(id);
-            if (item != null)
-            {
-                DB.PostTags.Remove(item);
-            }
 
-        }
+            DB.PostTags.Remove(item);
 
-        public PostTags Read(int id)
-        {
-            return DB.PostTags.Find(id);
         }
 
         public IEnumerable<PostTags> ReadAll()
@@ -40,9 +32,5 @@ namespace DAL.Repositories
             return DB.PostTags;
         }
 
-        public void Update(PostTags item)
-        {
-            DB.PostTags.Update(item);
-        }
     }
 }

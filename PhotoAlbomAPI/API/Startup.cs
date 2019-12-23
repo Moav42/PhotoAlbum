@@ -25,6 +25,8 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCors();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,6 +35,11 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
+
 
             app.UseHttpsRedirection();
 

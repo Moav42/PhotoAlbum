@@ -4,6 +4,7 @@ using System.Text;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Linq;
 
 namespace DAL.Repositories
 {
@@ -20,29 +21,16 @@ namespace DAL.Repositories
             DB.PostRates.Add(item);
         }
 
-        public void Delete(int id)
-        {
-            var item = DB.PostRates.Find(id);
-            if (item != null)
-            {
-                DB.PostRates.Remove(item);
-            }
-
-        }
-
-        public PostRate Read(int id)
-        {
-            return DB.PostRates.Find(id);
-        }
-
-        public IEnumerable<PostRate> ReadAll()
-        {
-            return DB.PostRates;
-        }
-
         public void Update(PostRate item)
         {
             DB.PostRates.Update(item);
+            DB.SaveChanges();
         }
+
+        public IEnumerable<PostRate> ReadAllByPost(int postID)
+        {
+            return DB.PostRates.Where(pr => pr.PostId == postID);
+        }
+
     }
 }
