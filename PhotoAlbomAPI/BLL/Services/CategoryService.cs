@@ -7,20 +7,21 @@ using DAL.Entities;
 using DAL.Interfaces;
 using BLL.ExtensionsForTransfer;
 using BLL.Interfaces;
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
     public class CategoryService : ICategoryService<CategoryBLL>
     {
-        private UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
         public CategoryService()
         {
             _unitOfWork = new UnitOfWork();
         }
 
-        public IEnumerable<CategoryBLL> GetAll()
+        public async Task<IEnumerable<CategoryBLL>> GetAllAsync()
         {
-            var itemsDAL = _unitOfWork.CategorysRepository.ReadAll();
+            var itemsDAL = await Task.Run(() => _unitOfWork.CategorysRepository.ReadAll());
             var iemsBLL = new List<CategoryBLL>();
 
             foreach (var item in itemsDAL)
@@ -31,29 +32,29 @@ namespace BLL.Services
             return iemsBLL;
         }
 
-        public CategoryBLL Get(int id)
+        public async Task<CategoryBLL> GetAsync(int id)
         {
-            var ietm = _unitOfWork.CategorysRepository.Read(id);
+            var ietm = await Task.Run(() => _unitOfWork.CategorysRepository.Read(id));
             return ietm.Transform();
         }
 
-        public void Add(CategoryBLL item)
+        public async Task AddAsync(CategoryBLL item)
         {
             var itemDAL = item.Transform();
             _unitOfWork.CategorysRepository.Create(itemDAL);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(CategoryBLL item)
+        public async Task UpdateAsync(CategoryBLL item)
         {
             _unitOfWork.CategorysRepository.Update(item.Id, item.Transform());
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             _unitOfWork.CategorysRepository.Delete(id);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

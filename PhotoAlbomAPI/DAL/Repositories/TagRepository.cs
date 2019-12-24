@@ -11,9 +11,9 @@ namespace DAL.Repositories
 {
     public class TagRepository : ITagRepository<Tag>
     {
-        private DAL.EF.DbContext DB;
+        private readonly DAL.EF.DbContext DB;
 
-        private PostTagsRepository _postTags;
+        private readonly PostTagsRepository _postTags;
         public TagRepository(DAL.EF.DbContext context)
         {
             DB = context;

@@ -10,8 +10,8 @@ namespace DAL.Repositories
 {
     public class CategoryRepository : ICategoryRepository<Category>
     {
-        private DbContext DB;
-        private PostCategoriesRepository _postCategories;
+        private readonly DbContext DB;
+        private readonly PostCategoriesRepository _postCategories;
         public CategoryRepository(DbContext context)
         {
             DB = context;

@@ -7,29 +7,30 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using BLL.Interfaces;
-using BLL.Models;
+
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
     public class TagService : ITagService<TagBLL>
     {
-        private UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
 
         public TagService()
         {
             _unitOfWork = new UnitOfWork();
         }
 
-        public void Add(TagBLL item)
+        public async Task AddAsync(TagBLL item)
         {
             var itemDAL = item.Transform();
             _unitOfWork.TagsRepository.Create(itemDAL);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public IEnumerable<TagBLL> GetAll()
+        public async Task<IEnumerable<TagBLL>> GetAllAsync()
         {
-            var itemsDAL = _unitOfWork.TagsRepository.ReadAll();
+            var itemsDAL =  await Task.Run(() =>_unitOfWork.TagsRepository.ReadAll());
             var iemsBLL = new List<TagBLL>();
 
             foreach (var item in itemsDAL)
@@ -40,9 +41,9 @@ namespace BLL.Services
             return iemsBLL;
         }
 
-        public TagBLL Get(int id)
+        public async Task<TagBLL> GetAsync(int id)
         {
-            var item = _unitOfWork.TagsRepository.Read(id);
+            var item = await Task.Run(() => _unitOfWork.TagsRepository.Read(id));
             if (item != null)
             {
                 return item.Transform();
@@ -51,16 +52,17 @@ namespace BLL.Services
            
         }
 
-        public void Update(TagBLL item)
+        public async Task UpdateAsync(TagBLL item)
         {
+
             _unitOfWork.TagsRepository.Update(item.Id, item.Transform());
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
         
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             _unitOfWork.TagsRepository.Delete(id);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
     }

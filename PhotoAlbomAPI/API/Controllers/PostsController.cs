@@ -16,7 +16,7 @@ namespace API.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private IPostService<PostBLL> _postService;
+        private readonly IPostService<PostBLL> _postService;
         public PostsController(IPostService<PostBLL> postService)
         {
             _postService = postService;
@@ -24,9 +24,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PostModel>> GetTags()
+        public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
         {
-            var modelBLL = _postService.GetAll();
+            var modelBLL = await _postService.GetAllAsync();
             var models = new List<PostModel>();
 
             foreach (var item in modelBLL)
@@ -37,9 +37,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<PostModel> GetTag(int id)
+        public async Task<ActionResult<PostModel>> GetPost(int id)
         {
-            var modelBLL = _postService.Get(id);
+            var modelBLL = await _postService.GetAsync(id);
 
             if (modelBLL == null)
             {
@@ -49,47 +49,46 @@ namespace API.Controllers
             {
                 return modelBLL.Transform();
             }
-
         }
 
         [HttpPost]
-        public ActionResult<PostModel> PostTag(PostModel model)
+        public async Task<ActionResult<PostModel>> PostPost(PostModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
             //model.AddingDate = DateTime.Now;
-            _postService.Add(model.Transform());
+            await _postService.AddAsync(model.Transform());
 
             return CreatedAtAction("GetPost", new { id = model.Id }, model);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<PostModel> PutTag(PostModel model)
+        public async Task<ActionResult<PostModel>> PutPost(PostModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
-            if (_postService.Get(model.Id) == null)
+            if (_postService.GetAsync(model.Id) == null)
             {
                 return BadRequest("Model doesn`t exicte");
             }
-            _postService.Update(model.Transform());
+            await _postService.UpdateAsync(model.Transform());
             return model;
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<PostModel> DeleteTag(int id)
+        public async Task<ActionResult<PostModel>> DeletePost(int id)
         {
-            var model = _postService.Get(id);
+            var model = await _postService.GetAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            _postService.Delete(model.Id);
+            await _postService.DeleteAsync(model.Id);
 
             return model.Transform();
         }

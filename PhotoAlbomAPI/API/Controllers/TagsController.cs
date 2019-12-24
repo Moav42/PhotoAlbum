@@ -16,7 +16,7 @@ namespace API.Controllers
     [ApiController]
     public class TagsController : ControllerBase
     {
-        private ITagService<TagBLL> _tagService;
+        private readonly ITagService<TagBLL> _tagService;
         public TagsController(ITagService<TagBLL> tagService)
         {
             _tagService = tagService;
@@ -24,9 +24,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TagModel>> GetTags()
+        public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
         {
-            var tagsBLL = _tagService.GetAll();
+            var tagsBLL = await _tagService.GetAllAsync();
             var tagModels = new List<TagModel>();
 
             foreach (var item in tagsBLL)
@@ -37,9 +37,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<TagModel> GetTag(int id)
+        public async Task<ActionResult<TagModel>> GetTag(int id)
         {
-            var tagsBLL = _tagService.Get(id);
+            var tagsBLL = await _tagService.GetAsync(id);
 
             if(tagsBLL == null)
             {
@@ -53,43 +53,43 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<TagModel> PostTag(TagModel model)
+        public async Task<ActionResult<TagModel>> PostTag(TagModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
 
-            _tagService.Add(model.Transform());
+            await _tagService.AddAsync(model.Transform());
 
             return CreatedAtAction("GetTag", new { id = model.Id }, model);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<TagModel> PutTag(TagModel model)
+        public async Task<ActionResult<TagModel>> PutTag(TagModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
-            if (_tagService.Get(model.Id) == null)
+            if (await _tagService.GetAsync(model.Id) == null)
             {
                 return BadRequest("Model doesn`t exicte");
             }
-            _tagService.Update(model.Transform());
+            await _tagService.UpdateAsync(model.Transform());
             return model;
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<TagModel> DeleteTag(int id)
+        public async Task<ActionResult<TagModel>> DeleteTag(int id)
         {
-            var model = _tagService.Get(id);
+            var model = await _tagService.GetAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            _tagService.Delete(model.Id);
+            await _tagService.DeleteAsync(model.Id);
 
             return model.Transform();
         }

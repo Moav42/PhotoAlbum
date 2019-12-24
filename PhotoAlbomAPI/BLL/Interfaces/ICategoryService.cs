@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
     public interface ICategoryService<T>
     {
-        T Get(int id);
-        IEnumerable<T> GetAll();
-        void Add(T item);
-        void Update(T item);
-        void Delete(int id);
+        Task<T> GetAsync(int id);
+        Task<IEnumerable<T>> GetAllAsync();
+        Task AddAsync(T item);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(int id);
 
     }
 }

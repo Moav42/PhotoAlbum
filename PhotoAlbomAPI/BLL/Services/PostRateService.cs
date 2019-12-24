@@ -8,28 +8,29 @@ using DAL.Interfaces;
 using BLL.ExtensionsForTransfer;
 using BLL.Interfaces;
 using DAL.Repositories;
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
     public class PostRateService : IPostRateService<PostRateBLL>
     {
-        private UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
 
         public PostRateService()
         {
             _unitOfWork = new UnitOfWork();
         }
-        public void Add(PostRateBLL item)
+        public async Task AddAsync(PostRateBLL item)
         {
             var itemDAL = item.Transform();
             _unitOfWork.PostRateRepository.Create(itemDAL);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
 
-        public IEnumerable<PostRateBLL> GetAllByPost(int postId)
+        public async Task<IEnumerable<PostRateBLL>> GetAllByPostAsync(int postId)
         {
-            var itemDAL = _unitOfWork.PostRateRepository.ReadAllByPost(postId);
+            var itemDAL = await Task.Run(() =>_unitOfWork.PostRateRepository.ReadAllByPost(postId));
             var itemBLL = new List<PostRateBLL>();
             foreach (var item in itemDAL)
             {
@@ -38,10 +39,10 @@ namespace BLL.Services
             return itemBLL;
         }
 
-        public void Update(PostRateBLL item)
+        public async Task UpdateAsync(PostRateBLL item)
         {
             _unitOfWork.PostRateRepository.Update(item.Transform());
-            _unitOfWork.SaveChanges();
-        }
+            await _unitOfWork.SaveChangesAsync();
+        } 
     }
 }

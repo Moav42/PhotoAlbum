@@ -16,16 +16,16 @@ namespace API.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private ICategoryService<CategoryBLL> _categoryService;
+        private readonly ICategoryService<CategoryBLL> _categoryService;
         public CategoriesController(ICategoryService<CategoryBLL> categoryService)
         {
             _categoryService = categoryService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CategoryModel>> GetCategories()
+        public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
         {
-            var modelBLL = _categoryService.GetAll();
+            var modelBLL = await _categoryService.GetAllAsync();
             var models = new List<CategoryModel>();
 
             foreach (var item in modelBLL)
@@ -36,9 +36,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<CategoryModel> GetCategory(int id)
+        public async Task<ActionResult<CategoryModel>> GetCategory(int id)
         {
-            var modelBLL = _categoryService.Get(id);
+            var modelBLL = await _categoryService.GetAsync(id);
 
             if (modelBLL == null)
             {
@@ -52,43 +52,43 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public ActionResult<CategoryModel> PostCategory(CategoryModel model)
+        public async Task<ActionResult<CategoryModel>> PostCategory(CategoryModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
 
-            _categoryService.Add(model.Transform());
+            await _categoryService.AddAsync(model.Transform());
 
             return CreatedAtAction("GetCategory", new { id = model.Id }, model);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<CategoryModel> PutCategory(CategoryModel model)
+        public async Task<ActionResult<CategoryModel>> PutCategory(CategoryModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
-            if (_categoryService.Get(model.Id) == null)
+            if (_categoryService.GetAsync(model.Id) == null)
             {
                 return BadRequest("Model doesn`t exicte");
             }
-            _categoryService.Update(model.Transform());
+            await _categoryService.UpdateAsync(model.Transform());
             return model;
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<CategoryModel> DeleteCategory(int id)
+        public async Task<ActionResult<CategoryModel>> DeleteCategory(int id)
         {
-            var model = _categoryService.Get(id);
+            var model = await _categoryService.GetAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            _categoryService.Delete(model.Id);
+            await  _categoryService.DeleteAsync(model.Id);
 
             return model.Transform();
         }

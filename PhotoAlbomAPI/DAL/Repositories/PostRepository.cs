@@ -9,7 +9,7 @@ namespace DAL.Repositories
 {
     public class PostRepository : IPostRepository<Post>
     {
-        private DbContext DB;
+        private readonly DbContext DB;
         public PostRepository(DbContext context)
         {
             DB = context;

@@ -7,19 +7,20 @@ using DAL.Entities;
 using DAL.Interfaces;
 using BLL.Interfaces;
 using BLL.ExtensionsForTransfer;
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
     public class CommentService : ICommentService<CommentBLL>
     {
-        private UnitOfWork _unitOfWork;
+        private readonly UnitOfWork _unitOfWork;
         public CommentService()
         {
             _unitOfWork = new UnitOfWork();
         }
-        public IEnumerable<CommentBLL> GetByPost(int postId)
+        public async Task<IEnumerable<CommentBLL>> GetByPostAsync(int postId)
         {
-            var itemsDAL = _unitOfWork.CommentsRepository.ReadByPost(postId);
+            var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByPost(postId));
             var iemsBLL = new List<CommentBLL>();
 
             foreach (var item in itemsDAL)
@@ -29,9 +30,9 @@ namespace BLL.Services
 
             return iemsBLL;
         }
-        public IEnumerable<CommentBLL> GetByUser(string userId)
+        public async Task<IEnumerable<CommentBLL>> GetByUserAsync(string userId)
         {
-            var itemsDAL = _unitOfWork.CommentsRepository.ReadByUser(userId);
+            var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByUser(userId));
             var iemsBLL = new List<CommentBLL>();
 
             foreach (var item in itemsDAL)
@@ -42,29 +43,29 @@ namespace BLL.Services
             return iemsBLL;
         }
 
-        public CommentBLL Get(int id)
+        public async Task<CommentBLL> GetAsync(int id)
         {
-            var ietm = _unitOfWork.CommentsRepository.Read(id);
+            var ietm = await Task.Run(() => _unitOfWork.CommentsRepository.Read(id));
             return ietm.Transform();
         }
 
-        public void Add(CommentBLL item)
+        public async Task AddAsync(CommentBLL item)
         {
             var itemDAL = item.Transform();
             _unitOfWork.CommentsRepository.Create(itemDAL);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Update(CommentBLL item)
+        public async Task UpdateAsync(CommentBLL item)
         {
             _unitOfWork.CommentsRepository.Update(item.Transform());
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             _unitOfWork.CommentsRepository.Delete(id);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

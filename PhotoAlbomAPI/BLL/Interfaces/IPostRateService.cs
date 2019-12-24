@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
     interface IPostRateService<T>
     {
-        IEnumerable<T> GetAllByPost(int postId);
-        void Add(T item);
-        void Update(T item);
+        Task<IEnumerable<T>> GetAllByPostAsync(int postId);
+        Task AddAsync(T item);
+        Task UpdateAsync(T item);
     }
 }
