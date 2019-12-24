@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace BLL.Models
+namespace API.Models
 {
-    public class PostBLL
+    public class CommentModel
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string LocationPath { get; set; }
+        public int PostId { get; set; }
         public string UserId { get; set; }
+        public string Text { get; set; }
         public DateTime AddingDate { get; set; }
-
     }
 }

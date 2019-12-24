@@ -42,9 +42,13 @@ namespace DAL.Repositories
             return DB.Categories;
         }
 
-        public void Update(Category item)
+        public void Update(int id, Category item)
         {
-            DB.Categories.Update(item);
+            var model = Read(id);
+            model.Title = item.Title;
+            model.Description = item.Description;
+
+            DB.Categories.Update(model);
         }
 
         public IEnumerable<Category> ReadAllByPost(int postId)

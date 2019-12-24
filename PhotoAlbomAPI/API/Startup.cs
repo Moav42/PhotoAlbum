@@ -2,10 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Models;
+using BLL.Interfaces;
+using BLL.Models;
+using BLL.Services;
+using DAL.EF;
+using DAL.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,7 +32,17 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DAL.EF.DbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DAL.EF.DbContext>();
+
             services.AddControllers();
+
+         
+
+            services.AddScoped<ITagService<TagBLL>, TagService>();
+            services.AddScoped<ICategoryService<CategoryBLL>, CategoryService>();
+            services.AddScoped<IPostService<PostBLL>, PostService>();
 
             services.AddCors();
         }

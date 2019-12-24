@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using BLL.Interfaces;
+using BLL.Models;
 
 namespace BLL.Services
 {
@@ -42,12 +43,17 @@ namespace BLL.Services
         public TagBLL Get(int id)
         {
             var item = _unitOfWork.TagsRepository.Read(id);
-            return item.Transform();
+            if (item != null)
+            {
+                return item.Transform();
+            }
+            else return null;
+           
         }
 
         public void Update(TagBLL item)
         {
-            _unitOfWork.TagsRepository.Update(item.Transform());
+            _unitOfWork.TagsRepository.Update(item.Id, item.Transform());
             _unitOfWork.SaveChanges();
         }
         

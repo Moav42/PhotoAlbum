@@ -11,7 +11,7 @@ using DAL.Repositories;
 
 namespace BLL.Services
 {
-    public class PostService
+    public class PostService : IPostService<PostBLL>
     {
         private UnitOfWork _unitOfWork;
 
@@ -47,7 +47,7 @@ namespace BLL.Services
 
         public void Update(PostBLL item)
         {
-            _unitOfWork.PostsRepository.Update(item.Transform());
+            _unitOfWork.PostsRepository.Update(item.Id, item.Transform());
             _unitOfWork.SaveChanges();
         }
 

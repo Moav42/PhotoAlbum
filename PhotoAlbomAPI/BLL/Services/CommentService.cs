@@ -10,7 +10,7 @@ using BLL.ExtensionsForTransfer;
 
 namespace BLL.Services
 {
-    public class CommentService
+    public class CommentService : ICommentService<CommentBLL>
     {
         private UnitOfWork _unitOfWork;
         public CommentService()

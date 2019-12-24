@@ -5,15 +5,16 @@ using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
     public class TagRepository : ITagRepository<Tag>
     {
-        private DbContext DB;
+        private DAL.EF.DbContext DB;
 
         private PostTagsRepository _postTags;
-        public TagRepository(DbContext context)
+        public TagRepository(DAL.EF.DbContext context)
         {
             DB = context;
             _postTags = new PostTagsRepository(context);
@@ -43,9 +44,12 @@ namespace DAL.Repositories
             return DB.Tags;
         }
        
-        public void Update(Tag item)
+        public void Update(int id, Tag modeifayModel)
         {
-            DB.Tags.Update(item);
+            var temp = Read(id);
+            temp.Title = modeifayModel.Title;
+
+            DB.Update(temp);
         }
 
         public IEnumerable<Tag> ReadAllByPost(int postId)

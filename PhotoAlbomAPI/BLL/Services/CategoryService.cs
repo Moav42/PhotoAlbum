@@ -46,7 +46,7 @@ namespace BLL.Services
 
         public void Update(CategoryBLL item)
         {
-            _unitOfWork.CategorysRepository.Update(item.Transform());
+            _unitOfWork.CategorysRepository.Update(item.Id, item.Transform());
             _unitOfWork.SaveChanges();
         }
 
