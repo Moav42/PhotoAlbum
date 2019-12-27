@@ -20,13 +20,13 @@ namespace BLL.Services
         {
             _unitOfWork = new UnitOfWork();
         }
+
         public async Task AddAsync(PostRateBLL item)
         {
             var itemDAL = item.Transform();
             _unitOfWork.PostRateRepository.Create(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
-
 
         public async Task<IEnumerable<PostRateBLL>> GetAllByPostAsync(int postId)
         {

@@ -16,5 +16,9 @@ namespace API.Models.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "Пароль")]
         public string Password { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Location { get; set; }
     }
 }

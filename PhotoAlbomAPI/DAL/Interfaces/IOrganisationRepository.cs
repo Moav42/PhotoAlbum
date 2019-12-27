@@ -6,6 +6,6 @@ namespace DAL.Interfaces
 {
     public interface IOrganisationRepository<T>
     {
-
+        void Create(T item);
     }
 }

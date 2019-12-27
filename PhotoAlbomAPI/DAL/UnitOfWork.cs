@@ -12,7 +12,6 @@ namespace DAL
     public class UnitOfWork : IUnitOfWork
     {
 
-
         private ICategoryRepository<Category> _categorysRepository;
 
         private ICommentRepository<Comment> _commentsRepository;
@@ -29,18 +28,25 @@ namespace DAL
 
         private ITagRepository<Tag> _tagsRepository;
 
-        private readonly DbContext DataBase;
+        private readonly DbContext _DataBase;
+
         public UnitOfWork()
         {
-            DataBase = new DbContext();
+            _DataBase = new DbContext();
         }
-
+        public DbContext Context 
+        {
+            get
+            {
+                return _DataBase;
+            }
+        }
         public ICategoryRepository<Category> CategorysRepository
         {
             get
             {
                 if (_categorysRepository == null)
-                    _categorysRepository = new CategoryRepository(DataBase);
+                    _categorysRepository = new CategoryRepository(_DataBase);
                 return _categorysRepository;
             }
         }
@@ -50,7 +56,7 @@ namespace DAL
             get
             {
                 if (_commentsRepository == null)
-                    _commentsRepository = new CommentRepository(DataBase);
+                    _commentsRepository = new CommentRepository(_DataBase);
                 return _commentsRepository;
             }
         }
@@ -60,7 +66,7 @@ namespace DAL
             get
             {
                 if (_organisationsRepository == null)
-                    _organisationsRepository = new OrganisationRepository(DataBase);
+                    _organisationsRepository = new OrganisationRepository(_DataBase);
                 return _organisationsRepository;
             }
         }
@@ -70,7 +76,7 @@ namespace DAL
             get
             {
                 if (_postCategoriesRepository == null)
-                    _postCategoriesRepository = new PostCategoriesRepository(DataBase);
+                    _postCategoriesRepository = new PostCategoriesRepository(_DataBase);
                 return _postCategoriesRepository;
             }
         }
@@ -80,7 +86,7 @@ namespace DAL
             get
             {
                 if (_postRateRepository == null)
-                    _postRateRepository = new PostRateRepository(DataBase);
+                    _postRateRepository = new PostRateRepository(_DataBase);
                 return _postRateRepository;
             }
         }
@@ -90,7 +96,7 @@ namespace DAL
             get
             {
                 if (_postsRepository == null)
-                    _postsRepository = new PostRepository(DataBase);
+                    _postsRepository = new PostRepository(_DataBase);
                 return _postsRepository;
             }
         }
@@ -100,7 +106,7 @@ namespace DAL
             get
             {
                 if (_postTagsRepository == null)
-                    _postTagsRepository = new PostTagsRepository(DataBase);
+                    _postTagsRepository = new PostTagsRepository(_DataBase);
                 return _postTagsRepository;
             }
         }
@@ -110,7 +116,7 @@ namespace DAL
             get
             {
                 if (_tagsRepository == null)
-                    _tagsRepository = new TagRepository(DataBase);
+                    _tagsRepository = new TagRepository(_DataBase);
                 return _tagsRepository;
             }
         }
@@ -124,7 +130,7 @@ namespace DAL
             {
                 if (disposing)
                 {
-                    DataBase.Dispose();
+                    _DataBase.Dispose();
                 }
             }
             this.disposed = true;
@@ -138,12 +144,12 @@ namespace DAL
 
         public async Task<int> SaveChangesAsync()
         {
-            return await DataBase.SaveChangesAsync();
+            return await _DataBase.SaveChangesAsync();
         }
 
         public void SaveChanges()
         {
-            DataBase.SaveChanges();
+            _DataBase.SaveChanges();
         }
     }
 }

@@ -123,5 +123,28 @@ namespace BLL.ExtensionsForTransfer
             };
             return postRateBLL;
         }
+
+        public static Organisation Transform(this OrganisationBLL modelBLL)
+        {
+            var modelDAL = new Organisation
+            {
+                Id = modelBLL.Id,
+                Name = modelBLL.Name,
+                Location = modelBLL.Location,
+                UserId = modelBLL.UserId
+            };
+            return modelDAL;
+        }
+        public static OrganisationBLL Transform(this Organisation modelDAL)
+        {
+            var modelBLL = new OrganisationBLL
+            {
+                Id = modelDAL.Id,
+                Name = modelDAL.Name,
+                Location = modelDAL.Location,
+                UserId = modelDAL.UserId
+            };
+            return modelBLL;
+        }
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Models.ViewModels;
-using DAL;
+using BLL.Interfaces;
+using BLL.Models;
+using BLL.Services;
 using DAL.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -17,36 +19,40 @@ namespace API.Controllers
     {
         private readonly UserManager<User> _userManager ;
         private readonly SignInManager<User> _signInManager;
-        private UnitOfWork _unitOfWork = new UnitOfWork();
+        private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IOrganisationService<OrganisationBLL> organisationService )
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _organisationService = organisationService;
         }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody]RegisterViewModel model)
+        public async Task<IActionResult> PostAccount([FromBody]RegisterViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = new User { Email = model.Email };
+            var userIdentity = new User { Email = model.Email, UserName = model.Email };
 
             var result = await _userManager.CreateAsync(userIdentity, model.Password);
-            _unitOfWork.SaveChanges();
-
+                      
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                return BadRequest(ModelState);
             }
-             
-
-            return new OkObjectResult("Account created");
+            else
+            {        
+                await _organisationService.AddAsync(new OrganisationBLL { Location = model.Location, Name = model.Name, UserId = userIdentity.Id });
+                return new OkObjectResult("Account created");
+            }
         }
 
     }

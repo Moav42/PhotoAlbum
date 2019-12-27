@@ -1,4 +1,5 @@
-﻿using DAL.Entities;
+﻿using DAL.EF;
+using DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,7 +25,7 @@ namespace DAL.Interfaces
         IPostTagsRepository<PostTags> PostTagsRepository { get; }
 
         ITagRepository<Tag> TagsRepository { get; }
-
+        DbContext Context { get; }
         Task<int> SaveChangesAsync();
         void SaveChanges();
 

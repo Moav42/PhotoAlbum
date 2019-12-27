@@ -20,7 +20,6 @@ namespace API.Controllers
         public PostsController(IPostService<PostBLL> postService)
         {
             _postService = postService;
-
         }
 
         [HttpGet]

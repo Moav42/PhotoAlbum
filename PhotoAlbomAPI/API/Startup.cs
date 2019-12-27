@@ -6,8 +6,6 @@ using API.Models;
 using BLL.Interfaces;
 using BLL.Models;
 using BLL.Services;
-using DAL.EF;
-using DAL.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,22 +25,21 @@ namespace API
         {
             Configuration = configuration;
         }
-
+        
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DAL.EF.DbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<DAL.EF.DbContext>();
+            services.AddIdentity<DAL.Entities.User, IdentityRole>().AddEntityFrameworkStores<DAL.EF.DbContext>();
 
             services.AddControllers();
-
-         
 
             services.AddScoped<ITagService<TagBLL>, TagService>();
             services.AddScoped<ICategoryService<CategoryBLL>, CategoryService>();
             services.AddScoped<IPostService<PostBLL>, PostService>();
+            services.AddScoped<IOrganisationService<OrganisationBLL>, OrganisationService>();
 
             services.AddCors();
         }

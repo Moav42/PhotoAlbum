@@ -14,5 +14,9 @@ namespace DAL.Repositories
         {
             DB = context;
         }
+        public void Create(Organisation item)
+        {
+            DB.Organisations.Add(item);
+        }
     }
 }

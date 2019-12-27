@@ -48,8 +48,7 @@ namespace API.Controllers
             else
             {
                 return tagsBLL.Transform();
-            }
-            
+            }           
         }
 
         [HttpPost]
