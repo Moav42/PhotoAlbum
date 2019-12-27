@@ -9,6 +9,7 @@ using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -23,6 +24,7 @@ namespace API.Controllers
 
         }
 
+        [Authorize(Policy = "Organisation")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
         {
@@ -51,6 +53,7 @@ namespace API.Controllers
             }           
         }
 
+        [Authorize(Policy = "Organisation")]
         [HttpPost]
         public async Task<ActionResult<TagModel>> PostTag(TagModel model)
         {

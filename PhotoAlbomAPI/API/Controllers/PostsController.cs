@@ -57,7 +57,6 @@ namespace API.Controllers
             {
                 return BadRequest("Not a valid model");
             }
-            //model.AddingDate = DateTime.Now;
             await _postService.AddAsync(model.Transform());
 
             return CreatedAtAction("GetPost", new { id = model.Id }, model);

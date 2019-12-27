@@ -17,14 +17,12 @@ namespace API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> _userManager ;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager ;      
         private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IOrganisationService<OrganisationBLL> organisationService )
+        public AccountController(UserManager<User> userManager, IOrganisationService<OrganisationBLL> organisationService )
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _userManager = userManager;         
             _organisationService = organisationService;
         }
 
@@ -36,7 +34,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = new User { Email = model.Email, UserName = model.Email };
+            var userIdentity = new User { Email = model.Email, UserName = model.Name };
 
             var result = await _userManager.CreateAsync(userIdentity, model.Password);
                       
@@ -51,7 +49,8 @@ namespace API.Controllers
             else
             {        
                 await _organisationService.AddAsync(new OrganisationBLL { Location = model.Location, Name = model.Name, UserId = userIdentity.Id });
-                return new OkObjectResult("Account created");
+                await _userManager.AddToRoleAsync(userIdentity, "organisation");
+                return new OkObjectResult("Organisation account created");
             }
         }
 

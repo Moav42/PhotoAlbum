@@ -9,7 +9,7 @@ namespace DAL.Repositories
 {
     public class OrganisationRepository : IOrganisationRepository<Organisation>
     {
-        private DbContext DB;
+        private readonly DbContext DB;
         public OrganisationRepository(DbContext context)
         {
             DB = context;

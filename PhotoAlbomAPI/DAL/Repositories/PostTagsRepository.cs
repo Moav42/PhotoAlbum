@@ -9,7 +9,7 @@ namespace DAL.Repositories
 {
     public class PostTagsRepository : IPostTagsRepository<PostTags>
     {
-        private DbContext DB;
+        private readonly DbContext DB;
         public PostTagsRepository(DbContext context)
         {
             DB = context;

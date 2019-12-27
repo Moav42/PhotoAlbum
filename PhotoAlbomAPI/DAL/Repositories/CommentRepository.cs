@@ -10,7 +10,7 @@ namespace DAL.Repositories
 {
     public class CommentRepository : ICommentRepository<Comment>
     {
-        private DbContext DB;
+        private readonly DbContext DB;
         public CommentRepository(DbContext context)
         {
             DB = context;
