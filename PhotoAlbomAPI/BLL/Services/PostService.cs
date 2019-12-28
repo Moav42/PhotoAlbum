@@ -68,6 +68,7 @@ namespace BLL.Services
             }
             return itemBLL;
         }
+
         public async Task<IEnumerable<CategoryBLL>> GetCategoriesAsync(int postId)
         {
             var itemDAL = await Task.Run(() => _unitOfWork.CategorysRepository.ReadAllByPost(postId));
@@ -78,6 +79,7 @@ namespace BLL.Services
             }
             return itemBLL;
         }
+
         public async Task<IEnumerable<TagBLL>> GetTagsAsync(int postId)
         {
             var itemDAL = await Task.Run(() => _unitOfWork.TagsRepository.ReadAllByPost(postId));
@@ -88,6 +90,7 @@ namespace BLL.Services
             }
             return itemBLL;
         }
+
         public async Task<IEnumerable<PostRateBLL>> GetRatesAsync(int postId)
         {
             var itemDAL = await Task.Run(() => _unitOfWork.PostRateRepository.ReadAllByPost(postId));

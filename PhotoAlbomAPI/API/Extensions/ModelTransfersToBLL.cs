@@ -75,5 +75,51 @@ namespace API.Extensions
             };
             return post;
         }
+
+        public static CommentBLL Transform(this CommentModel model)
+        {
+            var comment = new CommentBLL
+            {
+                Id = model.Id,
+                PostId = model.PostId,
+                UserId = model.UserId,
+                Text = model.Text,
+                AddingDate = model.AddingDate
+            };
+            return comment;
+        }
+
+        public static CommentModel Transform(this CommentBLL commentBLL)
+        {
+            var comment = new CommentModel
+            {
+                Id = commentBLL.Id,
+                PostId = commentBLL.PostId,
+                UserId = commentBLL.UserId,
+                Text = commentBLL.Text,
+                AddingDate = commentBLL.AddingDate
+            };
+            return comment;
+        }
+        public static PostRateModel Transform(this PostRateBLL postRateBLL)
+        {
+            var postRate = new PostRateModel
+            {
+                PostId = postRateBLL.PostId,
+                UserId = postRateBLL.UserId,
+                Licked = postRateBLL.Licked
+            };
+            return postRate;
+        }
+        public static PostRateBLL Transform(this PostRateModel postRate)
+        {
+            var postRateBLL = new PostRateBLL
+            {
+                PostId = postRate.PostId,
+                UserId = postRate.UserId,
+                Licked = postRate.Licked
+            };
+            return postRateBLL;
+        }
     }
 }

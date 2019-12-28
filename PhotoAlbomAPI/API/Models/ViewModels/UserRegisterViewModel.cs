@@ -6,11 +6,16 @@ using System.Threading.Tasks;
 
 namespace API.Models.ViewModels
 {
-    public class CredentialsViewModel
+    public class UserRegisterViewModel
     {
         [Required]
-        public string UserName { get; set; }
+        [Display(Name = "Email")]
+        public string Email { get; set; }
+
         [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Пароль")]
         public string Password { get; set; }
+       
     }
 }

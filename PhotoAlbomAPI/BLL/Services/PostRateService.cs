@@ -38,6 +38,16 @@ namespace BLL.Services
             }
             return itemBLL;
         }
+        public async Task<IEnumerable<PostRateBLL>> GetAllByUserAsync(string usertId)
+        {
+            var itemDAL = await Task.Run(() => _unitOfWork.PostRateRepository.ReadAllByUser(usertId));
+            var itemBLL = new List<PostRateBLL>();
+            foreach (var item in itemDAL)
+            {
+                itemBLL.Add(item.Transform());
+            }
+            return itemBLL;
+        }
 
         public async Task UpdateAsync(PostRateBLL item)
         {

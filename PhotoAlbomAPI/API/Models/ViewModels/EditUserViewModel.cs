@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace API.Models.ViewModels
 {
-    public class RoleViewModel
+    public class EditUserViewModel
     {
         [Required]
-        public string Name { get; set; }
+        public string UserName { get; set; }
+        [Required]
+        public string Email { get; set; }
     }
 }

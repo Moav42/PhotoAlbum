@@ -9,5 +9,6 @@ namespace DAL.Interfaces
         void Create(T item);
         void Update(T item);
         IEnumerable<T> ReadAllByPost(int postID);
+        IEnumerable<T> ReadAllByUser(string userId);
     }
 }

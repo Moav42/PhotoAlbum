@@ -21,12 +21,15 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using API.Extensions;
+using Microsoft.OpenApi.Models;
+using BLL.ExtensionsForTransfer;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace API
 {
     public class Startup
     {
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
+        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; 
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
         public Startup(IConfiguration configuration)
@@ -44,10 +47,7 @@ namespace API
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
 
-            services.AddScoped<ITagService<TagBLL>, TagService>();
-            services.AddScoped<ICategoryService<CategoryBLL>, CategoryService>();
-            services.AddScoped<IPostService<PostBLL>, PostService>();
-            services.AddScoped<IOrganisationService<OrganisationBLL>, OrganisationService>();
+            services.AddBllServices();
 
             services.AddJWT(_signingKey, Configuration);
             
@@ -72,10 +72,23 @@ namespace API
             builder.AddEntityFrameworkStores<DAL.EF.DbContext>().AddDefaultTokenProviders().AddRoles<IdentityRole>();
 
             services.AddCors();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

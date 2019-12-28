@@ -7,6 +7,10 @@ namespace BLL.Interfaces
 {
     public interface IOrganisationService<T>
     {
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<T> GetAsync(int id);
         Task AddAsync(T item);
+        Task UpdateAsync(T item);
+        Task DeleteAsync(int id);
     }
 }

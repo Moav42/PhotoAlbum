@@ -17,22 +17,20 @@ namespace API.Controllers
     [ApiController]
     public class AuthorizationController : ControllerBase
     {
+
         private readonly UserManager<DAL.Entities.User> _userManager;
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
-
 
         public AuthorizationController(UserManager<DAL.Entities.User> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
             _jwtOptions = jwtOptions.Value;
-
         }
 
-        //POST api/authorization/login
         [HttpPost("login")]
-        public async Task<IActionResult> Post([FromBody]CredentialsViewModel credentials)
+        public async Task<IActionResult> Login([FromBody]CredentialsViewModel credentials)
         {
             if (!ModelState.IsValid)
             {
@@ -43,7 +41,7 @@ namespace API.Controllers
 
             if (identity == null)
             {
-                return BadRequest(ModelState);
+                return BadRequest("Invalid login or password");
             }
 
             var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, credentials.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
@@ -54,10 +52,17 @@ namespace API.Controllers
         private async Task<ClaimsIdentity> GetClaimsIdentity(string userName, string password)
         {
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+            {
                 return await Task.FromResult<ClaimsIdentity>(null);
-
-            // get the user to verifty
+            }
+           
             var userToVerify = await _userManager.FindByNameAsync(userName);
+
+            if (userToVerify == null)
+            {
+                return await Task.FromResult<ClaimsIdentity>(null);
+            }
+
             var role = await _userManager.GetRolesAsync(userToVerify);
             var roleStr = string.Empty;
 
@@ -66,15 +71,11 @@ namespace API.Controllers
                 roleStr += item;
             }
 
-            if (userToVerify == null) return await Task.FromResult<ClaimsIdentity>(null);
-
-            // check the credentials
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
                 return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(userName, userToVerify.Id, roleStr));
             }
 
-            // Credentials are invalid, or account doesn't exist
             return await Task.FromResult<ClaimsIdentity>(null);
         }
     }

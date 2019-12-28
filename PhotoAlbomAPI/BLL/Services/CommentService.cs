@@ -18,6 +18,7 @@ namespace BLL.Services
         {
             _unitOfWork = new UnitOfWork();
         }
+
         public async Task<IEnumerable<CommentBLL>> GetByPostAsync(int postId)
         {
             var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByPost(postId));
@@ -30,6 +31,7 @@ namespace BLL.Services
 
             return iemsBLL;
         }
+
         public async Task<IEnumerable<CommentBLL>> GetByUserAsync(string userId)
         {
             var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByUser(userId));

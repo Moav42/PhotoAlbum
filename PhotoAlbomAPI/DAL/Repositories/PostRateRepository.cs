@@ -31,6 +31,10 @@ namespace DAL.Repositories
         {
             return DB.PostRates.Where(pr => pr.PostId == postID);
         }
+        public IEnumerable<PostRate> ReadAllByUser(string userId)
+        {
+            return DB.PostRates.Where(pr => pr.UserId == userId);
+        }
 
     }
 }
