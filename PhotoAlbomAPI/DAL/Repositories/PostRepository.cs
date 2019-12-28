@@ -39,13 +39,9 @@ namespace DAL.Repositories
             return DB.Posts;
         }
 
-        public void Update(int id, Post item)
+        public void Update(Post item)
         {
-            var model = Read(id);
-            model.Title = item.Title;
-            model.LocationPath = item.LocationPath;
-
-            DB.Posts.Update(model);
+            DB.Posts.Update(item);
         }
     }
 }

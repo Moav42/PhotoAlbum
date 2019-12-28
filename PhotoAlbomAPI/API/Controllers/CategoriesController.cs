@@ -9,6 +9,7 @@ using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -60,22 +61,52 @@ namespace API.Controllers
 
             await _categoryService.AddAsync(model.Transform());
 
-            return CreatedAtAction("GetCategory", new { id = model.Id }, model);
+            return new OkObjectResult(model);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<CategoryModel>> PutCategory(CategoryModel model)
+        public async Task<ActionResult<CategoryModel>> PutCategory(int id, CategoryModel model)
         {
-            if (!ModelState.IsValid)
+            //if (id != model.Id)
+            //{
+            //    return BadRequest("Model id wrong");
+            //}
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest("Not a valid model");
+            //}
+            //if (await _categoryService.GetAsync(model.Id) == null)
+            //{
+            //    return BadRequest("Model doesn`t exicte");
+            //}
+            //await _categoryService.UpdateAsync(model.Transform());
+            //return model;
+
+            if (ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                if (id != model.Id)
+                {
+                    return BadRequest("Model id wrong");
+                }
+
+                try
+                {
+                    await _categoryService.UpdateAsync(model.Transform());
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (await _categoryService.GetAsync(id) == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return new OkObjectResult(model);
             }
-            if (_categoryService.GetAsync(model.Id) == null)
-            {
-                return BadRequest("Model doesn`t exicte");
-            }
-            await _categoryService.UpdateAsync(model.Transform());
-            return model;
+            return BadRequest("Not a valid model");
         }
 
         [HttpDelete("{id}")]

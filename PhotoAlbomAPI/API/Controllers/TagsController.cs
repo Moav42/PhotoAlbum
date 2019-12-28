@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "Admin&Organisation")]
     [ApiController]
     public class TagsController : ControllerBase
     {
@@ -24,7 +25,8 @@ namespace API.Controllers
 
         }
 
-        [Authorize(Policy = "Organisation")]
+        
+        //[Authorize(Policy = "Admin&Organisation")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
         {
@@ -53,7 +55,7 @@ namespace API.Controllers
             }           
         }
 
-        [Authorize(Policy = "Organisation")]
+        //[Authorize(Policy = "Organisation")]
         [HttpPost]
         public async Task<ActionResult<TagModel>> PostTag(TagModel model)
         {
@@ -64,7 +66,7 @@ namespace API.Controllers
 
             await _tagService.AddAsync(model.Transform());
 
-            return CreatedAtAction("GetTag", new { id = model.Id }, model);
+            return new OkObjectResult(model);
         }
 
         [HttpPut("{id}")]

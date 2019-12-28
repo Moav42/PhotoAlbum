@@ -47,7 +47,7 @@ namespace BLL.Services
 
         public async Task UpdateAsync(CategoryBLL item)
         {
-            _unitOfWork.CategorysRepository.Update(item.Id, item.Transform());
+            _unitOfWork.CategorysRepository.Update(item.Transform());
             await _unitOfWork.SaveChangesAsync();
         }
 

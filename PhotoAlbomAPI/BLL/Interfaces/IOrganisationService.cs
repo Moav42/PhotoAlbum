@@ -11,7 +11,7 @@ namespace BLL.Interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetAsync(int id);
         Task<IdentityResult> RegisterOrganisation(T model);
-        Task UpdateAsync(T item);
+        Task UpdateAsync(T model);
         Task DeleteAsync(int id);
     }
 }

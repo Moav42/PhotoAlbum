@@ -45,8 +45,6 @@ namespace API
 
             services.AddControllers();
 
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-
             services.AddBllServices();
 
             services.AddJWT(_signingKey, Configuration);
@@ -60,6 +58,7 @@ namespace API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+               
             });
         }
 

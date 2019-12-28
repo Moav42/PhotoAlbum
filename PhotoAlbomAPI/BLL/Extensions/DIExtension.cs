@@ -23,6 +23,7 @@ namespace BLL.Extensions
             services.AddScoped<IAccountService<UserBLL>, AccountService>();
             services.AddScoped<IAuthorizationService<UserBLL>, AuthorizationService>();
             services.AddScoped<IAccountManagerService<UserBLL>, AccountManagerService>();
+            services.AddSingleton<IJwtFactory, JwtFactory>();
 
             return services;
         }
@@ -35,6 +36,7 @@ namespace BLL.Extensions
                 options.AddPolicy("Organisation", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation"));
                 options.AddPolicy("Moderator", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "moderator"));
                 options.AddPolicy("User", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "user"));
+                options.AddPolicy("Admin&Organisation", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation", "admin"));
             });
 
             return services;

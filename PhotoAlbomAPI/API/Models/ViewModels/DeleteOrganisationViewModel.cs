@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace API.Models.ViewModels
 {
-    public class RoleViewModel
+    public class DeleteOrganisationViewModel
     {
         [Required]
-        public string Name { get; set; }
+        public string UserName { get; set; }
+        [Required]
+        public int OrgId { get; set; }
     }
 }

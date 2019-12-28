@@ -9,6 +9,7 @@ using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -73,22 +74,34 @@ namespace API.Controllers
 
             await _commentService.AddAsync(model.Transform());
 
-            return CreatedAtAction("GetCategory", new { id = model.Id }, model);
+            return new OkObjectResult(model);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<CommentModel>> PutComment(CommentModel model)
         {
-            if (!ModelState.IsValid)
+
+            if (ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+   
+                try
+                {
+                    await _commentService.UpdateAsync(model.Transform());
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (await _commentService.GetAsync(model.Id) == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return new OkObjectResult(model);
             }
-            if (_commentService.GetAsync(model.Id) == null)
-            {
-                return BadRequest("Model doesn`t exicte");
-            }
-            await _commentService.UpdateAsync(model.Transform());
-            return model;
+            return BadRequest("Not a valid model");
         }
 
         [HttpDelete("{id}")]
@@ -102,7 +115,7 @@ namespace API.Controllers
 
             await _commentService.DeleteAsync(model.Id);
 
-            return model.Transform();
+            return new OkObjectResult(model.Transform());
         }
     }
 }

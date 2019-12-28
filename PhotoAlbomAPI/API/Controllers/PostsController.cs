@@ -9,6 +9,7 @@ using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
@@ -17,9 +18,11 @@ namespace API.Controllers
     public class PostsController : ControllerBase
     {
         private readonly IPostService<PostBLL> _postService;
-        public PostsController(IPostService<PostBLL> postService)
+        private readonly IPostRateService<PostRateBLL> _postRateService;
+        public PostsController(IPostService<PostBLL> postService, IPostRateService<PostRateBLL> postRateService)
         {
             _postService = postService;
+            _postRateService = postRateService;
         }
 
         [HttpGet]
@@ -59,22 +62,38 @@ namespace API.Controllers
             }
             await _postService.AddAsync(model.Transform());
 
-            return CreatedAtAction("GetPost", new { id = model.Id }, model);
+            return new OkObjectResult(model);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<PostModel>> PutPost(PostModel model)
+        public async Task<ActionResult> PutPost(int id, PostModel model)
         {
-            if (!ModelState.IsValid)
+         
+            if (ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                if (id != model.Id)
+                {
+                    return BadRequest();
+                }
+                try
+                {
+                    await _postService.UpdateAsync(model.Transform());
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (await _postService.GetAsync(model.Id) == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return new OkObjectResult(model);
             }
-            if (_postService.GetAsync(model.Id) == null)
-            {
-                return BadRequest("Model doesn`t exicte");
-            }
-            await _postService.UpdateAsync(model.Transform());
-            return model;
+            return BadRequest("Not a valid model");
+
         }
 
         [HttpDelete("{id}")]
@@ -89,6 +108,19 @@ namespace API.Controllers
             await _postService.DeleteAsync(model.Id);
 
             return model.Transform();
+        }
+
+        [HttpPost("rate")]
+        public async Task<ActionResult<PostRateModel>> PostRate(PostRateModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Not a valid model");
+            }
+
+            await _postRateService.AddAsync(model.Transform());
+
+            return new OkObjectResult(model);
         }
     }
 }

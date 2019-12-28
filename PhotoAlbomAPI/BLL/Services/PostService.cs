@@ -48,7 +48,7 @@ namespace BLL.Services
 
         public async Task UpdateAsync(PostBLL item)
         {
-            _unitOfWork.PostsRepository.Update(item.Id, item.Transform());
+            _unitOfWork.PostsRepository.Update(item.Transform());
             await _unitOfWork.SaveChangesAsync();
         }
 
