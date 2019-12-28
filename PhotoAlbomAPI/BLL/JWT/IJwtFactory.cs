@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace API.JWT
+namespace BLL.JWT
 {
     public  interface IJwtFactory
     {

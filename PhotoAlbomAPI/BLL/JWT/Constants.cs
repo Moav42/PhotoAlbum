@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API.JWT
+namespace BLL.JWT
 {
     public class Constants
     {

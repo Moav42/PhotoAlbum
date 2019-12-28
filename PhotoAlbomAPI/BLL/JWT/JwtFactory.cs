@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 
-namespace API.JWT
+namespace BLL.JWT
 {
     public class JwtFactory : IJwtFactory
     {

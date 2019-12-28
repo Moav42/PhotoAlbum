@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 
-namespace API.JWT
+namespace BLL.JWT
 {
     public class Tokens
     {

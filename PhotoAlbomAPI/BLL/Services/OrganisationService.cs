@@ -2,6 +2,8 @@
 using BLL.Interfaces;
 using BLL.Models;
 using DAL;
+using DAL.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,15 +14,33 @@ namespace BLL.Services
     public class OrganisationService : IOrganisationService<OrganisationBLL>
     {
         private readonly UnitOfWork _unitOfWork;
-        public OrganisationService()
+        private readonly UserManager<User> _userManager;
+
+        public OrganisationService(UserManager<User> userManager)
         {
             _unitOfWork = new UnitOfWork();
+            _userManager = userManager;
         }
-        public async Task AddAsync(OrganisationBLL item)
+
+        public async Task<IdentityResult> RegisterOrganisation(OrganisationBLL model)
         {
-            var itemDAL = item.Transform();
-            _unitOfWork.OrganisationsRepository.Create(itemDAL);
-            await _unitOfWork.SaveChangesAsync();
+            var userIdentity = new User { Email = model.Email, UserName = model.Email };
+
+            var result = await _userManager.CreateAsync(userIdentity, model.Password);
+            
+
+            if (result.Succeeded)
+            {
+                model.UserId = userIdentity.Id;
+                var itemDAL = model.Transform();
+                _unitOfWork.OrganisationsRepository.Create(itemDAL);
+                await _unitOfWork.SaveChangesAsync();
+
+                await _userManager.AddToRoleAsync(userIdentity, "user");
+
+                return result;
+            }
+            return result;
         }
 
         public async Task<IEnumerable<OrganisationBLL>> GetAllAsync()

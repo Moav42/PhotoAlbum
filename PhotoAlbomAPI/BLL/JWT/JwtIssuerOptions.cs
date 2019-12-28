@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.JWT
+namespace BLL.JWT
 {
     public class JwtIssuerOptions
     {

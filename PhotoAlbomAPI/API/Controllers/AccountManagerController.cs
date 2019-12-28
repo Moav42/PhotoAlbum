@@ -16,30 +16,24 @@ namespace API.Controllers
     [ApiController]
     public class AccountManagerController : ControllerBase
     {
-        private readonly UserManager<DAL.Entities.User> _userManager;
-        private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
-        public AccountManagerController(UserManager<User> userManager, IOrganisationService<OrganisationBLL> organisationService)
+        private readonly IAccountManagerService<UserBLL> _accountManagerService;
+
+        public AccountManagerController(IAccountManagerService<UserBLL> accountManagerService)
         {
-            _userManager = userManager;
-            _organisationService = organisationService;
+            _accountManagerService = accountManagerService;
         }
 
         [HttpGet]
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
-
-            List<UserViewModel> userViewModels = await Task.Run(() => 
-            (from user in _userManager.Users 
-            select new UserViewModel
+            var users = await _accountManagerService.GetAllUsers();
+            var userVM = new List<UserViewModel>();
+            foreach (var item in users)
             {
-                UserId = user.Id,
-                UserName = user.UserName,
-                Email = user.Email
-
-            }).ToList());
-
-            return userViewModels;
+                userVM.Add(new UserViewModel { Email = item.Email, UserId = item.UserId, UserName = item.UserName });
+            }
+            return userVM;
         }
 
         [HttpPost("create")]
@@ -50,9 +44,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = new User { Email = model.Email, UserName = model.Email };
-
-            var result = await _userManager.CreateAsync(userIdentity, model.Password);
+            var result = await _accountManagerService.CreacteAccount(model.Email, model.Password, model.Role);
 
             if (!result.Succeeded)
             {
@@ -64,46 +56,38 @@ namespace API.Controllers
             }
             else
             {
-                await _userManager.AddToRoleAsync(userIdentity, model.Role);
                 return new OkObjectResult("Account created");
             }
         }
 
         [HttpPut("edit")]
-        public async Task<IActionResult> EditUserAccount([FromBody] EditUserViewModel model)
+        public async Task<IActionResult> EditUserAccount([FromBody] EditUserNameViewModel model)
         {
             if (ModelState.IsValid)
             {
-                User user = await _userManager.FindByNameAsync(model.UserName);
-                if (user != null)
+                var result = await _accountManagerService.EditUserAccount(model.OldName, model.NewName);
+                if (result.Succeeded)
                 {
-                    user.Email = model.Email;
-                    user.UserName = model.Email;
-
-                    var result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded)
+                    return new OkObjectResult("Account updated");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
                     {
-                        return new OkObjectResult("Account updated");
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    else
-                    {
-                        foreach (var error in result.Errors)
-                        {
-                            ModelState.AddModelError(string.Empty, error.Description);
-                        }
-                    }
+                    return BadRequest(ModelState);
                 }
             }
             return BadRequest(ModelState);
         }
 
         [HttpDelete("delete")]
-        public async Task<ActionResult> DeleteAccount([FromBody] string name)
+        public async Task<ActionResult> DeleteAccount([FromBody] DeleteUserViewModel model)
         {
-            User user = await _userManager.FindByNameAsync(name);
-            if (user != null)
+            var result = await _accountManagerService.DeleteAccount(model.UserName);
+            if (result.Succeeded)
             {
-                IdentityResult result = await _userManager.DeleteAsync(user);
                 return new OkObjectResult("Account deleted");
             }
             return NotFound("Invalid user name");

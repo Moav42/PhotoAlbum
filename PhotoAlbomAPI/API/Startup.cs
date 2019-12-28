@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using API.JWT;
 using API.Models;
 using BLL.Interfaces;
 using BLL.Models;
@@ -22,8 +21,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using API.Extensions;
 using Microsoft.OpenApi.Models;
-using BLL.ExtensionsForTransfer;
+using BLL.Extensions;
 using Microsoft.AspNetCore.StaticFiles;
+using BLL.JWT;
 
 namespace API
 {
@@ -50,26 +50,10 @@ namespace API
             services.AddBllServices();
 
             services.AddJWT(_signingKey, Configuration);
-            
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("Admin", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "admin"));
-                options.AddPolicy("Organisation", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation"));
-                options.AddPolicy("Moderator", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "moderator"));
-                options.AddPolicy("User", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "user"));
-            });
 
-            var builder = services.AddIdentityCore<DAL.Entities.User> (o =>
-            {
-                o.Password.RequireDigit = false;
-                o.Password.RequireLowercase = false;
-                o.Password.RequireUppercase = false;
-                o.Password.RequireNonAlphanumeric = false;
-                o.Password.RequiredLength = 6;
-            });
-            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            services.AddJWTAuthorization();
 
-            builder.AddEntityFrameworkStores<DAL.EF.DbContext>().AddDefaultTokenProviders().AddRoles<IdentityRole>();
+            services.AddIdentity();           
 
             services.AddCors();
 

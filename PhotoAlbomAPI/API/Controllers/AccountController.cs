@@ -6,7 +6,6 @@ using API.Models.ViewModels;
 using BLL.Interfaces;
 using BLL.Models;
 using BLL.Services;
-using DAL.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +16,13 @@ namespace API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<User> _userManager ;      
+        private readonly IAccountService<UserBLL> _accountService;
         private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
-        public AccountController(UserManager<User> userManager, IOrganisationService<OrganisationBLL> organisationService )
-        {
-            _userManager = userManager;         
+        public AccountController( IOrganisationService<OrganisationBLL> organisationService, IAccountService<UserBLL> accountService )
+        {      
             _organisationService = organisationService;
+            _accountService = accountService;
         }
 
         [HttpPost("reg/user")]
@@ -34,9 +33,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = new User { Email = model.Email, UserName = model.Email };
-
-            var result = await _userManager.CreateAsync(userIdentity, model.Password);
+            var result = await _accountService.RegisterUser(new UserBLL { Email = model.Email, Password = model.Password });
 
             if (!result.Succeeded)
             {
@@ -47,8 +44,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
             else
-            {
-                await _userManager.AddToRoleAsync(userIdentity, "user");
+            {              
                 return new OkObjectResult("User account created");
             }
         }
@@ -61,9 +57,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var userIdentity = new User { Email = model.Email, UserName = model.Email };
-
-            var result = await _userManager.CreateAsync(userIdentity, model.Password);
+            var result = await _organisationService.RegisterOrganisation(new OrganisationBLL { Email = model.Email, Password = model.Password, Location = model.Location, Name = model.Name});
                       
             if (!result.Succeeded)
             {
@@ -74,9 +68,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
             else
-            {        
-                await _organisationService.AddAsync(new OrganisationBLL { Location = model.Location, Name = model.Name, UserId = userIdentity.Id });
-                await _userManager.AddToRoleAsync(userIdentity, "organisation");
+            {                       
                 return new OkObjectResult("Organisation account created");
             }
         }
@@ -84,16 +76,10 @@ namespace API.Controllers
         [HttpPost("ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
         {
-            User user = await _userManager.FindByNameAsync(model.Name);
-
-            if (user == null)
-            {
-                return NotFound("Invalid login");
-            }
 
             if (ModelState.IsValid)
             {
-                IdentityResult result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                IdentityResult result = await _accountService.ChangePassword(model.Name, model.OldPassword, model.NewPassword);
                 if (result.Succeeded)
                 {
                     return new OkObjectResult("Password changed");
@@ -106,7 +92,7 @@ namespace API.Controllers
                     }
                 }
             }
-            return BadRequest(ModelState);           
+            return BadRequest(ModelState);
         }
     }
 }

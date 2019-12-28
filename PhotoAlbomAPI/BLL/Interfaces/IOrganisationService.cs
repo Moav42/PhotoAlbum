@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace BLL.Interfaces
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T> GetAsync(int id);
-        Task AddAsync(T item);
+        Task<IdentityResult> RegisterOrganisation(T model);
         Task UpdateAsync(T item);
         Task DeleteAsync(int id);
     }

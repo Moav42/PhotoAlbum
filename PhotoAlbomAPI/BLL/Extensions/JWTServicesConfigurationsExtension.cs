@@ -1,20 +1,16 @@
-﻿using API.JWT;
+﻿using BLL.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace API.Extensions
+namespace BLL.Extensions
 {
-
-    public static class JWTServicesConfigurations
+    public static class JWTServicesConfigurationsExtension
     {
-
         public static IServiceCollection AddJWT(this IServiceCollection services, SymmetricSecurityKey signingKey, IConfiguration Configuration)
         {
 

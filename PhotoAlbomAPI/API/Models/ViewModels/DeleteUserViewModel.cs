@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace API.Models.ViewModels
 {
-    public class EditUserViewModel
+    public class DeleteUserViewModel
     {
         [Required]
         public string UserName { get; set; }
-        [Required]
-        public string Email { get; set; }
     }
 }
