@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text;
 using DAL.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace DAL.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             string connectionString = @"Data Source = LAPTOP-BPN6QIHG\SQLEXPRESS666; database = PhotoAlbom; integrated security = True; MultipleActiveResultSets = True; App = EntityFramework;";
             if (!optionsBuilder.IsConfigured)
             {

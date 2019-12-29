@@ -3,6 +3,8 @@ using BLL.JWT;
 using BLL.Models;
 using BLL.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,11 @@ namespace BLL.Extensions
 
             return services;
         }
-
+        public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration Configuration)
+        {
+            services.AddDbContext<DAL.EF.DbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            return services;
+        }
         public static IServiceCollection AddJWTAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization(options =>

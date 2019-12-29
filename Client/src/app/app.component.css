@@ -1,0 +1,17 @@
+.container {
+    height: 200vh;
+    background: black;
+    color: white;
+    display: flex;
+   
+    min-height:10vh;
+  
+  }
+  
+  .item {
+    width: auto;
+    height: 100vh;
+    flex-direction: column;
+    display: flex;
+   
+  }

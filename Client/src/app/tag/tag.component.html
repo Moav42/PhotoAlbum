@@ -1,0 +1,12 @@
+<h2>alo</h2>
+<div >
+    <ul *ngIf="tagService.tags.length;">    
+        
+    <li *ngFor="let tag of tagService.tags; let i = index">    
+        <span>  
+            <strong>{{i + 1}}</strong> {{tag.title}}
+        </span>
+    </li>
+    
+</ul>
+

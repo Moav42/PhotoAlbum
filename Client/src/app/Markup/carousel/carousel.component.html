@@ -1,0 +1,24 @@
+<ngb-carousel #ngcarousel>
+   <ng-template ngbSlide id="one">
+    <div class="picsum-img-wrapper">
+      <app-element> </app-element>
+       
+    </div>
+  </ng-template>
+  <ng-template ngbSlide id="two">
+    <div class="picsum-img-wrapper">
+      <app-tag></app-tag>
+    </div>
+  </ng-template>
+  </ngb-carousel>
+
+  <div class="text-center ,btn-group" >
+    <button >HER SEARCH</button>
+    <button (click)="getToPrev()">Prev</button>
+    <button (click)="goToNext()">Next</button>
+    <button >ADD COMENT\LIKE</button>
+  </div>
+
+  
+
+
