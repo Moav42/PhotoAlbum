@@ -45,6 +45,11 @@ namespace BLL.Services
             var item = await Task.Run(() => _unitOfWork.PostsRepository.Read(id));
             return item.Transform();
         }
+        public async Task<string> GetPathByIdAsync(int id)
+        {
+            var item = await Task.Run(() => _unitOfWork.PostsRepository.Read(id));
+            return item.LocationPath;
+        }
 
         public async Task UpdateAsync(PostBLL item)
         {

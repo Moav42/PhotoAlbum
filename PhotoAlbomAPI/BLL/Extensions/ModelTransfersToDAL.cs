@@ -17,7 +17,6 @@ namespace BLL.ExtensionsForTransfer
                 LocationPath = postBLL.LocationPath,
                 UserId = postBLL.UserId,
                 AddingDate = postBLL.AddingDate
-
             };
             return post;
         }
@@ -31,7 +30,6 @@ namespace BLL.ExtensionsForTransfer
                 LocationPath = postBLL.LocationPath,
                 UserId = postBLL.UserId,
                 AddingDate = postBLL.AddingDate
-
             };
             return post;
         }

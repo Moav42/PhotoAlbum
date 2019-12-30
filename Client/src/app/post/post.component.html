@@ -1,0 +1,13 @@
+<div class="primary-text">
+    <ul *ngFor="let item of posts">
+        <li >
+            {{item.title}}
+            
+            
+        </li>
+        <li>
+            <img  [src]="louadImage(item.id)" style="width: 50%; height: 50%;" >
+        </li>
+    </ul>
+    
+</div>

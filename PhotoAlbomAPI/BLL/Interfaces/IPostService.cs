@@ -13,6 +13,7 @@ namespace BLL.Interfaces
         Task AddAsync(T item);
         Task UpdateAsync(T item);
         Task DeleteAsync(int id);
+        Task<string> GetPathByIdAsync(int id);
         Task<IEnumerable<PostRateBLL>> GetRatesAsync(int postId);
         Task<IEnumerable<TagBLL>> GetTagsAsync(int postId);
         Task<IEnumerable<CategoryBLL>> GetCategoriesAsync(int postId);

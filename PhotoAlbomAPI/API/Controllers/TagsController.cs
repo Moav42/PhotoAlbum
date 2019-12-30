@@ -10,11 +10,14 @@ using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Cors;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize(Policy = "Admin&Organisation")]
+  
+    //[Authorize(Policy = "Admin&Organisation")]
     [ApiController]
     public class TagsController : ControllerBase
     {
@@ -70,18 +73,33 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<TagModel>> PutTag(TagModel model)
+        public async Task<ActionResult<TagModel>> PutTag(int id, TagModel model)
         {
-            if (!ModelState.IsValid)
+
+            if (ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                if (id != model.Id)
+                {
+                    return BadRequest();
+                }
+                try
+                {
+                    await _tagService.UpdateAsync(model.Transform());
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (await _tagService.GetAsync(model.Id) == null)
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return new OkObjectResult(model);
             }
-            if (await _tagService.GetAsync(model.Id) == null)
-            {
-                return BadRequest("Model doesn`t exicte");
-            }
-            await _tagService.UpdateAsync(model.Transform());
-            return model;
+            return BadRequest("Not a valid model");
         }
 
         [HttpDelete("{id}")]

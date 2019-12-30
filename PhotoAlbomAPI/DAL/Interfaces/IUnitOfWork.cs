@@ -25,8 +25,7 @@ namespace DAL.Interfaces
         IPostTagsRepository<PostTags> PostTagsRepository { get; }
 
         ITagRepository<Tag> TagsRepository { get; }
-        DbContext Context { get; }
-        Task<int> SaveChangesAsync();
+        Task SaveChangesAsync();
         void SaveChanges();
 
     }

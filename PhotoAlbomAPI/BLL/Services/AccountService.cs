@@ -28,6 +28,7 @@ namespace BLL.Services
             }
             return result;
         }
+
         public async Task<IdentityResult> ChangePassword(string name, string oldPass, string newPass)
         {
             User user = await _userManager.FindByNameAsync(name);

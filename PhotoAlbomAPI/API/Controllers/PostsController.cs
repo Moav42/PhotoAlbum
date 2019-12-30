@@ -53,6 +53,14 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("image/{postId}")]
+        public async Task<ActionResult> GetPostImageById(int postId)
+        {
+            string path = await _postService.GetPathByIdAsync(postId);
+            Byte[] b = await System.IO.File.ReadAllBytesAsync(path);
+            return File(b, "image/jpeg");
+        }
+
         [HttpPost]
         public async Task<ActionResult<PostModel>> PostPost(PostModel model)
         {
@@ -67,8 +75,7 @@ namespace API.Controllers
 
         [HttpPut("{id}")]
         public async Task<ActionResult> PutPost(int id, PostModel model)
-        {
-         
+        {         
             if (ModelState.IsValid)
             {
                 if (id != model.Id)

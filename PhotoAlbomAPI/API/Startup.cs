@@ -51,9 +51,20 @@ namespace API
 
             services.AddJWTAuthorization();
 
-            services.AddIdentity();           
+            services.AddIdentity();
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                       
+                    });
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -80,7 +91,9 @@ namespace API
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
+            app.UseCors("AllowAll");
+            //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
+            //app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
             app.UseRouting();

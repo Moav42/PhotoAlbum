@@ -38,6 +38,7 @@ namespace API.Controllers
             }
             return userVM;
         }
+
         [HttpGet("organisation")]
         public async Task<IEnumerable<OrganisationModel>> GetAllOrganisation()
         {
@@ -49,6 +50,7 @@ namespace API.Controllers
             }
             return orgsModel;
         }
+
         [HttpPost("create")]    
         public async Task<IActionResult> CreacteAccount([FromBody]AccountCreateViewModel model)
         {
@@ -113,23 +115,8 @@ namespace API.Controllers
         [HttpPut("organisation/edit")]
         public async Task<IActionResult> EditOrganisationAccount([FromBody] EditOrganisationViewModel model)
         {
-
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest("Not a valid model");
-            //}
-            //if (_organisationService.GetAsync(model.Id) == null)
-            //{
-            //    return BadRequest("Model doesn`t exicte");
-            //}
-            //await _organisationService.UpdateAsync(new OrganisationBLL { Id= model.Id, Name = model.OrgName, Location = model.Loacation});
-
-            //return new OkObjectResult("Account updated");
-
             if (ModelState.IsValid)
-            {
-              
-
+            {            
                 try
                 {
                     await _organisationService.UpdateAsync(new OrganisationBLL { Id = model.Id, Name = model.OrgName, Location = model.Loacation });

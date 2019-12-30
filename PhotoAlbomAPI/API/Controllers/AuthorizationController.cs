@@ -36,6 +36,11 @@ namespace API.Controllers
 
             var jwt = await _authorizationService.GetJWT(credentials.UserName, credentials.Password);
 
+            if(jwt == null)
+            {
+                return BadRequest("Wrong login or password");
+            }
+
             return new OkObjectResult(jwt);
         }
 

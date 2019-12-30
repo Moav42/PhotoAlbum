@@ -17,4 +17,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/tags']).then(success => console.log('navigation success?' , success))
     .catch(console.error); 
   }
+  openCategoriesEditor(event){
+    this.router.navigate(['/categories']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
 }

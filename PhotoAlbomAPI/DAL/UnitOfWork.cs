@@ -34,13 +34,7 @@ namespace DAL
         {
             _DataBase = new DbContext();
         }
-        public DbContext Context 
-        {
-            get
-            {
-                return _DataBase;
-            }
-        }
+   
         public ICategoryRepository<Category> CategorysRepository
         {
             get
@@ -142,9 +136,9 @@ namespace DAL
             GC.SuppressFinalize(this);
         }
 
-        public async Task<int> SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            return await _DataBase.SaveChangesAsync();
+             await _DataBase.SaveChangesAsync();
         }
 
         public void SaveChanges()

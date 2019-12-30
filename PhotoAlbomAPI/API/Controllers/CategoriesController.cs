@@ -67,20 +67,6 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<CategoryModel>> PutCategory(int id, CategoryModel model)
         {
-            //if (id != model.Id)
-            //{
-            //    return BadRequest("Model id wrong");
-            //}
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest("Not a valid model");
-            //}
-            //if (await _categoryService.GetAsync(model.Id) == null)
-            //{
-            //    return BadRequest("Model doesn`t exicte");
-            //}
-            //await _categoryService.UpdateAsync(model.Transform());
-            //return model;
 
             if (ModelState.IsValid)
             {

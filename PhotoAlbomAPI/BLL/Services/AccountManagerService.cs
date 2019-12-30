@@ -17,13 +17,10 @@ namespace BLL.Services
         public AccountManagerService(UserManager<User> userManager)
         {
             _userManager = userManager;
-
         }
 
         public async Task<IEnumerable<UserProfile>> GetAllUsers()
         {
-
-
             List<UserProfile> userViewModels = await Task.Run(() =>
                (from user in _userManager.Users
                 select new UserProfile
@@ -36,7 +33,6 @@ namespace BLL.Services
 
             return userViewModels;
         }
-
 
         public async Task<IdentityResult> CreacteAccount(string email, string password, string role)
         {
@@ -51,7 +47,6 @@ namespace BLL.Services
             return result;
         }
 
-
         public async Task<IdentityResult> EditUserAccount( string oldName, string newName)
         {
             User user = await _userManager.FindByNameAsync(oldName);
@@ -65,7 +60,6 @@ namespace BLL.Services
             }
             return IdentityResult.Failed();
         }
-
 
         public async Task<IdentityResult> DeleteAccount(string name)
         {

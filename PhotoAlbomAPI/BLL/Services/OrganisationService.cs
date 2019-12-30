@@ -26,16 +26,15 @@ namespace BLL.Services
         {
             var userIdentity = new User { Email = model.Email, UserName = model.Email };
 
-            var result = await _userManager.CreateAsync(userIdentity, model.Password);
-            
+            var result = await _userManager.CreateAsync(userIdentity, model.Password);            
 
             if (result.Succeeded)
             {
                 model.UserId = userIdentity.Id;
                 var itemDAL = model.Transform();
                 _unitOfWork.OrganisationsRepository.Create(itemDAL);
-                await _unitOfWork.SaveChangesAsync();
 
+                await _unitOfWork.SaveChangesAsync();
                 await _userManager.AddToRoleAsync(userIdentity, "user");
 
                 return result;
