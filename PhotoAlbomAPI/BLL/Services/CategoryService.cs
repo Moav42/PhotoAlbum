@@ -8,15 +8,16 @@ using DAL.Interfaces;
 using BLL.ExtensionsForTransfer;
 using BLL.Interfaces;
 using System.Threading.Tasks;
+using DAL.EF;
 
 namespace BLL.Services
 {
     public class CategoryService : ICategoryService<CategoryBLL>
     {
-        private readonly UnitOfWork _unitOfWork;
-        public CategoryService()
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<CategoryBLL>> GetAllAsync()

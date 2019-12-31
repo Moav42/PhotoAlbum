@@ -13,10 +13,10 @@ namespace BLL.Services
 {
     public class CommentService : ICommentService<CommentBLL>
     {
-        private readonly UnitOfWork _unitOfWork;
-        public CommentService()
+        private readonly IUnitOfWork _unitOfWork;
+        public CommentService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<CommentBLL>> GetByPostAsync(int postId)

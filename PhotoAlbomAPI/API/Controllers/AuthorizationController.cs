@@ -33,7 +33,6 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-
             var jwt = await _authorizationService.GetJWT(credentials.Email, credentials.Password);
 
             if(jwt == null)
@@ -42,8 +41,6 @@ namespace API.Controllers
             }
 
             return new OkObjectResult(jwt);
-        }
-
-     
+        }     
     }
 }

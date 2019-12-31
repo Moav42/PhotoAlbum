@@ -14,11 +14,11 @@ namespace BLL.Services
 {
     public class TagService : ITagService<TagBLL>
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TagService()
+        public TagService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         public async Task AddAsync(TagBLL item)

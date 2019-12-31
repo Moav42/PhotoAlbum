@@ -3,6 +3,7 @@ using BLL.Interfaces;
 using BLL.Models;
 using DAL;
 using DAL.Entities;
+using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,12 @@ namespace BLL.Services
 {
     public class OrganisationService : IOrganisationService<OrganisationBLL>
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
 
-        public OrganisationService(UserManager<User> userManager)
+        public OrganisationService(UserManager<User> userManager, IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
         }
 

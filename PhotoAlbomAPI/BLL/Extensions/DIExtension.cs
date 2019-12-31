@@ -21,6 +21,7 @@ namespace BLL.Extensions
     {
         public static IServiceCollection AddBllServices(this IServiceCollection services)
         {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ITagService<TagBLL>, TagService>();
             services.AddScoped<ICategoryService<CategoryBLL>, CategoryService>();
             services.AddScoped<IPostService<PostBLL>, PostService>();
@@ -29,17 +30,18 @@ namespace BLL.Extensions
             services.AddScoped<IPostRateService<PostRateBLL>, PostRateService>();
             services.AddScoped<IAccountService<UserBLL>, AccountService>();
             services.AddScoped<IAuthorizationService<UserBLL>, AuthorizationService>();
-            services.AddScoped<IAccountManagerService<UserBLL>, AccountManagerService>();
+            services.AddScoped<IAccountManagerService<UserBLL>, AccountManagerService>();        
             services.AddSingleton<IJwtFactory, JwtFactory>();
 
             return services;
         }
+
         public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration Configuration)
         {
-            string connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<DAL.EF.DbContext>(options => options.UseSqlServer(connectionString));
+            services.AddDbContext<DAL.EF.DbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             return services;
         }
+
         public static IServiceCollection AddJWTAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization(options =>

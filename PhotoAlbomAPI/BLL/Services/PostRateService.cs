@@ -14,11 +14,11 @@ namespace BLL.Services
 {
     public class PostRateService : IPostRateService<PostRateBLL>
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PostRateService()
+        public PostRateService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
 
         public async Task AddAsync(PostRateBLL item)

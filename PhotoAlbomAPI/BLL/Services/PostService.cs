@@ -14,11 +14,11 @@ namespace BLL.Services
 {
     public class PostService : IPostService<PostBLL>
     {
-        private readonly UnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PostService()
+        public PostService(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork();
+            _unitOfWork = unitOfWork;
         }
         public async Task AddAsync(PostBLL item)
         {

@@ -33,14 +33,9 @@ namespace DAL.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = @"Data Source = LAPTOP-BPN6QIHG\SQLEXPRESS666; database = PhotoAlbom; integrated security = True; MultipleActiveResultSets = True; App = EntityFramework;";
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer(
-                    connectionString, options => options.EnableRetryOnFailure()
-                    );
-            }
+
         }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<PostCategories>().HasKey(c => new { c.CategoryId, c.PostId });

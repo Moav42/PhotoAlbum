@@ -78,7 +78,6 @@ namespace API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-
             });
 
             if (env.IsDevelopment())
@@ -95,8 +94,6 @@ namespace API
             });
 
             app.UseCors("AllowAll");
-            //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
-            //app.UseCors("MyPolicy");
 
             app.UseHttpsRedirection();
             app.UseRouting();
