@@ -17,7 +17,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
   
-    //[Authorize(Policy = "Admin&Organisation")]
+    [Authorize(Policy = "Admin&Organisation")]
     [ApiController]
     public class TagsController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace API.Controllers
         }
 
         
-        //[Authorize(Policy = "Admin&Organisation")]
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
         {
@@ -58,7 +58,6 @@ namespace API.Controllers
             }           
         }
 
-        //[Authorize(Policy = "Organisation")]
         [HttpPost]
         public async Task<ActionResult<TagModel>> PostTag(TagModel model)
         {

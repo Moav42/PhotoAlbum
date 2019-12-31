@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
 using DAL.Entities;
+using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,24 +21,24 @@ namespace DAL.EF
         public DbSet<PostTags> PostTags { get; set; }
         public DbSet<Tag> Tags { get; set; }
 
-        public DbContext()
+        public DbContext() 
         {
 
         }
+
         public DbContext(DbContextOptions<DbContext> options) : base(options)
         {
-
+            
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             string connectionString = @"Data Source = LAPTOP-BPN6QIHG\SQLEXPRESS666; database = PhotoAlbom; integrated security = True; MultipleActiveResultSets = True; App = EntityFramework;";
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    connectionString,
-                    options => options.EnableRetryOnFailure());
+                    connectionString, options => options.EnableRetryOnFailure()
+                    );
             }
         }
         protected override void OnModelCreating(ModelBuilder builder)

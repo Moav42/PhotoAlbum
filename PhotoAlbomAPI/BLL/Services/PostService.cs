@@ -48,7 +48,14 @@ namespace BLL.Services
         public async Task<string> GetPathByIdAsync(int id)
         {
             var item = await Task.Run(() => _unitOfWork.PostsRepository.Read(id));
-            return item.LocationPath;
+            if(item != null)
+            {
+                return item.LocationPath;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task UpdateAsync(PostBLL item)

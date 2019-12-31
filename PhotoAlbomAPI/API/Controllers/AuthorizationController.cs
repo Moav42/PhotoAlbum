@@ -34,7 +34,7 @@ namespace API.Controllers
             }
 
 
-            var jwt = await _authorizationService.GetJWT(credentials.UserName, credentials.Password);
+            var jwt = await _authorizationService.GetJWT(credentials.Email, credentials.Password);
 
             if(jwt == null)
             {

@@ -24,6 +24,9 @@ using Microsoft.OpenApi.Models;
 using BLL.Extensions;
 using Microsoft.AspNetCore.StaticFiles;
 using BLL.JWT;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace API
 {
@@ -65,12 +68,7 @@ namespace API
                        
                     });
             });
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
-               
-            });
+            services.AddSwagger();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -90,6 +88,11 @@ namespace API
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"images")),
+                RequestPath = new PathString("/images")
+            });
 
             app.UseCors("AllowAll");
             //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));

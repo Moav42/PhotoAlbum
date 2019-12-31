@@ -10,6 +10,9 @@ using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Net.Http.Headers;
 
 namespace API.Controllers
 {
@@ -23,6 +26,7 @@ namespace API.Controllers
         {
             _postService = postService;
             _postRateService = postRateService;
+
         }
 
         [HttpGet]
@@ -57,8 +61,16 @@ namespace API.Controllers
         public async Task<ActionResult> GetPostImageById(int postId)
         {
             string path = await _postService.GetPathByIdAsync(postId);
-            Byte[] b = await System.IO.File.ReadAllBytesAsync(path);
-            return File(b, "image/jpeg");
+            if(path != null)
+            {
+                Byte[] b = await System.IO.File.ReadAllBytesAsync(path);
+                return File(b, "image/jpeg");
+            }
+            else
+            {
+                return NotFound("Post not found ");
+            }
+           
         }
 
         [HttpPost]
@@ -68,9 +80,44 @@ namespace API.Controllers
             {
                 return BadRequest("Not a valid model");
             }
+           
             await _postService.AddAsync(model.Transform());
 
             return new OkObjectResult(model);
+        }
+
+
+        [HttpPost("uplaodImage")]
+        public IActionResult UplaodImage()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var folderName = Path.Combine("images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+                if (file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
 
         [HttpPut("{id}")]
