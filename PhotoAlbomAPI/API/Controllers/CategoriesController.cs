@@ -130,8 +130,24 @@ namespace API.Controllers
         }
 
         [HttpGet("{categoryId}/posts")]
-      //  [Authorize(Policy = "AllUsers")]
+        [AllowAnonymous]
+        //  [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts(int categoryId)
+        {
+            var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
+            var models = new List<PostModel>();
+
+            foreach (var item in modelBLL)
+            {
+                models.Add(item.Transform());
+            }
+
+            return models;
+        }
+
+        [HttpGet("posts/{categoryId}")]
+        //  [Authorize(Policy = "AllUsers")]
+        public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts2(int categoryId)
         {
             var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
             var models = new List<PostModel>();

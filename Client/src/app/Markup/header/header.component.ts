@@ -21,4 +21,20 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/categories']).then(success => console.log('navigation success?' , success))
     .catch(console.error); 
   }
+  openPostsEditor(event){
+    this.router.navigate(['/postsForm']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
+  openHomePage(event){
+    this.router.navigate(['']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
+  openRegistrationForm(event){
+    this.router.navigate(['/registration']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
+  openLoginForm(event){
+    this.router.navigate(['/login']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
 }

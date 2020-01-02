@@ -1,5 +1,4 @@
 <div >
-    <h2 class="primary-text" >alo</h2>
 <input type="button" value="Add new tag"  class="btn btn-success" (click)="add()" />
 <table *ngIf="tableMode; else create" class="table table-striped">
     <thead class="secendory-text">
@@ -21,7 +20,6 @@
     </tbody>
 </table>
  
-<!--шаблон для редактирования-->
 <ng-template #edit>
     <td>
         <input type="text" [(ngModel)]="tag.title" class="form-control" />
@@ -33,15 +31,14 @@
     </td>
 </ng-template>
  
-<!--шаблон для добавления-->
 <ng-template #create>
     <div class="form-group">
         <label>Tag Title</label>
         <input type="text" [(ngModel)]="tag.title" class="form-control" />
     </div>
     <div>
-        <input type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
-        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+        <input type="button" value="Save" (click)="save()" class="btn btn-success" />
+        <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />
     </div>
     
 </ng-template>

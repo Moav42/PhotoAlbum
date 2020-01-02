@@ -1,15 +1,47 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+import { Post } from 'src/app/Shared/Models/Post';
+import { PostService } from 'src/app/Shared/Services/post.service';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { CategoryService } from 'src/app/Shared/Services/category.service';
 
 @Component({
   selector: 'app-carousel',
   templateUrl: './carousel.component.html',
   styleUrls: ['./carousel.component.css']
 })
-export class CarouselComponent implements OnInit {
+export class CarouselComponent implements OnInit, OnDestroy  {
   @ViewChild('ngcarousel', { static: true }) ngCarousel: NgbCarousel;
-  ngOnInit() { }
+  
+  posts: Post[];
+  tableMode: boolean = true;
+
+  id: number;
+  private sub: any;
+
+  constructor(private _categoriesService: CategoryService , private http: HttpClient, private route: ActivatedRoute ) { }
+  
+  ngOnInit() {
+    
+
+    this.sub = this.route.params.subscribe(params => {
+      this.id = +params['id'];
+   });
+   this.loaudPosts();
+    
+  }
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  loaudPosts(){
+    this._categoriesService.getPostByCategory(this.id).subscribe((date: Post[]) => this.posts = date);
+  }
+  public louadImage = (postId: number) =>{
+      return `https://localhost:44380/api/Posts/${postId}/image` 
+  }
 
   title = 'RDA';
 
@@ -21,29 +53,5 @@ export class CarouselComponent implements OnInit {
     console.log(NgbSlideEventSource.ARROW_RIGHT);
   }
 
-    // Move to specific slide
-    navigateToSlide(item) {
-      this.ngCarousel.select(item);
-      console.log(item)
-    }
   
-    // Move to previous slide
-    getToPrev() {
-      this.ngCarousel.prev();
-    }
-  
-    // Move to next slide
-    goToNext() {
-      this.ngCarousel.next();
-    }
-  
-    // Pause slide
-    stopCarousel() {
-      this.ngCarousel.pause();
-    }
-  
-    // Restart carousel
-    restartCarousel() {
-      this.ngCarousel.cycle();
-    }
 }

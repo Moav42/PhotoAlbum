@@ -12,6 +12,11 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CategoryComponent } from './category/category.component';
 import { PostComponent } from './post/post.component';
+import { PostFormComponent } from './post-form/post-form.component';
+import { RegistrationFormComponent } from './account/registration-form/registration-form.component';
+import { LoginFormComponent } from './account/login-form/login-form.component';
+import { PostDetailsComponent } from './post-details/post-details.component';
+import { PostFilterPipe } from './Shared/Pipes/post-filter-pipe';
 
 
 
@@ -23,7 +28,11 @@ import { PostComponent } from './post/post.component';
     HeaderComponent, 
     FooterComponent,
     TagComponent, 
-    CategoryComponent, PostComponent 
+    CategoryComponent, 
+    PostComponent, 
+    PostFormComponent, 
+    RegistrationFormComponent, 
+    LoginFormComponent, PostDetailsComponent, PostFilterPipe
   ],
   imports: [
     BrowserModule,
@@ -31,9 +40,7 @@ import { PostComponent } from './post/post.component';
     NgbModule,
     FormsModule,
     HttpClientModule
-    
-   
-    
+
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,4 @@
 <div  >
-    <h2 class="primary-text" >alo</h2>
 <input type="button" value="Add new category"  class="btn btn-success" (click)="add()" />
 <table *ngIf="tableMode; else create" class="table table-striped">
     <thead class="category">
@@ -11,7 +10,9 @@
     <tbody class="category">
         <tr *ngFor="let t of categories">
             <ng-template [ngIf]="category?.id != t.id" [ngIfElse]="edit">
-                <td>{{t?.title}}</td>
+                
+                <a ><td>{{t?.title}}</td></a>
+                <button [routerLink]="['/categories/posts', t.id]">  Go to posts  </button>
                 <td>{{t?.description}}</td>
 >
                 <td>
@@ -23,7 +24,7 @@
     </tbody>
 </table>
  
-<!--шаблон для редактирования-->
+
 <ng-template #edit>
     <td>
         <input type="text" [(ngModel)]="category.title" class="form-control" />
@@ -36,7 +37,7 @@
     </td>
 </ng-template>
  
-<!--шаблон для добавления-->
+
 <ng-template #create>
     <div class="form-group">
         <label>Title </label>

@@ -1,13 +1,24 @@
+
 <div class="primary-text">
-    <ul *ngFor="let item of posts">
-        <li >
-            {{item.title}}
-            
-            
-        </li>
-        <li>
-            <img  [src]="louadImage(item.id)" style="width: 50%; height: 50%;" >
-        </li>
-    </ul>
+    <div class="filter" >
+        <Label >Search posts by title</Label>
+        <input
+            type ="text"
+            placeholder="Enter title for search"
+            [(ngModel)]="searchString"
+        >
     
+    </div>
+    <ul *ngFor="let item of posts | postsFilter: searchString; " style="padding-top: 30px;">
+        <li >  {{item.title}} </li>
+        <li>   <img  [src]="louadImage(item.id)" style="width: 60%; height: 60%;" > </li>        
+        <div class="text-center ,btn-group " style="align-items:flex-end">
+              
+              <div class="btn-group"  (click)="Like()"><Button>Like</Button></div>
+              <div class="btn-group" [routerLink]="['/posts', item.id]"><Button>Show details</Button></div>
+             
+          </div>
+    </ul>
+ 
 </div>
+

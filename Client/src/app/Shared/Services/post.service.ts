@@ -12,8 +12,8 @@ export class PostService {
   getPosts(){
     return this.http.get(this.url)
   }
-  getImage(path: string){
-    return this.http.get("https://localhost:44380/api/images/" + path)
+  getPost(id:number){
+    return this.http.get(this.url+ '/' + id)
   }
 
   createPost(item: Post){

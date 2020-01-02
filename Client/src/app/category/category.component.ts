@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../Shared/Models/Category';
 import { CategoryService } from '../Shared/Services/category.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-category',
@@ -11,15 +12,21 @@ export class CategoryComponent implements OnInit {
 
   category: Category = new Category();
   categories: Category[];
+  id: String;
   tableMode: boolean = true;
   
-  constructor(private service: CategoryService) {  }
+  constructor(private service: CategoryService, private router: Router, public route: ActivatedRoute) { 
+
+
+     this.id = this.route.snapshot.paramMap.get('id');
+   }
 
   ngOnInit() {
-    this.loaudTags();
+    this.loaudCategories();
   }
 
-  loaudTags(){
+
+  loaudCategories(){
     this.service.getCategories().subscribe((date: Category[]) => this.categories = date);
   }
  
@@ -28,7 +35,7 @@ export class CategoryComponent implements OnInit {
       this.service.createCategory(this.category).subscribe((date: Category) => this.categories.push(date));
     }
     else{
-      this.service.updateCategory(this.category).subscribe(date => this.loaudTags())
+      this.service.updateCategory(this.category).subscribe(date => this.loaudCategories())
     }
     this.cancel();
   }
@@ -43,7 +50,7 @@ export class CategoryComponent implements OnInit {
   }
 
   delete(item: Category){
-    this.service.deleteCategory(item.id).subscribe(date => this.loaudTags());
+    this.service.deleteCategory(item.id).subscribe(date => this.loaudCategories());
   }
   
   add(){

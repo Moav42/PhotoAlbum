@@ -3,6 +3,7 @@ import { PostService } from '../Shared/Services/post.service';
 import { Post } from '../Shared/Models/Post';
 
 import {HttpClient, HttpParams} from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -14,10 +15,12 @@ export class PostComponent implements OnInit {
 
   posts: Post[];
   tableMode: boolean = true;
+  id: String;
+  public searchString: string = ''
 
-
-
-  constructor(private _postService: PostService , private http: HttpClient ) { }
+  constructor(private _postService: PostService , private http: HttpClient, private router: Router , public route: ActivatedRoute) {
+    this.id = this.route.snapshot.paramMap.get('id');
+   }
 
   ngOnInit() {
     this.loaudPosts();
@@ -28,13 +31,13 @@ export class PostComponent implements OnInit {
     this._postService.getPosts().subscribe((date: Post[]) => this.posts = date);
   }
   public louadImage = (postId: number) =>{
-      return `https://localhost:44380/api/Posts/image/${postId}`  
+      return `https://localhost:44380/api/Posts/${postId}/image` 
   }
-  
+  openPost(event){
+    this.router.navigate(['/posts']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
 
-public createImgPath = (path: string) => {
-  //var url  = 
-  //return this.http.get(url);
-}
+
 
 }
