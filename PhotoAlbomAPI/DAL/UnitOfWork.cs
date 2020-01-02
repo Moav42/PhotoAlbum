@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
@@ -114,7 +112,6 @@ namespace DAL
                 return _tagsRepository;
             }
         }
-
 
         private bool disposed = false;
 

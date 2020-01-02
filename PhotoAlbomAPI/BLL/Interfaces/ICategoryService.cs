@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BLL.Interfaces
@@ -12,6 +10,7 @@ namespace BLL.Interfaces
         Task AddAsync(T item);
         Task UpdateAsync(T item);
         Task DeleteAsync(int id);
+        Task AddCategoryToPostAsync(int postId, int categoryId);
 
     }
 }

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DAL.Repositories
 {
     public class PostCategoriesRepository : IPostCategoriesRepository<PostCategories>
     {
         private readonly DbContext DB;
+
         public PostCategoriesRepository(DbContext context)
         {
             DB = context;

@@ -13,7 +13,6 @@ namespace BLL.JWT
             {
                 public const string Rol = "rol", Id = "id";
             }
-
         }
     }
 }

@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using BLL.Models;
-using DAL;
 using DAL.Entities;
 using DAL.Interfaces;
-using BLL.ExtensionsForTransfer;
 using BLL.Interfaces;
-using DAL.Repositories;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace BLL.Services
 {
     public class PostService : IPostService<PostBLL>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public PostService(IUnitOfWork unitOfWork)
+        public PostService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
+
         public async Task AddAsync(PostBLL item)
         {
-            var itemDAL = item.Transform();
+            var itemDAL = _mapper.Map<Post>(item);
             _unitOfWork.PostsRepository.Create(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
@@ -34,7 +33,7 @@ namespace BLL.Services
 
             foreach (var item in itemsDAL)
             {
-                iemsBLL.Add(item.Transform());
+                iemsBLL.Add(_mapper.Map<PostBLL>(item));
             }
 
             return iemsBLL;
@@ -43,8 +42,9 @@ namespace BLL.Services
         public async Task<PostBLL> GetAsync(int id)
         {
             var item = await Task.Run(() => _unitOfWork.PostsRepository.Read(id));
-            return item.Transform();
+            return _mapper.Map<PostBLL>(item);
         }
+
         public async Task<string> GetPathByIdAsync(int id)
         {
             var item = await Task.Run(() => _unitOfWork.PostsRepository.Read(id));
@@ -60,7 +60,7 @@ namespace BLL.Services
 
         public async Task UpdateAsync(PostBLL item)
         {
-            _unitOfWork.PostsRepository.Update(item.Transform());
+            _unitOfWork.PostsRepository.Update(_mapper.Map<Post>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -76,18 +76,7 @@ namespace BLL.Services
             var itemBLL = new List<CommentBLL>();
             foreach (var item in itemDAL)
             {
-                itemBLL.Add(item.Transform());
-            }
-            return itemBLL;
-        }
-
-        public async Task<IEnumerable<CategoryBLL>> GetCategoriesAsync(int postId)
-        {
-            var itemDAL = await Task.Run(() => _unitOfWork.CategorysRepository.ReadAllByPost(postId));
-            var itemBLL = new List<CategoryBLL>();
-            foreach (var item in itemDAL)
-            {
-                itemBLL.Add(item.Transform());
+                itemBLL.Add(_mapper.Map<CommentBLL>(item));
             }
             return itemBLL;
         }
@@ -98,21 +87,21 @@ namespace BLL.Services
             var itemBLL = new List<TagBLL>();
             foreach (var item in itemDAL)
             {
-                itemBLL.Add(item.Transform());
+                itemBLL.Add(_mapper.Map<TagBLL>(item));
             }
             return itemBLL;
         }
-
-        public async Task<IEnumerable<PostRateBLL>> GetRatesAsync(int postId)
+        public async Task<IEnumerable<PostBLL>> GetAllByCategoryAsync(int categoryId)
         {
-            var itemDAL = await Task.Run(() => _unitOfWork.PostRateRepository.ReadAllByPost(postId));
-            var itemBLL = new List<PostRateBLL>();
-            foreach (var item in itemDAL)
-            {
-                itemBLL.Add(item.Transform());
-            }
-            return itemBLL;
-        }
+            var itemsDAL = await Task.Run(() => _unitOfWork.PostsRepository.ReadAllPostsByCategory(categoryId));
+            var iemsBLL = new List<PostBLL>();
 
+            foreach (var item in itemsDAL)
+            {
+                iemsBLL.Add(_mapper.Map<PostBLL>(item));
+            }
+
+            return iemsBLL;
+        }
     }
 }

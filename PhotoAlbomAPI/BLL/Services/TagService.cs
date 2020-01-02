@@ -1,29 +1,27 @@
 ﻿using BLL.Models;
-using DAL;
 using DAL.Entities;
 using DAL.Interfaces;
-using BLL.ExtensionsForTransfer;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using BLL.Interfaces;
-
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace BLL.Services
 {
     public class TagService : ITagService<TagBLL>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public TagService(IUnitOfWork unitOfWork)
+        public TagService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task AddAsync(TagBLL item)
         {
-            var itemDAL = item.Transform();
+            var itemDAL = _mapper.Map<TagBLL, Tag>(item);
             _unitOfWork.TagsRepository.Create(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
@@ -35,7 +33,7 @@ namespace BLL.Services
 
             foreach (var item in itemsDAL)
             {
-                iemsBLL.Add(item.Transform());
+                iemsBLL.Add(_mapper.Map<TagBLL>(item));
             }
 
             return iemsBLL;
@@ -44,18 +42,12 @@ namespace BLL.Services
         public async Task<TagBLL> GetAsync(int id)
         {
             var item = await Task.Run(() => _unitOfWork.TagsRepository.Read(id));
-            if (item != null)
-            {
-                return item.Transform();
-            }
-            else return null;
-           
+            return _mapper.Map<TagBLL>(item);
         }
 
         public async Task UpdateAsync(TagBLL item)
         {
-
-            _unitOfWork.TagsRepository.Update(item.Id, item.Transform());
+            _unitOfWork.TagsRepository.Update( _mapper.Map<Tag>(item));
             await _unitOfWork.SaveChangesAsync();
         }
         
@@ -65,5 +57,10 @@ namespace BLL.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task AddTagToPostAsync(int postId, int tagId)
+        {
+            _unitOfWork.PostTagsRepository.Create(new PostTags { PostId = postId, TagId = tagId });
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

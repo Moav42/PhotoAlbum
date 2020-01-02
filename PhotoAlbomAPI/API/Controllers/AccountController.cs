@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using API.Models.ViewModels;
 using BLL.Interfaces;
 using BLL.Models;
-using BLL.Services;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Policy = "AllUsers")]
     [ApiController]
     public class AccountController : ControllerBase
     {
@@ -25,6 +22,7 @@ namespace API.Controllers
             _accountService = accountService;
         }
 
+        [AllowAnonymous]
         [HttpPost("reg/user")]
         public async Task<IActionResult> RegisterUser([FromBody]UserRegisterViewModel model)
         {
@@ -49,6 +47,7 @@ namespace API.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("reg/org")]
         public async Task<IActionResult> RegisterOrganisation([FromBody]OrganisationRegisterViewModel model)
         {
@@ -73,10 +72,9 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost("ChangePassword")]
+        [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
         {
-
             if (ModelState.IsValid)
             {
                 IdentityResult result = await _accountService.ChangePassword(model.Name, model.OldPassword, model.NewPassword);

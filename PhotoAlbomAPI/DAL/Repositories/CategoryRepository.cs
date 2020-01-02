@@ -1,9 +1,7 @@
 ﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
 namespace DAL.Repositories
@@ -11,7 +9,8 @@ namespace DAL.Repositories
     public class CategoryRepository : ICategoryRepository<Category>
     {
         private readonly DbContext DB;
-        private readonly PostCategoriesRepository _postCategories;
+        private readonly IPostCategoriesRepository<PostCategories> _postCategories;
+
         public CategoryRepository(DbContext context)
         {
             DB = context;
@@ -62,14 +61,12 @@ namespace DAL.Repositories
         {
             var postCat = new PostCategories { PostId = postId, CategoryId = categoryId };
             _postCategories.Create(postCat);
-
         }
 
         public void DeleteTagFromPost(int categoryId, int postId)
         {
             var postCat = new PostCategories { PostId = postId, CategoryId = categoryId };
             _postCategories.Delete(postCat);
-
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DAL.Repositories
@@ -11,6 +9,7 @@ namespace DAL.Repositories
     public class PostRateRepository : IPostRateRepository<PostRate>
     {
         private readonly DbContext DB;
+
         public PostRateRepository(DbContext context)
         {
             DB = context;

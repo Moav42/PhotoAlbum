@@ -1,35 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BLL.Services;
 using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Cors;
+using API.Models.ViewModels;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-  
-    [Authorize(Policy = "Admin&Organisation")]
+    [Route("api/[controller]")] 
+   
     [ApiController]
     public class TagsController : ControllerBase
     {
         private readonly ITagService<TagBLL> _tagService;
+
         public TagsController(ITagService<TagBLL> tagService)
         {
             _tagService = tagService;
 
         }
 
-        
-
+        [Authorize(Policy = "AllUsers")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
         {
@@ -43,6 +38,7 @@ namespace API.Controllers
             return tagModels;
         }
 
+        [Authorize(Policy = "AllUsers")]
         [HttpGet("{id}")]
         public async Task<ActionResult<TagModel>> GetTag(int id)
         {
@@ -58,6 +54,7 @@ namespace API.Controllers
             }           
         }
 
+        [Authorize(Policy = "Organisation")]
         [HttpPost]
         public async Task<ActionResult<TagModel>> PostTag(TagModel model)
         {
@@ -71,10 +68,10 @@ namespace API.Controllers
             return new OkObjectResult(model);
         }
 
+        [Authorize(Policy = "Organisation")]
         [HttpPut("{id}")]
         public async Task<ActionResult<TagModel>> PutTag(int id, TagModel model)
         {
-
             if (ModelState.IsValid)
             {
                 if (id != model.Id)
@@ -101,6 +98,7 @@ namespace API.Controllers
             return BadRequest("Not a valid model");
         }
 
+        [Authorize(Policy = "Organisation")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<TagModel>> DeleteTag(int id)
         {
@@ -113,6 +111,18 @@ namespace API.Controllers
             await _tagService.DeleteAsync(model.Id);
 
             return model.Transform();
+        }
+
+        [Authorize(Policy = "AllUsers")]
+        [HttpPost("post")]
+        public async Task<ActionResult<PostTagViewModel>> AddPostToCategory(PostTagViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Not a valid model");
+            }
+            await _tagService.AddTagToPostAsync(model.PostId, model.TagId);
+            return new OkObjectResult(model);
         }
     }
 }

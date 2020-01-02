@@ -1,18 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DAL.Repositories
 {
     public class PostRepository : IPostRepository<Post>
     {
         private readonly DbContext DB;
+        private readonly PostCategoriesRepository _postCategories;
+
         public PostRepository(DbContext context)
         {
             DB = context;
+            _postCategories = new PostCategoriesRepository(context);
         }
 
         public void Create(Post item)
@@ -42,6 +44,17 @@ namespace DAL.Repositories
         public void Update(Post item)
         {
             DB.Posts.Update(item);
+        }
+
+        public IEnumerable<Post> ReadAllPostsByCategory(int categoryId)
+        {
+            var postCategories = _postCategories.ReadAll().Where(ct => ct.CategoryId == categoryId);
+            var posts = new List<Post>();
+            foreach (var item in postCategories)
+            {
+                posts.Add(Read(item.PostId));
+            }
+            return posts;
         }
     }
 }

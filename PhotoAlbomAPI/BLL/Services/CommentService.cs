@@ -1,22 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using BLL.Models;
-using DAL;
 using DAL.Entities;
 using DAL.Interfaces;
 using BLL.Interfaces;
-using BLL.ExtensionsForTransfer;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace BLL.Services
 {
     public class CommentService : ICommentService<CommentBLL>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CommentService(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+
+        public CommentService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<CommentBLL>> GetByPostAsync(int postId)
@@ -26,7 +26,7 @@ namespace BLL.Services
 
             foreach (var item in itemsDAL)
             {
-                iemsBLL.Add(item.Transform());
+                iemsBLL.Add(_mapper.Map<CommentBLL>(item));
             }
 
             return iemsBLL;
@@ -39,7 +39,7 @@ namespace BLL.Services
 
             foreach (var item in itemsDAL)
             {
-                iemsBLL.Add(item.Transform());
+                iemsBLL.Add(_mapper.Map<CommentBLL>(item));
             }
 
             return iemsBLL;
@@ -47,20 +47,20 @@ namespace BLL.Services
 
         public async Task<CommentBLL> GetAsync(int id)
         {
-            var ietm = await Task.Run(() => _unitOfWork.CommentsRepository.Read(id));
-            return ietm.Transform();
+            var item = await Task.Run(() => _unitOfWork.CommentsRepository.Read(id));
+            return _mapper.Map<CommentBLL>(item);
         }
 
         public async Task AddAsync(CommentBLL item)
         {
-            var itemDAL = item.Transform();
+            var itemDAL = _mapper.Map<Comment>(item);
             _unitOfWork.CommentsRepository.Create(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(CommentBLL item)
         {
-            _unitOfWork.CommentsRepository.Update(item.Transform());
+            _unitOfWork.CommentsRepository.Update(_mapper.Map<Comment>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 

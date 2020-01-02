@@ -1,13 +1,10 @@
-﻿using BLL.ExtensionsForTransfer;
+﻿using AutoMapper;
 using BLL.Interfaces;
 using BLL.Models;
-using DAL;
 using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -16,11 +13,13 @@ namespace BLL.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
+        private readonly IMapper _mapper;
 
-        public OrganisationService(UserManager<User> userManager, IUnitOfWork unitOfWork)
+        public OrganisationService(UserManager<User> userManager, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         public async Task<IdentityResult> RegisterOrganisation(OrganisationBLL model)
@@ -32,7 +31,7 @@ namespace BLL.Services
             if (result.Succeeded)
             {
                 model.UserId = userIdentity.Id;
-                var itemDAL = model.Transform();
+                var itemDAL = _mapper.Map<Organisation>(model);
                 _unitOfWork.OrganisationsRepository.Create(itemDAL);
 
                 await _unitOfWork.SaveChangesAsync();
@@ -50,7 +49,7 @@ namespace BLL.Services
 
             foreach (var item in itemsDAL)
             {
-                iemsBLL.Add(item.Transform());
+                iemsBLL.Add(_mapper.Map<OrganisationBLL>(item));
             }
 
             return iemsBLL;
@@ -59,12 +58,12 @@ namespace BLL.Services
         public async Task<OrganisationBLL> GetAsync(int id)
         {
             var item = await Task.Run(() => _unitOfWork.OrganisationsRepository.Read(id));
-            return item.Transform();
+            return _mapper.Map<OrganisationBLL>(item);
         }
 
         public async Task UpdateAsync(OrganisationBLL item)
         {
-            _unitOfWork.OrganisationsRepository.Update(item.Id, item.Transform());
+            _unitOfWork.OrganisationsRepository.Update(item.Id, _mapper.Map<Organisation>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 

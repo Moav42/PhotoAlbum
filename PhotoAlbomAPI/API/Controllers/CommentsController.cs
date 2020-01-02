@@ -1,29 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BLL.Services;
 using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "AllUsers")]
     public class CommentsController : ControllerBase
     {
         private readonly ICommentService<CommentBLL> _commentService;
+
         public CommentsController(ICommentService<CommentBLL> commentService)
         {
             _commentService = commentService;
         }
 
         [HttpGet("post/postId")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetCommentByPost(int postId)
         {
             var modelBLL = await _commentService.GetByPostAsync(postId);
@@ -50,6 +50,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<CommentModel>> GetComment(int id)
         {
             var modelBLL = await _commentService.GetAsync(id);
@@ -78,12 +79,12 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Policy = "Moderator")]
         public async Task<ActionResult<CommentModel>> PutComment(CommentModel model)
         {
 
             if (ModelState.IsValid)
             {
-   
                 try
                 {
                     await _commentService.UpdateAsync(model.Transform());

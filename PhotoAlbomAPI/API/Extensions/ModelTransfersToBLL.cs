@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using BLL.Models;
+﻿using BLL.Models;
 using API.Models;
 
 namespace API.Extensions
@@ -18,6 +14,7 @@ namespace API.Extensions
             };
             return tag;
         }
+
         public static TagModel Transform(this TagBLL tagBLL)
         {
             var tag = new TagModel
@@ -27,6 +24,7 @@ namespace API.Extensions
             };
             return tag;
         }
+
         public static CategoryModel Transform(this CategoryBLL categoryBLL)
         {
             var category = new CategoryModel
@@ -48,6 +46,7 @@ namespace API.Extensions
             };
             return categoryBLL;
         }
+
         public static PostModel Transform(this PostBLL postBLL)
         {
             var post = new PostModel
@@ -101,6 +100,7 @@ namespace API.Extensions
             };
             return comment;
         }
+
         public static PostRateModel Transform(this PostRateBLL postRateBLL)
         {
             var postRate = new PostRateModel
@@ -111,6 +111,7 @@ namespace API.Extensions
             };
             return postRate;
         }
+
         public static PostRateBLL Transform(this PostRateModel postRate)
         {
             var postRateBLL = new PostRateBLL

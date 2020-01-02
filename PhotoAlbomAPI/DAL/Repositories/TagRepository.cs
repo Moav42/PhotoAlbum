@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories
 {
     public class TagRepository : ITagRepository<Tag>
     {
-        private readonly DAL.EF.DbContext DB;
+        private readonly DbContext DB;
 
         private readonly PostTagsRepository _postTags;
-        public TagRepository(DAL.EF.DbContext context)
+
+        public TagRepository(DbContext context)
         {
             DB = context;
             _postTags = new PostTagsRepository(context);
@@ -44,12 +42,10 @@ namespace DAL.Repositories
             return DB.Tags;
         }
        
-        public void Update(int id, Tag modeifayModel)
+        public void Update( Tag modeifayModel)
         {
-            var temp = Read(id);
-            temp.Title = modeifayModel.Title;
 
-            DB.Update(temp);
+            DB.Update(modeifayModel);
         }
 
         public IEnumerable<Tag> ReadAllByPost(int postId)
@@ -68,14 +64,12 @@ namespace DAL.Repositories
         {
             var postTag = new PostTags { PostId = postId, TagId = tagId };
             _postTags.Create(postTag);
-
         }
 
         public void DeleteTagFromPost(int tagId, int postId)
         {
             var postTag = new PostTags { PostId = postId, TagId = tagId };
             _postTags.Delete(postTag);
-
         }
     }
 }

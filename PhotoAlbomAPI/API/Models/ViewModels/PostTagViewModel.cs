@@ -2,11 +2,11 @@
 
 namespace API.Models.ViewModels
 {
-    public class CredentialsViewModel
+    public class PostTagViewModel
     {
         [Required]
-        public string Email { get; set; }
+        public int PostId { get; set; }
         [Required]
-        public string Password { get; set; }
+        public int TagId { get; set; }
     }
 }

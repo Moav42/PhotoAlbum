@@ -1,8 +1,4 @@
-﻿using BLL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace API.Models
 {
@@ -12,8 +8,7 @@ namespace API.Models
         public string Title { get; set; }
         public string LocationPath { get; set; }
         public string UserId { get; set; }
-        public DateTime AddingDate { get; set; }
-       
+        public DateTime AddingDate { get; set; }       
 
     }
 }

@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAL.Entities;
+﻿using DAL.Entities;
 using DAL.Interfaces;
 using DAL.EF;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DAL.Repositories
 {
     public class PostTagsRepository : IPostTagsRepository<PostTags>
     {
         private readonly DbContext DB;
+
         public PostTagsRepository(DbContext context)
         {
             DB = context;
@@ -22,15 +22,12 @@ namespace DAL.Repositories
 
         public void Delete(PostTags item)
         {
-
             DB.PostTags.Remove(item);
-
         }
 
         public IEnumerable<PostTags> ReadAll()
         {
             return DB.PostTags;
         }
-
     }
 }

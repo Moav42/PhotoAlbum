@@ -3,17 +3,12 @@ using BLL.JWT;
 using BLL.Models;
 using BLL.Services;
 using DAL;
-using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BLL.Extensions
 {
@@ -47,10 +42,9 @@ namespace BLL.Extensions
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "admin"));
-                options.AddPolicy("Organisation", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation"));
-                options.AddPolicy("Moderator", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "moderator"));
-                options.AddPolicy("User", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "user"));
-                options.AddPolicy("Admin&Organisation", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation", "admin"));
+                options.AddPolicy("Moderator", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "admin", "moderator"));
+                options.AddPolicy("Organisation", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation", "moderator", "admin"));
+                options.AddPolicy("AllUsers", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, "organisation", "moderator", "admin", "user"));
             });
 
             return services;
@@ -67,7 +61,6 @@ namespace BLL.Extensions
                 o.Password.RequiredLength = 6;
             });
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
-
             builder.AddEntityFrameworkStores<DAL.EF.DbContext>().AddDefaultTokenProviders().AddRoles<IdentityRole>();
 
             return services;
@@ -102,6 +95,5 @@ namespace BLL.Extensions
 
             return services;
         }
-
     }
 }

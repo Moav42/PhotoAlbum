@@ -1,38 +1,22 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using API.Models;
-using BLL.Interfaces;
-using BLL.Models;
-using BLL.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using API.Extensions;
-using Microsoft.OpenApi.Models;
 using BLL.Extensions;
-using Microsoft.AspNetCore.StaticFiles;
-using BLL.JWT;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using BLL.Maping;
 
 namespace API
 {
     public class Startup
     {
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; 
+        private const string SecretKey = "The Answer to Life the Universe and Everything is 42";
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
         public Startup(IConfiguration configuration)
@@ -40,7 +24,7 @@ namespace API
             Configuration = configuration;
         }
         
-        public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }        
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -58,17 +42,12 @@ namespace API
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
-                       
-                    });
+                options.AddPolicy("AllowAll", builder => { builder .AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();});
             });
+
             services.AddSwagger();
+
+            services.AddAutoMapper(c => c.AddProfile<MapingProfiles>(), typeof(Startup));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -86,7 +65,6 @@ namespace API
             }
 
             app.UseDefaultFiles();
-            app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"images")),

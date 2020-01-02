@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BLL.Services;
 using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using API.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -18,12 +16,16 @@ namespace API.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService<CategoryBLL> _categoryService;
-        public CategoriesController(ICategoryService<CategoryBLL> categoryService)
+        private readonly IPostService<PostBLL> _postService;
+
+        public CategoriesController(ICategoryService<CategoryBLL> categoryService, IPostService<PostBLL> postService)
         {
             _categoryService = categoryService;
+            _postService = postService;
         }
 
         [HttpGet]
+        //[Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
         {
             var modelBLL = await _categoryService.GetAllAsync();
@@ -37,6 +39,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        //[Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<CategoryModel>> GetCategory(int id)
         {
             var modelBLL = await _categoryService.GetAsync(id);
@@ -52,6 +55,7 @@ namespace API.Controllers
         }
 
         [HttpPost]
+        //[Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> PostCategory(CategoryModel model)
         {
             if (!ModelState.IsValid)
@@ -65,6 +69,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        //[Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> PutCategory(int id, CategoryModel model)
         {
 
@@ -96,6 +101,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
+       // [Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> DeleteCategory(int id)
         {
             var model = await _categoryService.GetAsync(id);
@@ -107,6 +113,35 @@ namespace API.Controllers
             await  _categoryService.DeleteAsync(model.Id);
 
             return model.Transform();
+        }
+
+        [HttpPost("post")]
+        //[Authorize(Policy = "AllUsers")]
+        public async Task<ActionResult<PostCategoryViewModel>> AddPostToCategory(PostCategoryViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Not a valid model");
+            }
+ 
+            await _categoryService.AddCategoryToPostAsync(model.PostId, model.CategoryId);
+
+            return new OkObjectResult(model);
+        }
+
+        [HttpGet("{categoryId}/posts")]
+      //  [Authorize(Policy = "AllUsers")]
+        public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts(int categoryId)
+        {
+            var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
+            var models = new List<PostModel>();
+
+            foreach (var item in modelBLL)
+            {
+                models.Add(item.Transform());
+            }
+
+            return models;
         }
     }
 }

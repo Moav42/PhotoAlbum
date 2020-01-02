@@ -1,32 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using BLL.Services;
 using API.Models;
 using BLL.Models;
 using API.Extensions;
 using BLL.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class PostsController : ControllerBase
     {
         private readonly IPostService<PostBLL> _postService;
         private readonly IPostRateService<PostRateBLL> _postRateService;
+
         public PostsController(IPostService<PostBLL> postService, IPostRateService<PostRateBLL> postRateService)
         {
             _postService = postService;
             _postRateService = postRateService;
-
         }
 
         [HttpGet]
@@ -57,7 +55,7 @@ namespace API.Controllers
             }
         }
 
-        [HttpGet("image/{postId}")]
+        [HttpGet("{postId}/image")]
         public async Task<ActionResult> GetPostImageById(int postId)
         {
             string path = await _postService.GetPathByIdAsync(postId);
@@ -69,11 +67,11 @@ namespace API.Controllers
             else
             {
                 return NotFound("Post not found ");
-            }
-           
+            }      
         }
 
         [HttpPost]
+        //[Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostModel>> PostPost(PostModel model)
         {
             if (!ModelState.IsValid)
@@ -86,8 +84,8 @@ namespace API.Controllers
             return new OkObjectResult(model);
         }
 
-
         [HttpPost("uplaodImage")]
+      //  [Authorize(Policy = "AllUsers")]
         public IActionResult UplaodImage()
         {
             try
@@ -121,6 +119,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
+        //[Authorize(Policy = "Moderator")]
         public async Task<ActionResult> PutPost(int id, PostModel model)
         {         
             if (ModelState.IsValid)
@@ -147,10 +146,10 @@ namespace API.Controllers
                 return new OkObjectResult(model);
             }
             return BadRequest("Not a valid model");
-
         }
 
         [HttpDelete("{id}")]
+       // [Authorize(Policy = "Moderator")]
         public async Task<ActionResult<PostModel>> DeletePost(int id)
         {
             var model = await _postService.GetAsync(id);
@@ -165,6 +164,7 @@ namespace API.Controllers
         }
 
         [HttpPost("rate")]
+       // [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostRateModel>> PostRate(PostRateModel model)
         {
             if (!ModelState.IsValid)
@@ -175,6 +175,32 @@ namespace API.Controllers
             await _postRateService.AddAsync(model.Transform());
 
             return new OkObjectResult(model);
+        }
+
+        [HttpGet("{postId}/comments")]
+        public async Task<ActionResult<IEnumerable<CommentModel>>> GetPostComments(int postId)
+        {
+            var modelBLL = await _postService.GetCommentsAsync(postId);
+            var models = new List<CommentModel>();
+
+            foreach (var item in modelBLL)
+            {
+                models.Add(item.Transform());
+            }
+            return models;
+        }
+
+        [HttpGet("{postId}/tags")]
+        public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(int postId)
+        {
+            var modelBLL = await _postService.GetTagsAsync(postId);
+            var models = new List<TagModel>();
+
+            foreach (var item in modelBLL)
+            {
+                models.Add(item.Transform());
+            }
+            return models;
         }
     }
 }

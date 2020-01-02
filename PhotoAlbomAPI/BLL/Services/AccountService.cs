@@ -2,9 +2,6 @@
 using BLL.Models;
 using DAL.Entities;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL.Services
@@ -12,6 +9,7 @@ namespace BLL.Services
     public class AccountService : IAccountService<UserBLL>
     {
         private readonly UserManager<User> _userManager;
+
         public AccountService(UserManager<User> userManager)
         {
             _userManager = userManager;
