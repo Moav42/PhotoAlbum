@@ -17,7 +17,6 @@ export class CategoryComponent implements OnInit {
   
   constructor(private service: CategoryService, private router: Router, public route: ActivatedRoute) { 
 
-
      this.id = this.route.snapshot.paramMap.get('id');
    }
 

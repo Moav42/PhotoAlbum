@@ -8,16 +8,19 @@ import { CarouselComponent } from './Markup/carousel/carousel.component';
 import { HeaderComponent } from './Markup/header/header.component';
 import { FooterComponent } from './Markup/footer/footer.component';
 import { TagComponent } from './tag/tag.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CategoryComponent } from './category/category.component';
 import { PostComponent } from './post/post.component';
 import { PostFormComponent } from './post-form/post-form.component';
-import { RegistrationFormComponent } from './account/registration-form/registration-form.component';
-import { LoginFormComponent } from './account/login-form/login-form.component';
 import { PostDetailsComponent } from './post-details/post-details.component';
 import { PostFilterPipe } from './Shared/Pipes/post-filter-pipe';
-
+import { UsersManagerComponent } from './users-manager/users-manager.component';
+import { OrganisationsManagerComponent } from './organisations-manager/organisations-manager.component';
+import { AccountCreationFormComponent } from './account-creation-form/account-creation-form.component';
+import { LoginComponent } from './login/login.component';
+import { JwtInterceptor, ErrorInterceptor } from './helpers';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 
 
@@ -31,18 +34,26 @@ import { PostFilterPipe } from './Shared/Pipes/post-filter-pipe';
     CategoryComponent, 
     PostComponent, 
     PostFormComponent, 
-    RegistrationFormComponent, 
-    LoginFormComponent, PostDetailsComponent, PostFilterPipe
+    PostDetailsComponent, 
+    PostFilterPipe,
+    UsersManagerComponent,
+    OrganisationsManagerComponent, 
+    AccountCreationFormComponent, LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     NgbModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule, BrowserModule,
+    ReactiveFormsModule,
+
 
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -9,7 +9,7 @@ namespace BLL.Interfaces
     {
         Task<IEnumerable<UserProfile>> GetAllUsers();
         Task<IdentityResult> CreacteAccount(string email, string password, string role);
-        Task<IdentityResult> EditUserAccount(string userName, string email);
+        Task<IdentityResult> EditUserAccount(string id, string newName, string newEmail);
         Task<IdentityResult> DeleteAccount(string name);
     }
 }

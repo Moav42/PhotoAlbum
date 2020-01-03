@@ -14,7 +14,7 @@
                 <a ><td>{{t?.title}}</td></a>
                 <button [routerLink]="['/categories/posts', t.id]">  Go to posts  </button>
                 <td>{{t?.description}}</td>
->
+
                 <td>
                     <button class="btn btn-sm btn-primary" (click)="editTag(t)">Edit</button>
                     <button class="btn btn-sm btn-danger" (click)="delete(t)">Delete</button>
@@ -39,7 +39,7 @@
  
 
 <ng-template #create>
-    <div class="form-group">
+    <div class="form-group" style="color:white  ">
         <label>Title </label>
         <input type="text" [(ngModel)]="category.title" class="form-control" />
         <label>Description</label>

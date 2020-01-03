@@ -2,30 +2,33 @@
  <nav class="navbar">
 
   <div class="text-center ,btn-group ">
+    
     <div class="btn-group"  (click)="openHomePage()"><Button>Home</Button></div>
 
+  
+      <div class="btn-group"  (click)="openCategoriesEditor()"><Button >Categories</Button></div>
+      <div class="btn-group" (click)="openTagsEditor()"><Button >Tags</Button></div>
+      
+      <div class="btn-group"  (click)="openPostsEditor()"><Button>Add post</Button></div>
+      <div class="btn-group" (click)="openLoginForm()"><Button>Sign in</Button></div>
+      <div class="btn-group" (click)="openRegistrationForm()"><Button>Sign up</Button></div>
+      <div class="btn-group" (click)="signOut()"><Button>Sign out</Button></div>
+
       <div ngbDropdown class="d-inline-block">
-        <button class="btn-group" id="dropdownBasic1" ngbDropdownToggle>Tags & Categories</button>
+        <button class="btn-group" id="dropdownBasic1" ngbDropdownToggle>Admin</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <div class="btn-group"  (click)="openCategoriesEditor()"><Button ngbDropdownItem>Categories</Button></div>
+          <div class="btn-group"  (click)="openRegForm()"><Button ngbDropdownItem>Create account</Button></div>
           <br>
-          <div class="btn-group" (click)="openTagsEditor()"><Button ngbDropdownItem>Tags</Button></div>
-          <button ngbDropdownItem>Something else is here</button>
+          <div class="btn-group" (click)="openUsersEditor()"><Button ngbDropdownItem>Manage users</Button></div>
+          <br>
+          <div class="btn-group" (click)="openOrganisationsEditor()"><Button ngbDropdownItem>Manage organisations</Button></div>
         </div>
       </div>
       
-    
-   
-      
-      <div class="btn-group"  (click)="openPostsEditor()"><Button>Add post</Button></div>
-      <div class="btn-group" (click)="openRegistrationForm()"><Button>Registration</Button></div>
-      <div class="btn-group" (click)="openLoginForm()"><Button>Login</Button></div>
-
-
      
   </div>
   </nav>
-  
+
 
   
    

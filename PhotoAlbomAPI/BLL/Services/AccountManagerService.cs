@@ -45,12 +45,13 @@ namespace BLL.Services
             return result;
         }
 
-        public async Task<IdentityResult> EditUserAccount( string oldName, string newName)
+        public async Task<IdentityResult> EditUserAccount( string id, string newName, string newEmail)
         {
-            User user = await _userManager.FindByNameAsync(oldName);
+            User user = await _userManager.FindByIdAsync(id);
             if (user != null)
             {
                 user.UserName = newName;
+                user.Email = newEmail;
 
                 var result = await _userManager.UpdateAsync(user);
 

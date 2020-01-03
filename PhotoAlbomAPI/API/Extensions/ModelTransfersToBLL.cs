@@ -122,6 +122,28 @@ namespace API.Extensions
             };
             return postRateBLL;
         }
-       
+
+        public static OrganisationModel Transform(this OrganisationBLL modelBLL)
+        {
+            var model = new OrganisationModel
+            {
+                Id = modelBLL.Id,
+                Name = modelBLL.Name,
+                Location = modelBLL.Location
+            };
+            return model;
+        }
+
+        public static OrganisationBLL Transform(this OrganisationModel model)
+        {
+            var modelBLL = new OrganisationBLL
+            {
+                Id = model.Id,
+                Name = model.Name,
+                Location = model.Location
+            };
+            return modelBLL;
+        }
+
     }
 }

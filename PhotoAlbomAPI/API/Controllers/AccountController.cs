@@ -43,7 +43,7 @@ namespace API.Controllers
             }
             else
             {              
-                return new OkObjectResult("User account created");
+                return new OkObjectResult(model);
             }
         }
 
@@ -68,7 +68,7 @@ namespace API.Controllers
             }
             else
             {                       
-                return new OkObjectResult("Organisation account created");
+                return new OkObjectResult(model);
             }
         }
 

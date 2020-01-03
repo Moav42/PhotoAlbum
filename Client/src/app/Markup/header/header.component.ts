@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/Shared/Services';
+import { User } from 'src/app/Shared/Models/UserAccount';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +9,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+  
+  currentUser: User;
 
-  constructor( private router: Router) { }
+  constructor( private router: Router, private authenticationService: AuthenticationService) {
+        this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+    }
 
+    signOut() {
+      this.authenticationService.logout();
+      this.router.navigate(['/login']);
+    }
   ngOnInit() {
   }
 
@@ -37,4 +47,17 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/login']).then(success => console.log('navigation success?' , success))
     .catch(console.error); 
   }
+  openRegForm(event){
+    this.router.navigate(['/admin/createAccount']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
+  openUsersEditor(event){
+    this.router.navigate(['/admin/users']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
+  openOrganisationsEditor(event){
+    this.router.navigate(['/admin/organisations']).then(success => console.log('navigation success?' , success))
+    .catch(console.error); 
+  }
+  
 }

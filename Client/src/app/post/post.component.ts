@@ -17,6 +17,7 @@ export class PostComponent implements OnInit {
   tableMode: boolean = true;
   id: String;
   public searchString: string = ''
+  
 
   constructor(private _postService: PostService , private http: HttpClient, private router: Router , public route: ActivatedRoute) {
     this.id = this.route.snapshot.paramMap.get('id');

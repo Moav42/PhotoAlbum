@@ -28,14 +28,14 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var jwt = await _authorizationService.GetJWT(credentials.Email, credentials.Password);
+            var jwt = await _authorizationService.GetJWT(credentials.Username, credentials.Password);
 
-            if(jwt == null)
+            if (jwt == null)
             {
                 return BadRequest("Wrong login or password");
             }
 
-            return new OkObjectResult(jwt);
+            return  Ok(jwt);
         }     
     }
 }

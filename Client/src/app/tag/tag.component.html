@@ -6,11 +6,10 @@
             <td>Tag Title</td>
         </tr>
     </thead>
-    <tbody  class="secendory-text">
+    <tbody  class="secendory-text" >
         <tr *ngFor="let t of tags">
             <ng-template [ngIf]="tag?.id != t.id" [ngIfElse]="edit">
                 <td>{{t?.title}}</td>
->
                 <td>
                     <button class="btn btn-sm btn-primary" (click)="editTag(t)">Edit</button>
                     <button class="btn btn-sm btn-danger" (click)="delete(t)">Delete</button>
@@ -33,7 +32,7 @@
  
 <ng-template #create>
     <div class="form-group">
-        <label>Tag Title</label>
+        <label style="color: white;">Tag Title</label>
         <input type="text" [(ngModel)]="tag.title" class="form-control" />
     </div>
     <div>

@@ -14,7 +14,7 @@ import { CategoryService } from 'src/app/Shared/Services/category.service';
 })
 export class CarouselComponent implements OnInit, OnDestroy  {
   @ViewChild('ngcarousel', { static: true }) ngCarousel: NgbCarousel;
-  
+  @ViewChild('mycarousel', {static : true}) carousel: NgbCarousel;
   posts: Post[];
   tableMode: boolean = true;
 
@@ -22,6 +22,14 @@ export class CarouselComponent implements OnInit, OnDestroy  {
   private sub: any;
 
   constructor(private _categoriesService: CategoryService , private http: HttpClient, private route: ActivatedRoute ) { }
+
+  onSlide(slideEvent: NgbSlideEvent) {
+    console.log(slideEvent.source);
+    console.log(NgbSlideEventSource.ARROW_LEFT);
+    console.log(slideEvent.paused);
+    console.log(NgbSlideEventSource.INDICATOR);
+    console.log(NgbSlideEventSource.ARROW_RIGHT);
+  }
   
   ngOnInit() {
     
@@ -51,6 +59,25 @@ export class CarouselComponent implements OnInit, OnDestroy  {
     console.log(NgbSlideEventSource.INDICATOR);
     console.log(NgbSlideEventSource.ARROW_LEFT);
     console.log(NgbSlideEventSource.ARROW_RIGHT);
+  }
+  startCarousel() {
+    this.carousel.cycle();
+  }
+ 
+  pauseCarousel() {
+    this.carousel.pause();
+  }
+ 
+  moveNext() {
+    this.carousel.next();
+  }
+ 
+  getPrev() {
+    this.carousel.prev();
+  }
+ 
+  goToSlide(slide) {
+    this.carousel.select(slide);
   }
 
   

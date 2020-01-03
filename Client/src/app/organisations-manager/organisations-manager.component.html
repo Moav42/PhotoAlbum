@@ -1,0 +1,39 @@
+<div>
+
+    <table *ngIf="tableMode; else create" class="table table-striped">
+        <thead class="secendory-text">
+            <tr>
+                <td>ID</td>
+                <td>Name</td>
+                <td>Location</td>
+            </tr>
+        </thead>
+        <tbody  class="secendory-text">
+            <tr *ngFor="let t of orgs">
+                <ng-template [ngIf]="org?.id != t.id" [ngIfElse]="edit">
+                    <td>{{t?.id}}</td>
+                    <td>{{t?.name}}</td>
+                    <td>{{t?.location}}</td>
+    
+                    <td>
+                        <button class="btn btn-sm btn-primary" (click)="editTag(t)">Edit</button>
+                        <button class="btn btn-sm btn-danger" (click)="delete(t.id)">Delete</button>
+                    </td>
+                </ng-template>
+            </tr>
+        </tbody>
+    </table>
+    <ng-template #edit>
+        <td>
+            <label for="">Org Name</label>
+            <input type="text" [(ngModel)]="org.name" class="form-control" />
+            <label for="">Location</label>
+            <input type="text" [(ngModel)]="orn.loaction" class="form-control" />
+        </td>
+      
+        <td>
+            <input type="button" value="Save" (click)="save()" class="btn btn-sm btn-success" />
+            <input type="button" value="Cancel" (click)="cancel()" class="btn btn-sm btn-warning" />
+        </td>
+    </ng-template>
+    </div>

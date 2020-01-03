@@ -27,4 +27,11 @@ export class PostService {
   deletePost(item: Post){
     return this.http.delete(this.url + '/' + item)
   }
+  getTags(id:number){
+    return this.http.get(this.url+ '/' + id + '/tags')
+  }
+  getComments(id:number){
+    return this.http.get(this.url+ '/' + id + '/comments')
+  }
+
 }

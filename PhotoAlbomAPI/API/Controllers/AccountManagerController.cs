@@ -7,12 +7,13 @@ using BLL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using API.Extensions;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Policy = "Admin")]
+   // [Authorize(Policy = "Admin")]
     public class AccountManagerController : ControllerBase
     {
 
@@ -69,19 +70,19 @@ namespace API.Controllers
             }
             else
             {
-                return new OkObjectResult("Account created");
+                return new OkObjectResult(model);
             }
         }
 
         [HttpPut("users/edit")]
-        public async Task<IActionResult> EditUserAccount([FromBody] EditUserNameViewModel model)
+        public async Task<IActionResult> EditUserAccount([FromBody] UserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var result = await _accountManagerService.EditUserAccount(model.OldName, model.NewName);
+                var result = await _accountManagerService.EditUserAccount(model.UserId, model.UserName, model.Email);
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult("Account updated");
+                    return new OkObjectResult(model);
                 }
                 else
                 {
@@ -96,6 +97,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("users/delete")]
+        [AllowAnonymous]
         public async Task<ActionResult> DeleteUserAccount([FromBody] DeleteUserViewModel model)
         {
             if (ModelState.IsValid)
@@ -103,21 +105,21 @@ namespace API.Controllers
                 var result = await _accountManagerService.DeleteAccount(model.UserName);
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult("Account deleted");
+                    return new OkObjectResult(model);
                 }
                 return NotFound("Invalid user name");
             }
             return BadRequest(ModelState);
         }
 
-        [HttpPut("organisation/edit")]
-        public async Task<IActionResult> EditOrganisationAccount([FromBody] EditOrganisationViewModel model)
+        [HttpPut("organisation/edit/{orgId}")]
+        public async Task<IActionResult> EditOrganisationAccount(int orgId, OrganisationModel model)
         {
             if (ModelState.IsValid)
             {            
                 try
                 {
-                    await _organisationService.UpdateAsync(new OrganisationBLL { Id = model.Id, Name = model.OrgName, Location = model.Loacation });
+                    await _organisationService.UpdateAsync(model.Transform());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -135,18 +137,20 @@ namespace API.Controllers
             return BadRequest("Not a valid model");
         }
 
-        [HttpDelete("organisation/delete")]
-        public async Task<ActionResult> DeleteOrganisationAccount([FromBody]DeleteOrganisationViewModel model)
+        [HttpDelete("organisation/delete/{orgId}")]
+        public async Task<ActionResult<OrganisationModel>> DeleteOrganisationAccount(int orgId)
         {
             if (ModelState.IsValid)
             {
-                await _organisationService.DeleteAsync(model.OrgId);
-                var result = await _accountManagerService.DeleteAccount(model.UserName);
-                if (result.Succeeded)
+                var model = await _organisationService.GetAsync(orgId);
+                if (model == null)
                 {
-                    return new OkObjectResult("Account deleted");
+                    return NotFound();
                 }
-                return NotFound("Invalid user name");
+
+                await _organisationService.DeleteAsync(orgId);
+
+                return new OkObjectResult(model.Transform()) ;
             }
             return BadRequest(ModelState);
         }

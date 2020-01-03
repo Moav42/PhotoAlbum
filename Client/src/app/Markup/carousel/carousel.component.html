@@ -1,7 +1,14 @@
 <div class="contents">
   <div >
    
-    <ngb-carousel #ngcarousel>
+    <ngb-carousel #mycarousel
+    [showNavigationArrows]="false" 
+[showNavigationIndicators]="true"
+interval="10000"
+[keyboard]="true"
+[pauseOnHover]="true"
+[wrap]="true"
+[activeId]="'slideTwo'">
       <ng-template ngbSlide *ngFor="let item of posts" >
       
         <div class="container">
@@ -23,4 +30,10 @@
     
 
   </div>
+</div>
+<div class="text-center ,btn-group " >
+  <button (click)="goToSlide('slideThree')">Pause</button>
+<button (click)="pauseCarousel()">Play</button>
+<button (click)="moveNext()">Next</button>
+<button (click)="getPrev()">Prev</button>
 </div>

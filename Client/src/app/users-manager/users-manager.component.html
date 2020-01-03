@@ -1,0 +1,39 @@
+<div>
+
+<table *ngIf="tableMode; else create" class="table table-striped">
+    <thead class="secendory-text">
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+            <td>Email</td>
+        </tr>
+    </thead>
+    <tbody  class="secendory-text">
+        <tr *ngFor="let t of users">
+            <ng-template [ngIf]="user?.userId != t.userId" [ngIfElse]="edit">
+                <td>{{t?.userId}}</td>
+                <td>{{t?.userName}}</td>
+                <td>{{t?.email}}</td>
+
+                <td>
+                    <button class="btn btn-sm btn-primary" (click)="editTag(t)">Edit</button>
+                    <button class="btn btn-sm btn-danger" (click)="delete(t.userName)">Delete</button>
+                </td>
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+<ng-template #edit>
+    <td>
+        <label for="">User Name</label>
+        <input type="text" [(ngModel)]="user.userName" class="form-control" />
+        <label for="">Email</label>
+        <input type="text" [(ngModel)]="user.email" class="form-control" />
+    </td>
+  
+    <td>
+        <input type="button" value="Save" (click)="save()" class="btn btn-sm btn-success" />
+        <input type="button" value="Cancel" (click)="cancel()" class="btn btn-sm btn-warning" />
+    </td>
+</ng-template>
+</div>

@@ -5,6 +5,7 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -16,7 +17,7 @@ namespace BLL.Services
         private readonly IJwtFactory _jwtFactory;
         private readonly JwtIssuerOptions _jwtOptions;
 
-        public AuthorizationService(UserManager<DAL.Entities.User> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
+        public AuthorizationService(UserManager<User> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
@@ -32,7 +33,11 @@ namespace BLL.Services
                 return null;
             }
 
-            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, name, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            var user = await _userManager.FindByNameAsync(name);
+            var role = await _userManager.GetRolesAsync(user);
+            var roleStr = role.First();
+
+            var jwt = await Tokens.GenerateJwt(identity, _jwtFactory, user, roleStr, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
 
             return jwt;
         }
@@ -45,19 +50,14 @@ namespace BLL.Services
             }
 
             var userToVerify = await _userManager.FindByNameAsync(userName);
-
+            
             if (userToVerify == null)
             {
                 return await Task.FromResult<ClaimsIdentity>(null);
             }
 
             var role = await _userManager.GetRolesAsync(userToVerify);
-            var roleStr = string.Empty;
-
-            foreach (var item in role)
-            {
-                roleStr += item;
-            }
+            var roleStr = role.First();
 
             if (await _userManager.CheckPasswordAsync(userToVerify, password))
             {
@@ -66,5 +66,6 @@ namespace BLL.Services
 
             return await Task.FromResult<ClaimsIdentity>(null);
         }
+
     }
 }
