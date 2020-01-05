@@ -5,8 +5,8 @@ namespace API.Models.ViewModels
     public class PostCategoryViewModel
     {
         [Required]
-        public int PostId { get; set; }
+        public string PostId { get; set; }
         [Required]
-        public int CategoryId { get; set; }
+        public string CategoryId { get; set; }
     }
 }

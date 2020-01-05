@@ -10,7 +10,7 @@ namespace API.Models.ViewModels
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Пароль")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
        
     }

@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
         {
             var modelBLL = await _categoryService.GetAllAsync();
@@ -35,11 +35,11 @@ namespace API.Controllers
             {
                 models.Add(item.Transform());
             }
-            return models;
+            return Ok(models);
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<CategoryModel>> GetCategory(int id)
         {
             var modelBLL = await _categoryService.GetAsync(id);
@@ -50,12 +50,12 @@ namespace API.Controllers
             }
             else
             {
-                return modelBLL.Transform();
+                return Ok(modelBLL.Transform());
             }
         }
 
         [HttpPost]
-        //[Authorize(Policy = "Organisation")]
+        [Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> PostCategory(CategoryModel model)
         {
             if (!ModelState.IsValid)
@@ -65,11 +65,11 @@ namespace API.Controllers
 
             await _categoryService.AddAsync(model.Transform());
 
-            return new OkObjectResult(model);
+            return CreatedAtAction(nameof(GetCategory), new { id = model.Id }, model);
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Policy = "Organisation")]
+        [Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> PutCategory(int id, CategoryModel model)
         {
 
@@ -95,14 +95,14 @@ namespace API.Controllers
                         throw;
                     }
                 }
-                return new OkObjectResult(model);
+                return Ok(model);
             }
             return BadRequest("Not a valid model");
         }
 
         [HttpDelete("{id}")]
-       // [Authorize(Policy = "Organisation")]
-        public async Task<ActionResult<CategoryModel>> DeleteCategory(int id)
+        [Authorize(Policy = "Organisation")]
+        public async Task<ActionResult> DeleteCategory(int id)
         {
             var model = await _categoryService.GetAsync(id);
             if (model == null)
@@ -110,28 +110,27 @@ namespace API.Controllers
                 return NotFound();
             }
 
-            await  _categoryService.DeleteAsync(model.Id);
+            await _categoryService.DeleteAsync(model.Id);
 
-            return model.Transform();
+            return NoContent();
         }
 
         [HttpPost("post")]
-        //[Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostCategoryViewModel>> AddPostToCategory(PostCategoryViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
- 
-            await _categoryService.AddCategoryToPostAsync(model.PostId, model.CategoryId);
 
-            return new OkObjectResult(model);
+            await _categoryService.AddCategoryToPostAsync(int.Parse(model.PostId), int.Parse(model.CategoryId));
+
+            return model;
         }
 
-        [HttpGet("{categoryId}/posts")]
-        [AllowAnonymous]
-        //  [Authorize(Policy = "AllUsers")]
+        [HttpGet("posts/{categoryId}")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts(int categoryId)
         {
             var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
@@ -145,19 +144,5 @@ namespace API.Controllers
             return models;
         }
 
-        [HttpGet("posts/{categoryId}")]
-        //  [Authorize(Policy = "AllUsers")]
-        public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts2(int categoryId)
-        {
-            var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
-            var models = new List<PostModel>();
-
-            foreach (var item in modelBLL)
-            {
-                models.Add(item.Transform());
-            }
-
-            return models;
-        }
     }
 }

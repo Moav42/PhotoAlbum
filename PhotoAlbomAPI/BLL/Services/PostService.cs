@@ -5,6 +5,7 @@ using DAL.Interfaces;
 using BLL.Interfaces;
 using System.Threading.Tasks;
 using AutoMapper;
+using System;
 
 namespace BLL.Services
 {
@@ -22,6 +23,7 @@ namespace BLL.Services
         public async Task AddAsync(PostBLL item)
         {
             var itemDAL = _mapper.Map<Post>(item);
+            itemDAL.AddingDate = DateTime.Now;
             _unitOfWork.PostsRepository.Create(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }

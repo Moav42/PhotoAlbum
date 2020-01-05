@@ -22,7 +22,7 @@ namespace API.Controllers
             _commentService = commentService;
         }
 
-        [HttpGet("post/postId")]
+        [HttpGet("post/{postId}")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetCommentByPost(int postId)
         {
@@ -33,10 +33,10 @@ namespace API.Controllers
             {
                 models.Add(item.Transform());
             }
-            return models;
+            return Ok(models);
         }
 
-        [HttpGet("user/userId")]
+        [HttpGet("user/{userId}")]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetCommentByUser(string userId)
         {
             var modelBLL = await _commentService.GetByUserAsync(userId);
@@ -46,7 +46,7 @@ namespace API.Controllers
             {
                 models.Add(item.Transform());
             }
-            return models;
+            return Ok(models);
         }
 
         [HttpGet("{id}")]
@@ -61,7 +61,7 @@ namespace API.Controllers
             }
             else
             {
-                return modelBLL.Transform();
+                return Ok(modelBLL.Transform());
             }
         }
 
@@ -75,7 +75,7 @@ namespace API.Controllers
 
             await _commentService.AddAsync(model.Transform());
 
-            return new OkObjectResult(model);
+            return CreatedAtAction(nameof(GetComment), new { id = model.Id }, model);
         }
 
         [HttpPut("{id}")]
@@ -100,13 +100,13 @@ namespace API.Controllers
                         throw;
                     }
                 }
-                return new OkObjectResult(model);
+                return Ok(model);
             }
             return BadRequest("Not a valid model");
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CommentModel>> DeleteComment(int id)
+        public async Task<ActionResult> DeleteComment(int id)
         {
             var model = await _commentService.GetAsync(id);
             if (model == null)
@@ -116,7 +116,7 @@ namespace API.Controllers
 
             await _commentService.DeleteAsync(model.Id);
 
-            return new OkObjectResult(model.Transform());
+            return NoContent();
         }
     }
 }

@@ -10,7 +10,6 @@ namespace BLL.JWT
     {
         public static async Task<string> GenerateJwt(ClaimsIdentity identity, IJwtFactory jwtFactory, User user, string userRole, JwtIssuerOptions jwtOptions, JsonSerializerSettings serializerSettings)
         {
-
             var response = new
             {
                 id = identity.Claims.Single(c => c.Type == "id").Value,

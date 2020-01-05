@@ -11,8 +11,7 @@ using API.Models.ViewModels;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")] 
-   
+    [Route("api/[controller]")]   
     [ApiController]
     public class TagsController : ControllerBase
     {
@@ -35,7 +34,7 @@ namespace API.Controllers
             {
                 tagModels.Add(item.Transform());
             }
-            return tagModels;
+            return Ok(tagModels);
         }
 
         [Authorize(Policy = "AllUsers")]
@@ -50,7 +49,7 @@ namespace API.Controllers
             }
             else
             {
-                return tagsBLL.Transform();
+                return Ok(tagsBLL.Transform());
             }           
         }
 
@@ -65,7 +64,7 @@ namespace API.Controllers
 
             await _tagService.AddAsync(model.Transform());
 
-            return new OkObjectResult(model);
+            return CreatedAtAction(nameof(GetTag), new { id = model.Id }, model);
         }
 
         [Authorize(Policy = "Organisation")]
@@ -93,14 +92,14 @@ namespace API.Controllers
                         throw;
                     }
                 }
-                return new OkObjectResult(model);
+                return Ok(model);
             }
             return BadRequest("Not a valid model");
         }
 
         [Authorize(Policy = "Organisation")]
         [HttpDelete("{id}")]
-        public async Task<ActionResult<TagModel>> DeleteTag(int id)
+        public async Task<ActionResult> DeleteTag(int id)
         {
             var model = await _tagService.GetAsync(id);
             if (model == null)
@@ -110,19 +109,19 @@ namespace API.Controllers
 
             await _tagService.DeleteAsync(model.Id);
 
-            return model.Transform();
+            return NoContent();
         }
 
         [Authorize(Policy = "AllUsers")]
         [HttpPost("post")]
-        public async Task<ActionResult<PostTagViewModel>> AddPostToCategory(PostTagViewModel model)
+        public async Task<ActionResult<PostTagViewModel>> AddTagToPost(PostTagViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
             }
-            await _tagService.AddTagToPostAsync(model.PostId, model.TagId);
-            return new OkObjectResult(model);
+            await _tagService.AddTagToPostAsync(int.Parse(model.PostId),int.Parse(model.TagId));
+            return Ok(model);
         }
     }
 }

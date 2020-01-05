@@ -5,8 +5,8 @@ namespace API.Models.ViewModels
     public class PostTagViewModel
     {
         [Required]
-        public int PostId { get; set; }
+        public string PostId { get; set; }
         [Required]
-        public int TagId { get; set; }
+        public string TagId { get; set; }
     }
 }

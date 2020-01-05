@@ -37,7 +37,7 @@ namespace API.Controllers
             {
                 models.Add(item.Transform());
             }
-            return models;
+            return Ok(models);
         }
 
         [HttpGet("{id}")]
@@ -51,7 +51,7 @@ namespace API.Controllers
             }
             else
             {
-                return modelBLL.Transform();
+                return Ok(modelBLL.Transform());
             }
         }
 
@@ -71,55 +71,46 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostModel>> PostPost(PostModel model)
-        {
+        {           
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
-            }
-           
+            }           
             await _postService.AddAsync(model.Transform());
 
-            return new OkObjectResult(model);
+            return CreatedAtAction(nameof(GetPost), new { id = model.Id }, model);
         }
 
         [HttpPost("uplaodImage")]
-      //  [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "AllUsers")]
         public IActionResult UplaodImage()
         {
-            try
+            var file = Request.Form.Files[0];
+            var folderName = Path.Combine("images");
+            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+
+            if (file.Length > 0)
             {
-                var file = Request.Form.Files[0];
-                var folderName = Path.Combine("images");
-                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                var fullPath = Path.Combine(pathToSave, fileName);
 
-                if (file.Length > 0)
+                using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                    var fullPath = Path.Combine(pathToSave, fileName);
-                    var dbPath = Path.Combine(folderName, fileName);
-
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
-                    {
-                        file.CopyTo(stream);
-                    }
-
-                    return Ok();
+                    file.CopyTo(stream);
                 }
-                else
-                {
-                    return BadRequest();
-                }
+
+                return Ok();
             }
-            catch (Exception)
+            else
             {
-                return StatusCode(500, "Internal server error");
+                return BadRequest();
             }
         }
 
         [HttpPut("{id}")]
-        //[Authorize(Policy = "Moderator")]
+        [Authorize(Policy = "Moderator")]
         public async Task<ActionResult> PutPost(int id, PostModel model)
         {         
             if (ModelState.IsValid)
@@ -143,14 +134,14 @@ namespace API.Controllers
                         throw;
                     }
                 }
-                return new OkObjectResult(model);
+                return Ok(model);
             }
             return BadRequest("Not a valid model");
         }
 
         [HttpDelete("{id}")]
-       // [Authorize(Policy = "Moderator")]
-        public async Task<ActionResult<PostModel>> DeletePost(int id)
+        [Authorize(Policy = "Moderator")]
+        public async Task<ActionResult> DeletePost(int id)
         {
             var model = await _postService.GetAsync(id);
             if (model == null)
@@ -160,11 +151,11 @@ namespace API.Controllers
 
             await _postService.DeleteAsync(model.Id);
 
-            return model.Transform();
+            return NoContent();
         }
 
         [HttpPost("rate")]
-       // [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostRateModel>> PostRate(PostRateModel model)
         {
             if (!ModelState.IsValid)
@@ -174,7 +165,7 @@ namespace API.Controllers
 
             await _postRateService.AddAsync(model.Transform());
 
-            return new OkObjectResult(model);
+            return Ok(model);
         }
 
         [HttpGet("{postId}/comments")]

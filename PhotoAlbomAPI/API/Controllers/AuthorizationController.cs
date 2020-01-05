@@ -35,7 +35,7 @@ namespace API.Controllers
                 return BadRequest("Wrong login or password");
             }
 
-            return  Ok(jwt);
+            return Ok(jwt);
         }     
     }
 }

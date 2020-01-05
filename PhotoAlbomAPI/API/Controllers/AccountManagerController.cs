@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   // [Authorize(Policy = "Admin")]
+    [Authorize(Policy = "Admin")]
     public class AccountManagerController : ControllerBase
     {
 
@@ -27,7 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet("users")]
-        public async Task<IEnumerable<UserViewModel>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserViewModel>>> GetAllUsers()
         {
             var users = await _accountManagerService.GetAllUsers();
             var userVM = new List<UserViewModel>();
@@ -35,11 +35,11 @@ namespace API.Controllers
             {
                 userVM.Add(new UserViewModel { Email = item.Email, UserId = item.UserId, UserName = item.UserName });
             }
-            return userVM;
+            return Ok(userVM);
         }
 
         [HttpGet("organisation")]
-        public async Task<IEnumerable<OrganisationModel>> GetAllOrganisation()
+        public async Task<ActionResult<IEnumerable<OrganisationModel>>> GetAllOrganisation()
         {
             var orgs = await _organisationService.GetAllAsync();
             var orgsModel = new List<OrganisationModel>();
@@ -47,7 +47,7 @@ namespace API.Controllers
             {
                 orgsModel.Add(new OrganisationModel { Id = item.Id, Name = item.Name, Location = item.Location });
             }
-            return orgsModel;
+            return Ok(orgsModel);
         }
 
         [HttpPost("create")]    
@@ -70,11 +70,11 @@ namespace API.Controllers
             }
             else
             {
-                return new OkObjectResult(model);
+                return Ok(model);
             }
         }
 
-        [HttpPut("users/edit")]
+        [HttpPut("users")]
         public async Task<IActionResult> EditUserAccount([FromBody] UserViewModel model)
         {
             if (ModelState.IsValid)
@@ -82,7 +82,7 @@ namespace API.Controllers
                 var result = await _accountManagerService.EditUserAccount(model.UserId, model.UserName, model.Email);
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult(model);
+                    return Ok(model);
                 }
                 else
                 {
@@ -96,7 +96,7 @@ namespace API.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpDelete("users/delete")]
+        [HttpDelete("users")]
         [AllowAnonymous]
         public async Task<ActionResult> DeleteUserAccount([FromBody] DeleteUserViewModel model)
         {
@@ -105,16 +105,21 @@ namespace API.Controllers
                 var result = await _accountManagerService.DeleteAccount(model.UserName);
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult(model);
+                    return NoContent();
                 }
                 return NotFound("Invalid user name");
             }
             return BadRequest(ModelState);
         }
 
-        [HttpPut("organisation/edit/{orgId}")]
+        [HttpPut("organisation/{orgId}")]
         public async Task<IActionResult> EditOrganisationAccount(int orgId, OrganisationModel model)
         {
+            if(orgId != model.Id)
+            {
+                return BadRequest();
+            }
+
             if (ModelState.IsValid)
             {            
                 try
@@ -132,12 +137,12 @@ namespace API.Controllers
                         throw;
                     }
                 }
-                return new OkObjectResult(model);
+                return Ok(model);
             }
             return BadRequest("Not a valid model");
         }
 
-        [HttpDelete("organisation/delete/{orgId}")]
+        [HttpDelete("organisation/{orgId}")]
         public async Task<ActionResult<OrganisationModel>> DeleteOrganisationAccount(int orgId)
         {
             if (ModelState.IsValid)
@@ -150,7 +155,7 @@ namespace API.Controllers
 
                 await _organisationService.DeleteAsync(orgId);
 
-                return new OkObjectResult(model.Transform()) ;
+                return NoContent();
             }
             return BadRequest(ModelState);
         }

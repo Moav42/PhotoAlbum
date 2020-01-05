@@ -11,12 +11,13 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
 using BLL.Maping;
+using API.Extensions;
 
 namespace API
 {
     public class Startup
     {
-        private const string SecretKey = "The Answer to Life the Universe and Everything is 42";
+        private const string SecretKey = "The Answer to Life the Universe and Everything is ...";
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
         public Startup(IConfiguration configuration)
@@ -64,12 +65,11 @@ namespace API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCustomExceptionMiddleware();
+
             app.UseDefaultFiles();
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"images")),
-                RequestPath = new PathString("/images")
-            });
+
+            app.UseStaticFiles();
 
             app.UseCors("AllowAll");
 

@@ -43,7 +43,7 @@ namespace API.Controllers
             }
             else
             {              
-                return new OkObjectResult(model);
+                return Ok(model);
             }
         }
 
@@ -68,11 +68,11 @@ namespace API.Controllers
             }
             else
             {                       
-                return new OkObjectResult(model);
+                return Ok(model);
             }
         }
 
-        [HttpPost("changePassword")]
+        [HttpPut("password")]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -80,7 +80,7 @@ namespace API.Controllers
                 IdentityResult result = await _accountService.ChangePassword(model.Name, model.OldPassword, model.NewPassword);
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult("Password changed");
+                    return  Ok("Password changed");
                 }
                 else
                 {
