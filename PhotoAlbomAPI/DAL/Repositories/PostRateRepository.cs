@@ -34,6 +34,17 @@ namespace DAL.Repositories
         {
             return DB.PostRates.Where(pr => pr.UserId == userId);
         }
-
+        public bool GetPostsRate(int postId, string userId)
+        {
+            var rate = DB.PostRates.Where(pr => pr.PostId == postId && pr.UserId == userId).ToList();
+            if(rate.Count != 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

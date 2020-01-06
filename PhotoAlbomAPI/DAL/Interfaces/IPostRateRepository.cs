@@ -8,5 +8,6 @@ namespace DAL.Interfaces
         void Update(T item);
         IEnumerable<T> ReadAllByPost(int postID);
         IEnumerable<T> ReadAllByUser(string userId);
+        bool GetPostsRate(int postId, string userId);
     }
 }

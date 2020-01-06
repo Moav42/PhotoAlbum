@@ -1,9 +1,9 @@
-<div  >
+<div>
 <input type="button" value="Add new category"  class="btn btn-success" (click)="add()" />
 <table *ngIf="tableMode; else create" class="table table-striped">
     <thead class="category">
         <tr>
-            <td >Category title</td>
+            <td>Category title</td>
             <td>Description</td>
         </tr>
     </thead>
@@ -17,7 +17,7 @@
 
                 <td>
                     <button class="btn btn-sm btn-primary" (click)="editTag(t)">Edit</button>
-                    <button class="btn btn-sm btn-danger" (click)="delete(t)">Delete</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteTag(t.id)">Delete</button>
                 </td>
             </ng-template>
         </tr>

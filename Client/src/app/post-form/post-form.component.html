@@ -1,34 +1,32 @@
-<div class="primary-text"> 
+<div class="container, primary-text">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+                <div class="form-group">
+                    <alert></alert>
+                 <h4>Enter Post title</h4>                   
+                    <input class="form-control" name="title" [(ngModel)]="post.title"  #title="ngModel" required />                    
+                </div>
 
-    <div class="row" style="margin-bottom:15px;">
-      <div class="col-md-3">
-        <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display:none;">
-        <button type="button" class="btn btn-success" (click)="file.click()">Upload File</button>
-      </div>
-      <div class="col-md-4">
-        <span class="upload" *ngIf="progress > 0">
-          {{progress}}%
-        </span>
-        <span class="upload" *ngIf="message">
-          {{message}}
-        </span>
-      </div>
-    </div>
+                <h4>Choose File</h4>            
+                <div class="form-group">
+                    <input type="file" name="image" (change)="fileProgress($event)" />
+                </div>
 
+                <div *ngIf="fileUploadProgress">
+                    Upload progress: {{ fileUploadProgress }}
+                </div>
+                
+                <div class="image-preview mb-3" *ngIf="previewUrl">
+                    <img [src]="previewUrl" height="300" />                 
+                </div>
+
+                <div class="mb-3" *ngIf="uploadedFilePath">
+                    {{uploadedFilePath}}
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-primary"  (click)="onSubmit()">Submit</button>
+                </div>
+         </div>
+     </div>
 </div>
-
-<input type="button" value="Add new post"  class="btn btn-success" (click)="add()" />
-
-<ng-template #create>
-  <div class="form-group">
-      <label>Title </label>
-      <input type="text" [(ngModel)]="post.title" class="form-control" />
-      <label>Description</label>
-      <input type="text" [(ngModel)]="category.description" class="form-control" />
-  </div>
-  <div>
-      <input type="button" value="Save" (click)="save()" class="btn btn-success" />
-      <input type="button" value="Cancel" (click)="cancel()" class="btn btn-warning" />
-  </div>
-  
-</ng-template>

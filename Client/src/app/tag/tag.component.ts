@@ -1,16 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {delay} from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
 import { TagsService } from '../Shared/Services/tags.service';
 import { Tag } from '../Shared/Models/Tag';
-
-
 
 @Component({
   selector: 'app-tag',
   templateUrl: './tag.component.html',
   styleUrls: ['./tag.component.scss']
 })
+
 export class TagComponent implements OnInit {
 
   tag: Tag = new Tag();
@@ -36,16 +33,20 @@ export class TagComponent implements OnInit {
     }
     this.cancel();
   }
+
   editTag(tag: Tag){
     this.tag = tag;
   }
+  
   cancel(){
     this.tag = new Tag();
     this.tableMode = true;
   }
+
   delete(tag: Tag){
     this.service.deleteTag(tag.id).subscribe(date => this.loaudTags());
   }
+
   add(){
     this.cancel();
     this.tableMode = false;

@@ -1,5 +1,3 @@
-
-
 <div class="primary-text">
     <div class="filter" >
         <Label >Search posts by title</Label>
@@ -8,13 +6,14 @@
             placeholder="Enter title for search"
             [(ngModel)]="searchString"
         >
-    
     </div>
-    <ul *ngFor="let item of posts | postsFilter: searchString; " style="padding-top: 30px;">
-        <li >  {{item.title}} </li>
-        <li>   <img  [src]="louadImage(item.id)" style="width: 60%; height: 60%;" [routerLink]="['/posts', item.id]" > </li>        
-       
-    </ul>
- 
+  
+    <div *ngFor="let item of pageOfItems | postsFilter: searchString; " style="padding-top: 30px;">
+        {{item.title}} <br>
+        <img  [src]="louadImage(item.id)" style="width: 60%; height: 60%;" [routerLink]="['/posts', item.id]" >
+    </div> 
 </div>
 
+<div class="card-footer pb-0 pt-3"style="  margin: auto; width: 25%;" >
+    <jw-pagination [items]="posts" (changePage)="onChangePage($event)"></jw-pagination>
+</div>

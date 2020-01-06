@@ -1,8 +1,10 @@
+import { Role } from './role';
+
 export class User {
-    id?: number;
+    id?: string;
     username?: string;
     email?: string;
-    role?: string;
+    role?: Role;
     token?: string;
     expires_in?: string;
 }

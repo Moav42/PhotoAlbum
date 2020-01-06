@@ -53,5 +53,10 @@ namespace BLL.Services
             _unitOfWork.PostRateRepository.Update(_mapper.Map<PostRate>(item));
             await _unitOfWork.SaveChangesAsync();
         } 
+
+        public async Task<bool> GetPostRate(int postId, string userId)
+        {
+            return await Task.Run(() => _unitOfWork.PostRateRepository.GetPostsRate(postId, userId));
+        }
     }
 }

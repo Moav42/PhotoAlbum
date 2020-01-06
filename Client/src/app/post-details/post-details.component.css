@@ -1,0 +1,21 @@
+.align-left{
+    text-align: left; 
+    padding-left: 230px;
+}
+.align-right{
+    text-align: right; padding-right: 230px;
+}
+.image-prop{
+    width: 70%; height: 70%;
+}
+.liked{
+    background-color: #ff3333;
+    color: black;
+    border: 2px solid #ff3333;
+}
+.span-right{
+    float:right
+}
+.addButon{
+    padding-top: 10px;
+}

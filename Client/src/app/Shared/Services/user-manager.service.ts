@@ -17,7 +17,7 @@ export class UserManagerService {
   }
 
   updateUser(user: UserVM){
-    return this.http.put(this.url + '/edit', user)
+    return this.http.put(this.url, user)
   }
   deleteUser(userName: string){
     const options = {
@@ -29,6 +29,9 @@ export class UserManagerService {
       },
     };
     
-    return this.http.delete(this.url + '/delete', options)
+    return this.http.delete(this.url , options)
+  }
+  createAcc(email: string, password: string, role: string ){
+    return this.http.post('https://localhost:44380/api/AccountManager/create', {email, password, role})
   }
 }

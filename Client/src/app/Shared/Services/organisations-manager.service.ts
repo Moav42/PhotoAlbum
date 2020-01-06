@@ -16,11 +16,10 @@ export class OrganisationsManagerService {
   }
 
   updateOrg(org: Organisation){
-    return this.http.put(this.url + '/edit/' + org.id, org)
+    return this.http.put(this.url + '/' + org.id, org)
   }
-  deleteOrg(id: number){
-    return this.http.delete(this.url + '/delete/' + id)
-  }
-    
   
+  deleteOrg(id: number){
+    return this.http.delete(this.url + '/' + id)
+  }    
 }

@@ -4,6 +4,6 @@ export class Post{
         public title?: string,
         public locationPath?: string,
         public userId?: string,
-        public addingDate?: Date
+        public addingDate?: string
     ){}
 }

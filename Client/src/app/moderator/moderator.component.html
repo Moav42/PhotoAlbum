@@ -1,0 +1,74 @@
+
+<div class="col-md-6 offset-md-3 mt-5">
+     <div class="card">
+        
+          <h4 class="card-header">Add tag to post</h4>
+          <div class="card-body">   
+            <alert id="alert-1"></alert>    
+            <p>Select tag</p>            
+            <select [(ngModel)]="selectedTagId">
+               <option [value]="tag.id" *ngFor="let tag of tags"> 
+                    {{ tag.title}} 
+               </option>
+            </select>
+            <p> Id of selected iteam: {{ selectedTagId }}</p>
+            
+           <p>Select post</p>
+            <select [(ngModel)]="selectedPostIdForTag">
+               <option [value]="post.id" *ngFor="let post of posts"> 
+                    {{ post.title}} 
+               </option>
+            </select>
+            <p> Id of selected iteam: {{ selectedPostIdForTag }}</p>
+           
+            <button (click)="addTagToPost('alert-1')">Add </button>
+          </div>
+     </div>
+</div>
+
+
+<div class="col-md-6 offset-md-3 mt-5">
+     <div class="card">
+          <h4 class="card-header">Add post to category</h4>
+         <div class="card-body">
+               <alert id="alert-2"></alert>    
+               <p>Select category</p>
+               <select [(ngModel)]="selectedCategoryId">
+                    <option [value]="category.id" *ngFor="let category of categories"> 
+                         {{ category.title}} 
+                    </option>    
+               </select>
+               <p> Id of selected iteam: {{ selectedCategoryId }}</p>
+          
+                <p>Select post</p>
+               <select [(ngModel)]="selectedPostIdForCategory">
+                    <option [value]="post.id" *ngFor="let post of posts"> 
+                         {{ post.title}} 
+                    </option>
+               </select>
+               <p> Id of selected iteam: {{ selectedPostIdForCategory }}</p>
+          
+               <button (click)="addPostToCategory('alert-2')">Add</button>
+         </div>
+     </div>
+</div>
+
+<div class="col-md-6 offset-md-3 mt-5">
+     <div class="card">
+          <h4 class="card-header">Delete post</h4>
+         <div class="card-body">
+               <alert id="alert-3"></alert>   
+               <p>Select post</p>
+               <select [(ngModel)]="selectedPostIdForDelete">
+                    <option [value]="post.id" *ngFor="let post of posts"> 
+                         {{ post.title}} 
+                    </option>
+               </select>
+               <p> Id of selected iteam: {{ selectedPostIdForDelete }}</p>
+         
+               <button (click)="deletePost('alert-3')">Delete</button>
+         </div>
+     </div>
+</div>
+
+

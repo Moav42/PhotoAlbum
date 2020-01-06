@@ -21,12 +21,15 @@ export class CategoryService {
     return this.http.put(this.url + '/' + item.id, item)
   }
 
-  deleteCategory(item: number){
-    return this.http.get(this.url + '/' + item)
+  deleteCategory(id: number){
+    return this.http.delete(this.url + '/' + id)
   }
 
   getPostByCategory(item: number){
-    return this.http.get('https://localhost:44380/api/Categories/posts/' + item )
+    return this.http.get(this.url + '/posts/' + item )
   }
-
+  
+  addPostToCategory(postId: number, categoryId: number){
+    return this.http.post(this.url + '/post', {postId, categoryId})
+  }
 }

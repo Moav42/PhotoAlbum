@@ -1,5 +1,4 @@
 <div>
-
     <table *ngIf="tableMode; else create" class="table table-striped">
         <thead class="secendory-text">
             <tr>
@@ -23,12 +22,13 @@
             </tr>
         </tbody>
     </table>
+
     <ng-template #edit>
         <td>
             <label for="">Org Name</label>
             <input type="text" [(ngModel)]="org.name" class="form-control" />
             <label for="">Location</label>
-            <input type="text" [(ngModel)]="orn.loaction" class="form-control" />
+            <input type="text" [(ngModel)]="org.location" class="form-control" />
         </td>
       
         <td>
@@ -36,4 +36,4 @@
             <input type="button" value="Cancel" (click)="cancel()" class="btn btn-sm btn-warning" />
         </td>
     </ng-template>
-    </div>
+</div>

@@ -9,12 +9,10 @@ namespace DAL.Repositories
     public class PostRepository : IPostRepository<Post>
     {
         private readonly DbContext DB;
-        private readonly PostCategoriesRepository _postCategories;
 
         public PostRepository(DbContext context)
         {
             DB = context;
-            _postCategories = new PostCategoriesRepository(context);
         }
 
         public void Create(Post item)
@@ -48,7 +46,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Post> ReadAllPostsByCategory(int categoryId)
         {
-            var postCategories = _postCategories.ReadAll().Where(ct => ct.CategoryId == categoryId);
+            var postCategories = DB.PostCategories.Where(ct => ct.CategoryId == categoryId);
             var posts = new List<Post>();
             foreach (var item in postCategories)
             {

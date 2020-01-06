@@ -112,7 +112,7 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "Moderator")]
         [HttpPost("post")]
         public async Task<ActionResult<PostTagViewModel>> AddTagToPost(PostTagViewModel model)
         {

@@ -20,8 +20,13 @@ import { OrganisationsManagerComponent } from './organisations-manager/organisat
 import { AccountCreationFormComponent } from './account-creation-form/account-creation-form.component';
 import { LoginComponent } from './login/login.component';
 import { JwtInterceptor, ErrorInterceptor } from './helpers';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { RegisterComponent } from './register/register.component';
+import { JwPaginationComponent } from 'jw-angular-pagination';
+import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ModeratorComponent } from './moderator/moderator.component';
+import { AlertComponent } from './alert/alert.component';
+import { AlertModule } from './alert/alert.module';
 
 
 @NgModule({
@@ -38,7 +43,13 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
     PostFilterPipe,
     UsersManagerComponent,
     OrganisationsManagerComponent, 
-    AccountCreationFormComponent, LoginComponent
+    AccountCreationFormComponent, 
+    LoginComponent, 
+    RegisterComponent,
+    JwPaginationComponent,
+    ChangePasswordComponent,
+    ModeratorComponent
+
   ],
   imports: [
     BrowserModule,
@@ -47,9 +58,9 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
     FormsModule,
     HttpClientModule, BrowserModule,
     ReactiveFormsModule,
-
-
+    AlertModule
   ],
+  
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { NgbSlideEvent, NgbSlideEventSource } from '@ng-bootstrap/ng-bootstrap';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { Post } from 'src/app/Shared/Models/Post';
-import { PostService } from 'src/app/Shared/Services/post.service';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { CategoryService } from 'src/app/Shared/Services/category.service';
@@ -32,14 +31,10 @@ export class CarouselComponent implements OnInit, OnDestroy  {
   }
   
   ngOnInit() {
-    
-
-    this.sub = this.route.params.subscribe(params => {
-      this.id = +params['id'];
-   });
-   this.loaudPosts();
-    
+    this.sub = this.route.params.subscribe(params => { this.id = +params['id']; });
+    this.loaudPosts();   
   }
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
@@ -47,11 +42,11 @@ export class CarouselComponent implements OnInit, OnDestroy  {
   loaudPosts(){
     this._categoriesService.getPostByCategory(this.id).subscribe((date: Post[]) => this.posts = date);
   }
+
   public louadImage = (postId: number) =>{
       return `https://localhost:44380/api/Posts/${postId}/image` 
   }
 
-  title = 'RDA';
 
   slideActivate(ngbSlideEvent: NgbSlideEvent) {
     console.log(ngbSlideEvent.source);
@@ -60,6 +55,7 @@ export class CarouselComponent implements OnInit, OnDestroy  {
     console.log(NgbSlideEventSource.ARROW_LEFT);
     console.log(NgbSlideEventSource.ARROW_RIGHT);
   }
+
   startCarousel() {
     this.carousel.cycle();
   }
@@ -78,7 +74,5 @@ export class CarouselComponent implements OnInit, OnDestroy  {
  
   goToSlide(slide) {
     this.carousel.select(slide);
-  }
-
-  
+  }  
 }

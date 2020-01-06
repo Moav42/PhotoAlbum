@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Authorization;
+using API.Models.ViewModels;
 
 namespace API.Controllers
 {
@@ -87,25 +88,32 @@ namespace API.Controllers
         [Authorize(Policy = "AllUsers")]
         public IActionResult UplaodImage()
         {
-            var file = Request.Form.Files[0];
-            var folderName = Path.Combine("images");
-            var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-
-            if (file.Length > 0)
+            try
             {
-                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
-                var fullPath = Path.Combine(pathToSave, fileName);
+                var file = Request.Form.Files[0];             
+                var folderName = Path.Combine("images");
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 
-                using (var stream = new FileStream(fullPath, FileMode.Create))
+                if (file.Length > 0)
                 {
-                    file.CopyTo(stream);
-                }
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    var fullPath = Path.Combine(pathToSave, fileName);
 
-                return Ok();
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-            else
+            catch (Exception)
             {
-                return BadRequest();
+                return StatusCode(500, "Internal server error. Did you forget to attach the file?");
             }
         }
 
@@ -154,10 +162,15 @@ namespace API.Controllers
             return NoContent();
         }
 
-        [HttpPost("rate")]
+        [HttpPost("{id}/like")]
         [Authorize(Policy = "AllUsers")]
-        public async Task<ActionResult<PostRateModel>> PostRate(PostRateModel model)
+        public async Task<ActionResult<PostRateModel>> PostRate(int id, PostRateModel model)
         {
+            if(id != model.PostId)
+            {
+                return BadRequest();
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Not a valid model");
@@ -192,6 +205,11 @@ namespace API.Controllers
                 models.Add(item.Transform());
             }
             return models;
+        }
+        [HttpPost("{id}/rate")]
+        public async Task<ActionResult<bool>> GetPostRateByUser(int id, PostRateViewModel postRate )
+        {
+            return await _postRateService.GetPostRate(postRate.PostId, postRate.UserId);
         }
     }
 }

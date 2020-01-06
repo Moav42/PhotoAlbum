@@ -20,19 +20,16 @@ export class OrganisationsManagerComponent implements OnInit {
     this.loaudOrgs();
   }
 
-
   loaudOrgs(){
     this.service.getOrgs().subscribe((date: Organisation[]) => this.orgs = date);
 
   }
 
   save(){
-    if(this.org.id == null){
-       return
-    }
-    else{
+    if(this.org.id != null){
       this.service.updateOrg(this.org).subscribe(date => this.loaudOrgs())
     }
+ 
     this.cancel();
   }
 

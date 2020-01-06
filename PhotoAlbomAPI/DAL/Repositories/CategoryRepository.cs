@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace DAL.Repositories
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class CategoryRepository : ICategoryRepository<Category>
     {
         private readonly DbContext DB;
@@ -48,7 +51,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Category> ReadAllByPost(int postId)
         {
-            var postComments = _postCategories.ReadAll().Where(pt => pt.PostId == postId);
+            var postComments = DB.PostCategories.Where(pt => pt.PostId == postId);
             var categories = new List<Category>();
             foreach (var item in postComments)
             {
@@ -60,13 +63,13 @@ namespace DAL.Repositories
         public void AddTagToPost(int categoryId, int postId)
         {
             var postCat = new PostCategories { PostId = postId, CategoryId = categoryId };
-            _postCategories.Create(postCat);
+            DB.PostCategories.Add(postCat);
         }
 
         public void DeleteTagFromPost(int categoryId, int postId)
         {
             var postCat = new PostCategories { PostId = postId, CategoryId = categoryId };
-            _postCategories.Delete(postCat);
+            DB.PostCategories.Remove(postCat);
         }
     }
 }

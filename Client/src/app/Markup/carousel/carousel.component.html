@@ -1,39 +1,30 @@
 <div class="contents">
-  <div >
-   
+  <div>  
     <ngb-carousel #mycarousel
-    [showNavigationArrows]="false" 
-[showNavigationIndicators]="true"
-interval="10000"
-[keyboard]="true"
-[pauseOnHover]="true"
-[wrap]="true"
-[activeId]="'slideTwo'">
-      <ng-template ngbSlide *ngFor="let item of posts" >
-      
-        <div class="container">
-          <div class="content has-text-centered">
-              <h3 class="primary-text">{{item.title}}</h3>
-            <p class="primary-text">
-     
-              <img  [src]="louadImage(item.id)"   class="caption" >
-            </p>
-            
-      </div>
+      [showNavigationArrows]="false" 
+      [showNavigationIndicators]="true"
+      interval="10000"
+      [keyboard]="true"
+      [pauseOnHover]="true"
+      [wrap]="true"
+      [activeId]="'slideTwo'">
 
-      </div>
-         
-     </ng-template>
-  
-     </ngb-carousel>
-   
-    
-
+        <ng-template ngbSlide *ngFor="let item of posts" >
+        
+          <div class="container">
+            <div class="content has-text-centered">
+                <h3 class="primary-text">{{item.title}}</h3>
+                <p class="primary-text"> <img  [src]="louadImage(item.id)"   class="caption" > </p>
+              </div>
+          </div>          
+        </ng-template>
+    </ngb-carousel>
   </div>
 </div>
+
 <div class="text-center ,btn-group " >
   <button (click)="goToSlide('slideThree')">Pause</button>
-<button (click)="pauseCarousel()">Play</button>
-<button (click)="moveNext()">Next</button>
-<button (click)="getPrev()">Prev</button>
+  <button (click)="pauseCarousel()">Play</button>
+  <button (click)="moveNext()">Next</button>
+  <button (click)="getPrev()">Prev</button>
 </div>

@@ -24,7 +24,6 @@ export class CategoryComponent implements OnInit {
     this.loaudCategories();
   }
 
-
   loaudCategories(){
     this.service.getCategories().subscribe((date: Category[]) => this.categories = date);
   }
@@ -48,8 +47,8 @@ export class CategoryComponent implements OnInit {
     this.tableMode = true;
   }
 
-  delete(item: Category){
-    this.service.deleteCategory(item.id).subscribe(date => this.loaudCategories());
+  deleteTag(id: number){
+    this.service.deleteCategory(id).subscribe(date => this.loaudCategories());
   }
   
   add(){

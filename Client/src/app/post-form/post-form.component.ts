@@ -2,6 +2,10 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpEventType, HttpClient } from '@angular/common/http';
 import { PostService } from '../Shared/Services/post.service';
 import { Post } from '../Shared/Models/Post';
+import { FormsModule }   from '@angular/forms';
+import { AuthenticationService } from '../Shared/Services';
+import { User } from '../Shared/Models/UserAccount';
+import { AlertService } from '../alert';
 
 @Component({
   selector: 'app-post-form',
@@ -10,57 +14,64 @@ import { Post } from '../Shared/Models/Post';
 })
 export class PostFormComponent implements OnInit {
 
-  public progress: number;
-  public message: string;
-  @Output() public onUploadFinished = new EventEmitter();
-
+  fileData: File = null;
+  previewUrl:any = null;
+  fileUploadProgress: string = null;
+  uploadedFilePath: string = null;
   post: Post = new Post();
+  currentUser: User;
 
-  tableMode: boolean = true;
-
-  constructor(private http: HttpClient, private postService: PostService) { }
-
+  constructor(private http: HttpClient, private authenticationService: AuthenticationService, private alertService: AlertService) {
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+  }
+   
   ngOnInit() {
   }
-
-  
-  save(){
-
-    this.postService.createPost(this.post)
-    this.cancel();
+   
+  fileProgress(fileInput: any) {
+      this.fileData = <File>fileInput.target.files[0];
+      this.preview();
   }
-
-
-  cancel(){
-    this.post = new Post();
-    this.tableMode = true;
-  }
-
-  add(){
-    this.cancel();
-    this.tableMode = false;
-  }
-
-
-
-
-  public uploadFile = (files) => {
-    if (files.length === 0) {
+ 
+  preview() {
+    var mimeType = this.fileData.type;
+    if (mimeType.match(/image\/*/) == null) {
       return;
     }
- 
-    let fileToUpload = <File>files[0];
+    var reader = new FileReader();      
+    reader.readAsDataURL(this.fileData); 
+    reader.onload = (_event) => { 
+      this.previewUrl = reader.result; 
+    }
+  }
+   
+  onSubmit() {
     const formData = new FormData();
-    formData.append('file', fileToUpload, fileToUpload.name);
+    formData.append('files', this.fileData);
+     
+    this.fileUploadProgress = '0%';
  
-    this.http.post('https://localhost:44380/api/Posts/uplaodImage', formData, {reportProgress: true, observe: 'events'})
-      .subscribe(event => {
-        if (event.type === HttpEventType.UploadProgress)
-          this.progress = Math.round(100 * event.loaded / event.total);
-        else if (event.type === HttpEventType.Response) {
-          this.message = 'Upload success.';
-          this.onUploadFinished.emit(event.body);
-        }
-      });
+    this.http.post('https://localhost:44380/api/Posts/uplaodImage', formData, {
+      reportProgress: true,
+      observe: 'events'   
+    })
+    .subscribe(events => {
+      if(events.type === HttpEventType.UploadProgress) {
+        this.fileUploadProgress = Math.round(events.loaded / events.total * 100) + '%';
+        console.log(this.fileUploadProgress);
+      } else if(events.type === HttpEventType.Response) {
+        this.fileUploadProgress = '';
+        console.log(events.body);             
+      }        
+    }) 
+    this.post.userId = this.currentUser.id;
+    this.post.locationPath = this.fileData.name;
+    let id = this.post.id = 0;
+    let title = this.post.title;
+    let locationPath = "images\\\\"+ this.post.locationPath ;
+    let userId = this.post.userId;
+    this.http.post('https://localhost:44380/api/Posts', {id, title, locationPath, userId }).subscribe(res => {console.log(res);})
+    this.post.title = '';
+    this.alertService.success("Post added");
   }
 }

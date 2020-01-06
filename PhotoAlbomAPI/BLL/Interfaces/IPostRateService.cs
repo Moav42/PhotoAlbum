@@ -9,5 +9,6 @@ namespace BLL.Interfaces
         Task<IEnumerable<T>> GetAllByUserAsync(string usertId);
         Task AddAsync(T item);
         Task UpdateAsync(T item);
+        Task<bool> GetPostRate(int postId, string userId);
     }
 }

@@ -12,3 +12,8 @@
     outline: none;
     padding: 0 .5rem;
   }
+
+.center{
+  text-align: center;
+   display: inline-block;
+}

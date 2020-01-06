@@ -16,11 +16,9 @@ export class UsersManagerComponent implements OnInit {
   
   constructor(private service: UserManagerService, private http: HttpClient) { }
 
-
   ngOnInit() {
     this.loaudUsers();
   }
-
 
   loaudUsers(){
     this.service.getUsers().subscribe((date: UserVM[]) => this.users = date);

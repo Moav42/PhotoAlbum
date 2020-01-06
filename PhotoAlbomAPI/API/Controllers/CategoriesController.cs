@@ -116,7 +116,7 @@ namespace API.Controllers
         }
 
         [HttpPost("post")]
-        [Authorize(Policy = "AllUsers")]
+        [Authorize(Policy = "Moderator")]
         public async Task<ActionResult<PostCategoryViewModel>> AddPostToCategory(PostCategoryViewModel model)
         {
             if (!ModelState.IsValid)

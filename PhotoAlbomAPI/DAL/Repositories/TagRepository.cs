@@ -10,12 +10,9 @@ namespace DAL.Repositories
     {
         private readonly DbContext DB;
 
-        private readonly PostTagsRepository _postTags;
-
         public TagRepository(DbContext context)
         {
             DB = context;
-            _postTags = new PostTagsRepository(context);
         }
 
         public void Create(Tag item)
@@ -50,8 +47,7 @@ namespace DAL.Repositories
 
         public IEnumerable<Tag> ReadAllByPost(int postId)
         {
-
-            var postTags = _postTags.ReadAll().Where(pt => pt.PostId == postId);
+            var postTags = DB.PostTags.Where(pt => pt.PostId == postId);
             var tags = new List<Tag>();
             foreach (var item in postTags)
             {
@@ -63,13 +59,13 @@ namespace DAL.Repositories
         public void AddTagToPost(int tagId, int postId)
         {
             var postTag = new PostTags { PostId = postId, TagId = tagId };
-            _postTags.Create(postTag);
+            DB.PostTags.Add(postTag);
         }
 
         public void DeleteTagFromPost(int tagId, int postId)
         {
             var postTag = new PostTags { PostId = postId, TagId = tagId };
-            _postTags.Delete(postTag);
+            DB.PostTags.Remove(postTag);
         }
     }
 }

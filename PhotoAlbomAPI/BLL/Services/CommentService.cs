@@ -5,6 +5,7 @@ using DAL.Interfaces;
 using BLL.Interfaces;
 using System.Threading.Tasks;
 using AutoMapper;
+using System;
 
 namespace BLL.Services
 {
@@ -54,6 +55,7 @@ namespace BLL.Services
         public async Task AddAsync(CommentBLL item)
         {
             var itemDAL = _mapper.Map<Comment>(item);
+            itemDAL.AddingDate = DateTime.Now;
             _unitOfWork.CommentsRepository.Create(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
