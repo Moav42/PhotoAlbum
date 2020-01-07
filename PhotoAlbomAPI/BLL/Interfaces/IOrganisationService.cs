@@ -6,10 +6,10 @@ namespace BLL.Interfaces
 {
     public interface IOrganisationService<T>
     {
-        Task<IEnumerable<T>> GetAllAsync();
-        Task<T> GetAsync(int id);
+        Task<IEnumerable<T>> GetAllOrganisationAccountsAsync();
+        Task<T> GetOrganisationAccountAsync(int id);
         Task<IdentityResult> RegisterOrganisation(T model);
-        Task UpdateAsync(T model);
-        Task DeleteAsync(int id);
+        Task UpdateOrganisationAccountAsync(T model);
+        Task DeleteOrganisationAccountAsync(int id);
     }
 }

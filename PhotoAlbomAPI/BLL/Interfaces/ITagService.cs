@@ -5,12 +5,11 @@ namespace BLL.Interfaces
 {
     public interface ITagService<T>
     {
-        T Get(int id);
-        Task<T> GetAsync(int id);     
-        Task<IEnumerable<T>> GetAllAsync();
-        Task AddAsync(T item);
-        Task UpdateAsync(T item);
-        Task DeleteAsync(int id);
+        Task<T> GetTagAsync(int id);     
+        Task<IEnumerable<T>> GetAllTagsAsync();
+        Task AddTagAsync(T item);
+        Task UpdateTagAsync(T item);
+        Task DeleteTagAsync(int id);
         Task AddTagToPostAsync(int postId, int tagId);
     }
 }

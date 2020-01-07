@@ -27,16 +27,25 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task AddAsync(TagBLL item)
+        /// <summary>
+        /// Creates Tag
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task AddTagAsync(TagBLL item)
         {
             var itemDAL = _mapper.Map<TagBLL, Tag>(item);
-            _unitOfWork.TagsRepository.Create(itemDAL);
+            _unitOfWork.TagsRepository.CreateTag(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<TagBLL>> GetAllAsync()
+        /// <summary>
+        /// Gets all tags
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<TagBLL>> GetAllTagsAsync()
         {
-            var itemsDAL =  await Task.Run(() =>_unitOfWork.TagsRepository.ReadAll());
+            var itemsDAL =  await Task.Run(() =>_unitOfWork.TagsRepository.ReadAllTags());
             var iemsBLL = new List<TagBLL>();
 
             foreach (var item in itemsDAL)
@@ -47,27 +56,36 @@ namespace BLL.Services
             return iemsBLL;
         }
 
-        public async Task<TagBLL> GetAsync(int id)
+        /// <summary>
+        /// Gets tag by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<TagBLL> GetTagAsync(int id)
         {
-            var item = await Task.Run(() => _unitOfWork.TagsRepository.Read(id));
+            var item = await Task.Run(() => _unitOfWork.TagsRepository.ReadTag(id));
             return _mapper.Map<TagBLL>(item);
         }
 
-        public TagBLL Get(int id)
+        /// <summary>
+        /// Updates tag
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task UpdateTagAsync(TagBLL item)
         {
-            var item = _unitOfWork.TagsRepository.Read(id);
-            return _mapper.Map<TagBLL>(item);
-        }
-
-        public async Task UpdateAsync(TagBLL item)
-        {
-            _unitOfWork.TagsRepository.Update( _mapper.Map<Tag>(item));
+            _unitOfWork.TagsRepository.UpdateTag( _mapper.Map<Tag>(item));
             await _unitOfWork.SaveChangesAsync();
         }
         
-        public async Task DeleteAsync(int id)
+        /// <summary>
+        /// Deletes tag
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteTagAsync(int id)
         {
-            _unitOfWork.TagsRepository.Delete(id);
+            _unitOfWork.TagsRepository.DeleteTag(id);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -79,7 +97,7 @@ namespace BLL.Services
         /// <returns></returns>
         public async Task AddTagToPostAsync(int postId, int tagId)
         {
-            _unitOfWork.PostTagsRepository.Create(new PostTags { PostId = postId, TagId = tagId });
+            _unitOfWork.PostTagsRepository.AddTagToPost(new PostTags { PostId = postId, TagId = tagId });
             await _unitOfWork.SaveChangesAsync();
         }
     }

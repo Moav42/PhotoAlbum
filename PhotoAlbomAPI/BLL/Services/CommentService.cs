@@ -35,7 +35,7 @@ namespace BLL.Services
         /// <returns></returns>
         public async Task<IEnumerable<CommentBLL>> GetByPostAsync(int postId)
         {
-            var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByPost(postId));
+            var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadAllCommentsByPost(postId));
             var iemsBLL = new List<CommentBLL>();
 
             foreach (var item in itemsDAL)
@@ -51,9 +51,9 @@ namespace BLL.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<IEnumerable<CommentBLL>> GetByUserAsync(string userId)
+        public async Task<IEnumerable<CommentBLL>> GetAllCommentsByUserAsync(string userId)
         {
-            var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByUser(userId));
+            var itemsDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReaAllCommentsdByUser(userId));
             var iemsBLL = new List<CommentBLL>();
 
             foreach (var item in itemsDAL)
@@ -63,36 +63,49 @@ namespace BLL.Services
 
             return iemsBLL;
         }
-
-        public async Task<CommentBLL> GetAsync(int id)
+        /// <summary>
+        /// Gets comment by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<CommentBLL> GetCommentsAsync(int id)
         {
-            var item = await Task.Run(() => _unitOfWork.CommentsRepository.Read(id));
+            var item = await Task.Run(() => _unitOfWork.CommentsRepository.ReadComment(id));
             return _mapper.Map<CommentBLL>(item);
         }
 
-        public CommentBLL Get(int id)
-        {
-            var item = _unitOfWork.CommentsRepository.Read(id);
-            return _mapper.Map<CommentBLL>(item);
-        }
-
-        public async Task AddAsync(CommentBLL item)
+        /// <summary>
+        /// Creates new comment
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task AddCommentAsync(CommentBLL item)
         {
             var itemDAL = _mapper.Map<Comment>(item);
             itemDAL.AddingDate = DateTime.Now;
-            _unitOfWork.CommentsRepository.Create(itemDAL);
+            _unitOfWork.CommentsRepository.CreateComment(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(CommentBLL item)
+        /// <summary>
+        /// Updates comment
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task UpdateCommentAsync(CommentBLL item)
         {
-            _unitOfWork.CommentsRepository.Update(_mapper.Map<Comment>(item));
+            _unitOfWork.CommentsRepository.UpdateComment(_mapper.Map<Comment>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        /// <summary>
+        /// Deletes comment
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteCommentAsync(int id)
         {
-            _unitOfWork.CommentsRepository.Delete(id);
+            _unitOfWork.CommentsRepository.DeleteComment(id);
             await _unitOfWork.SaveChangesAsync();
         }
     }

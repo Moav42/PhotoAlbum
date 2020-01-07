@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Adds rate to post
         /// </summary>
         /// <param name="item"></param>
-        public void Create(PostRate item)
+        public void AddRateToPost(PostRate item)
         {
             DB.PostRates.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Updates rate of post
         /// </summary>
         /// <param name="item"></param>
-        public void Update(PostRate item)
+        public void UpdatePostRate(PostRate item)
         {
             DB.PostRates.Update(item);
             DB.SaveChanges();

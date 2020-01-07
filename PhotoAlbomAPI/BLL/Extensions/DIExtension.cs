@@ -68,6 +68,7 @@ namespace BLL.Extensions
 
             return services;
         }
+
         /// <summary>
         /// Adds and configures the identity system for application
         /// </summary>
@@ -88,6 +89,7 @@ namespace BLL.Extensions
 
             return services;
         }
+
         /// <summary>
         /// Adds and configures the swwagger service support for application
         /// </summary>

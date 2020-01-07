@@ -20,6 +20,11 @@ namespace API.Controllers
     {
         private readonly ICommentService<CommentBLL> _commentService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public CommentsController(ICommentService<CommentBLL> commentService)
         {
             _commentService = commentService;
@@ -57,7 +62,7 @@ namespace API.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<CommentModel>> GetComment(int id)
         {
-            var modelBLL = await _commentService.GetAsync(id);
+            var modelBLL = await _commentService.GetCommentsAsync(id);
 
             if (modelBLL == null)
             {
@@ -85,7 +90,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _commentService.AddAsync(model.Transform());
+            await _commentService.AddCommentAsync(model.Transform());
 
             return CreatedAtAction(nameof(GetComment), new { id = model.Id }, model);
         }
@@ -107,11 +112,11 @@ namespace API.Controllers
             {
                 try
                 {
-                    await _commentService.UpdateAsync(model.Transform());
+                    await _commentService.UpdateCommentAsync(model.Transform());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_commentService.Get(model.Id) == null)
+                    if (await _commentService.GetCommentsAsync(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -136,13 +141,13 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteComment(int id)
         {
-            var model = await _commentService.GetAsync(id);
+            var model = await _commentService.GetCommentsAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            await _commentService.DeleteAsync(model.Id);
+            await _commentService.DeleteCommentAsync(model.Id);
 
             return NoContent();
         }

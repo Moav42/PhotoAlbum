@@ -5,12 +5,11 @@ namespace BLL.Interfaces
 {
     public interface ICommentService<T>
     {
-        T Get(int id);
-        Task<IEnumerable<T>> GetByUserAsync(string userId);
+        Task<IEnumerable<T>> GetAllCommentsByUserAsync(string userId);
         Task<IEnumerable<T>> GetByPostAsync(int postId);
-        Task<T> GetAsync(int id);
-        Task AddAsync(T item);
-        Task UpdateAsync(T item);
-        Task DeleteAsync(int id);
+        Task<T> GetCommentsAsync(int id);
+        Task AddCommentAsync(T item);
+        Task UpdateCommentAsync(T item);
+        Task DeleteCommentAsync(int id);
     }
 }

@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Organisation Read(int id)
+        public Organisation ReadOrganisation(int id)
         {
             return DB.Organisations.Find(id);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Gets all Organisations
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Organisation> ReadAll()
+        public IEnumerable<Organisation> ReadAllOrganisations()
         {
             return DB.Organisations;
         }
@@ -44,7 +44,7 @@ namespace DAL.Repositories
         /// Creates new Organisation
         /// </summary>
         /// <param name="item"></param>
-        public void Create(Organisation item)
+        public void CreateOrganisation(Organisation item)
         {
             DB.Organisations.Add(item);
         }
@@ -53,7 +53,7 @@ namespace DAL.Repositories
         /// Updates Organisation
         /// </summary>
         /// <param name="item"></param>
-        public void Update(Organisation item)
+        public void UpdateOrganisation(Organisation item)
         {
             DB.Organisations.Update(item);
         }
@@ -62,7 +62,7 @@ namespace DAL.Repositories
         /// Deletes Organisation by id
         /// </summary>
         /// <param name="id"></param>
-        public void Delete(int id)
+        public void DeleteOrganisation(int id)
         {
             var item = DB.Organisations.Find(id);
             if (item != null)

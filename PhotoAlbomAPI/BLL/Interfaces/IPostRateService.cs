@@ -5,8 +5,8 @@ namespace BLL.Interfaces
 {
     public interface IPostRateService<T>
     {
-        Task AddAsync(T item);
-        Task UpdateAsync(T item);
+        Task AddRateToPostAsync(T item);
+        Task UpdatePostRateAsync(T item);
         Task<bool> GetPostRate(int postId, string userId);
     }
 }

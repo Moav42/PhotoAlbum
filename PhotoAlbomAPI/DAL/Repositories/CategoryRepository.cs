@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Create new category
         /// </summary>
         /// <param name="item"></param>
-        public void Create(Category item)
+        public void CreateCategory(Category item)
         {
             DB.Categories.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Delete category
         /// </summary>
         /// <param name="id"></param>
-        public void Delete(int id)
+        public void DeleteCategory(int id)
         {
             Category category = DB.Categories.Find(id);
             if (category != null)
@@ -49,7 +49,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Category Read(int id)
+        public Category ReadCategory(int id)
         {
             return DB.Categories.Find(id);
         }
@@ -58,7 +58,7 @@ namespace DAL.Repositories
         /// Gets all categies
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Category> ReadAll()
+        public IEnumerable<Category> ReadAllCategories()
         {
             return DB.Categories;
         }
@@ -67,7 +67,7 @@ namespace DAL.Repositories
         /// Udates category
         /// </summary>
         /// <param name="item"></param>
-        public void Update(Category item)
+        public void UpdateCategory(Category item)
         {
             DB.Categories.Update(item);
         }     

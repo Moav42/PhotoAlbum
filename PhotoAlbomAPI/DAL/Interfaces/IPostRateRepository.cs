@@ -4,8 +4,8 @@ namespace DAL.Interfaces
 {
     public interface IPostRateRepository<T>
     {
-        void Create(T item);
-        void Update(T item);
+        void AddRateToPost(T item);
+        void UpdatePostRate(T item);
         bool GetPostsRate(int postId, string userId);
     }
 }

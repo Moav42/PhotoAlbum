@@ -33,6 +33,10 @@ namespace DAL
 
         private readonly DbContext _context;
 
+        /// <summary>
+        /// Configures Unit Of Work by DbContext using DI
+        /// </summary>
+        /// <param name="db"></param>
         public UnitOfWork(DbContext db)
         {
             _context = db;
@@ -118,11 +122,18 @@ namespace DAL
             }
         }
 
+        /// <summary>
+        /// Saved changes in the database asynchronously
+        /// </summary>
+        /// <returns></returns>
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Saved changes in the database
+        /// </summary>
         public void SaveChanges()
         {
             _context.SaveChanges();

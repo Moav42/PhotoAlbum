@@ -21,6 +21,11 @@ namespace API.Controllers
         private readonly ICategoryService<CategoryBLL> _categoryService;
         private readonly IPostService<PostBLL> _postService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public CategoriesController(ICategoryService<CategoryBLL> categoryService, IPostService<PostBLL> postService)
         {
             _categoryService = categoryService;
@@ -35,7 +40,7 @@ namespace API.Controllers
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
         {
-            var modelBLL = await _categoryService.GetAllAsync();
+            var modelBLL = await _categoryService.GetAllCategoriesAsync();
             var models = new List<CategoryModel>();
 
             foreach (var item in modelBLL)
@@ -57,7 +62,7 @@ namespace API.Controllers
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<CategoryModel>> GetCategory(int id)
         {
-            var modelBLL = await _categoryService.GetAsync(id);
+            var modelBLL = await _categoryService.GetCategoryAsync(id);
 
             if (modelBLL == null)
             {
@@ -86,7 +91,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _categoryService.AddAsync(model.Transform());
+            await _categoryService.AddCategoryAsync(model.Transform());
 
             return CreatedAtAction(nameof(GetCategory), new { id = model.Id }, model);
         }
@@ -114,11 +119,11 @@ namespace API.Controllers
 
                 try
                 {
-                    await _categoryService.UpdateAsync(model.Transform());
+                    await _categoryService.UpdateCategoryAsync(model.Transform());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_categoryService.Get(id) == null)
+                    if (await _categoryService.GetCategoryAsync(id) == null)
                     {
                         return NotFound();
                     }
@@ -144,13 +149,13 @@ namespace API.Controllers
         [Authorize(Policy = "Organisation")]
         public async Task<ActionResult> DeleteCategory(int id)
         {
-            var model = await _categoryService.GetAsync(id);
+            var model = await _categoryService.GetCategoryAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            await _categoryService.DeleteAsync(model.Id);
+            await _categoryService.DeleteCategoryAsync(model.Id);
 
             return NoContent();
         }
@@ -185,7 +190,7 @@ namespace API.Controllers
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPostsByCategory(int categoryId)
         {
-            var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
+            var modelBLL = await _postService.GetAllPostsByCategoryAsync(categoryId);
             var models = new List<PostModel>();
 
             foreach (var item in modelBLL)

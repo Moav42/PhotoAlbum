@@ -4,11 +4,11 @@ namespace DAL.Interfaces
 {
     public interface IPostRepository<T>
     {
-        IEnumerable<T> ReadAll();
-        T Read(int id);
-        void Create(T item);
-        void Update(T item);
-        void Delete(int id);
+        IEnumerable<T> ReadAllPosts();
+        T ReadPost(int id);
+        void CreatePost(T item);
+        void UpdatePost(T item);
+        void DeletePost(int id);
         IEnumerable<T> ReadAllPostsByCategory(int categoryId);
     }
 }

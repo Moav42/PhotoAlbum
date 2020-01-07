@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Creates new Comment
         /// </summary>
         /// <param name="item"></param>
-        public void Create(Comment item)
+        public void CreateComment(Comment item)
         {
             DB.Comments.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Delets Comment
         /// </summary>
         /// <param name="id"></param>
-        public void Delete(int id)
+        public void DeleteComment(int id)
         {
             var item = DB.Comments.Find(id);
             if (item != null)
@@ -49,7 +49,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Comment Read(int id)
+        public Comment ReadComment(int id)
         {
             return DB.Comments.Find(id);
         }
@@ -59,7 +59,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="postId"></param>
         /// <returns></returns>
-        public IEnumerable<Comment> ReadByPost(int postId)
+        public IEnumerable<Comment> ReadAllCommentsByPost(int postId)
         {
             return DB.Comments.Where(c => c.PostId == postId);
         }
@@ -69,7 +69,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public IEnumerable<Comment> ReadByUser(string userId)
+        public IEnumerable<Comment> ReaAllCommentsdByUser(string userId)
         {
             return DB.Comments.Where(c => c.UserId == userId);
         }
@@ -78,7 +78,7 @@ namespace DAL.Repositories
         /// Updates Comment
         /// </summary>
         /// <param name="item"></param>
-        public void Update(Comment item)
+        public void UpdateComment(Comment item)
         {
             DB.Comments.Update(item);
         }

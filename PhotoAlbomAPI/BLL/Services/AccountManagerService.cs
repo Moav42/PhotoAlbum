@@ -24,6 +24,10 @@ namespace BLL.Services
             _userManager = userManager;
         }
 
+        /// <summary>
+        /// Gets all users accounts 
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<UserProfile>> GetAllUsers()
         {
             List<UserProfile> userViewModels = await Task.Run(() =>

@@ -25,6 +25,11 @@ namespace API.Controllers
         private readonly IPostService<PostBLL> _postService;
         private readonly IPostRateService<PostRateBLL> _postRateService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public PostsController(IPostService<PostBLL> postService, IPostRateService<PostRateBLL> postRateService)
         {
             _postService = postService;
@@ -38,7 +43,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
         {
-            var modelBLL = await _postService.GetAllAsync();
+            var modelBLL = await _postService.GetAllPostsAsync();
             var models = new List<PostModel>();
 
             foreach (var item in modelBLL)
@@ -60,7 +65,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<PostModel>> GetPost(int id)
         {
-            var modelBLL = await _postService.GetAsync(id);
+            var modelBLL = await _postService.GetPostAsync(id);
 
             if (modelBLL == null)
             {
@@ -80,7 +85,7 @@ namespace API.Controllers
         [HttpGet("{postId}/image")]
         public async Task<ActionResult> GetPostImageById(int postId)
         {
-            string path = await _postService.GetPathByIdAsync(postId);
+            string path = await _postService.GetImagePathByIdAsync(postId);
             if(path != null)
             {
                 Byte[] b = await System.IO.File.ReadAllBytesAsync(path);
@@ -108,7 +113,7 @@ namespace API.Controllers
             {
                 return BadRequest("Not a valid model");
             }           
-            await _postService.AddAsync(model.Transform());
+            await _postService.AddPostAsync(model.Transform());
 
             return CreatedAtAction(nameof(GetPost), new { id = model.Id }, model);
         }
@@ -174,11 +179,11 @@ namespace API.Controllers
                 }
                 try
                 {
-                    await _postService.UpdateAsync(model.Transform());
+                    await _postService.UpdatePostAsync(model.Transform());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_postService.Get(model.Id) == null)
+                    if (await _postService.GetPostAsync(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -204,13 +209,13 @@ namespace API.Controllers
         [Authorize(Policy = "Moderator")]
         public async Task<ActionResult> DeletePost(int id)
         {
-            var model = await _postService.GetAsync(id);
+            var model = await _postService.GetPostAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            await _postService.DeleteAsync(model.Id);
+            await _postService.DeletePostAsync(model.Id);
 
             return NoContent();
         }
@@ -238,7 +243,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _postRateService.AddAsync(model.Transform());
+            await _postRateService.AddRateToPostAsync(model.Transform());
 
             return Ok(model);
         }
@@ -250,7 +255,7 @@ namespace API.Controllers
         [HttpGet("{postId}/comments")]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetPostComments(int postId)
         {
-            var modelBLL = await _postService.GetCommentsAsync(postId);
+            var modelBLL = await _postService.GetAllPostCommentsAsync(postId);
             var models = new List<CommentModel>();
 
             foreach (var item in modelBLL)
@@ -273,7 +278,7 @@ namespace API.Controllers
         [HttpGet("{postId}/tags")]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(int postId)
         {
-            var modelBLL = await _postService.GetTagsAsync(postId);
+            var modelBLL = await _postService.GetAllPostTagsAsync(postId);
             var models = new List<TagModel>();
 
             foreach (var item in modelBLL)

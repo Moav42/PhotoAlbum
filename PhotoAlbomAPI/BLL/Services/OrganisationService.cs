@@ -45,7 +45,7 @@ namespace BLL.Services
             {
                 model.UserId = userIdentity.Id;
                 var itemDAL = _mapper.Map<Organisation>(model);
-                _unitOfWork.OrganisationsRepository.Create(itemDAL);
+                _unitOfWork.OrganisationsRepository.CreateOrganisation(itemDAL);
 
                 await _unitOfWork.SaveChangesAsync();
                 await _userManager.AddToRoleAsync(userIdentity, "user");
@@ -55,9 +55,13 @@ namespace BLL.Services
             return result;
         }
 
-        public async Task<IEnumerable<OrganisationBLL>> GetAllAsync()
+        /// <summary>
+        /// Gets all orgonistions accounts
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<OrganisationBLL>> GetAllOrganisationAccountsAsync()
         {
-            var itemsDAL = await Task.Run(() => _unitOfWork.OrganisationsRepository.ReadAll());
+            var itemsDAL = await Task.Run(() => _unitOfWork.OrganisationsRepository.ReadAllOrganisations());
             var iemsBLL = new List<OrganisationBLL>();
 
             foreach (var item in itemsDAL)
@@ -68,21 +72,36 @@ namespace BLL.Services
             return iemsBLL;
         }
 
-        public async Task<OrganisationBLL> GetAsync(int id)
+        /// <summary>
+        /// Gets orgonisation account by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<OrganisationBLL> GetOrganisationAccountAsync(int id)
         {
-            var item = await Task.Run(() => _unitOfWork.OrganisationsRepository.Read(id));
+            var item = await Task.Run(() => _unitOfWork.OrganisationsRepository.ReadOrganisation(id));
             return _mapper.Map<OrganisationBLL>(item);
         }
 
-        public async Task UpdateAsync(OrganisationBLL item)
+        /// <summary>
+        /// Updates orgonisation account 
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task UpdateOrganisationAccountAsync(OrganisationBLL item)
         {
-            _unitOfWork.OrganisationsRepository.Update(_mapper.Map<Organisation>(item));
+            _unitOfWork.OrganisationsRepository.UpdateOrganisation(_mapper.Map<Organisation>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        /// <summary>
+        /// Delets orgonisation account 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteOrganisationAccountAsync(int id)
         {
-            _unitOfWork.OrganisationsRepository.Delete(id);
+            _unitOfWork.OrganisationsRepository.DeleteOrganisation(id);
             await _unitOfWork.SaveChangesAsync();
         }
     }

@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Adds tag to post
         /// </summary>
         /// <param name="item"></param>
-        public void Create(PostTags item)
+        public void AddTagToPost(PostTags item)
         {
             DB.PostTags.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Removes tag from post
         /// </summary>
         /// <param name="item"></param>
-        public void Delete(PostTags item)
+        public void DeleteTagFromPost(PostTags item)
         {
             DB.PostTags.Remove(item);
         }

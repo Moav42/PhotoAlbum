@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Adds category to post
         /// </summary>
         /// <param name="item"></param>
-        public void Create(PostCategories item)
+        public void AddPostToCategory(PostCategories item)
         {
             DB.PostCategories.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Deletes category from post
         /// </summary>
         /// <param name="item"></param>
-        public void Delete(PostCategories item)
+        public void DeletePostFromCategory(PostCategories item)
         {
             DB.PostCategories.Remove(item);
         }

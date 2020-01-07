@@ -20,6 +20,11 @@ namespace API.Controllers
     {
         private readonly ITagService<TagBLL> _tagService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public TagsController(ITagService<TagBLL> tagService)
         {
             _tagService = tagService;
@@ -34,7 +39,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
         {
-            var tagsBLL = await _tagService.GetAllAsync();
+            var tagsBLL = await _tagService.GetAllTagsAsync();
             var tagModels = new List<TagModel>();
 
             foreach (var item in tagsBLL)
@@ -56,7 +61,7 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TagModel>> GetTag(int id)
         {
-            var tagsBLL = await _tagService.GetAsync(id);
+            var tagsBLL = await _tagService.GetTagAsync(id);
 
             if(tagsBLL == null)
             {
@@ -85,7 +90,7 @@ namespace API.Controllers
                 return BadRequest(ModelState);
             }
 
-            await _tagService.AddAsync(model.Transform());
+            await _tagService.AddTagAsync(model.Transform());
 
             return CreatedAtAction(nameof(GetTag), new { id = model.Id }, model);
         }
@@ -111,11 +116,11 @@ namespace API.Controllers
                 }
                 try
                 {
-                    await _tagService.UpdateAsync(model.Transform());
+                    await _tagService.UpdateTagAsync(model.Transform());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (_tagService.Get(model.Id) == null)
+                    if (await _tagService.GetTagAsync(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -141,13 +146,13 @@ namespace API.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTag(int id)
         {
-            var model = await _tagService.GetAsync(id);
+            var model = await _tagService.GetTagAsync(id);
             if (model == null)
             {
                 return NotFound();
             }
 
-            await _tagService.DeleteAsync(model.Id);
+            await _tagService.DeleteTagAsync(model.Id);
 
             return NoContent();
         }

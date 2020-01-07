@@ -4,7 +4,7 @@ namespace DAL.Interfaces
 {
     public interface IPostCategoriesRepository<T>
     {
-        void Create(T item);
-        void Delete(T item);
+        void AddPostToCategory(T item);
+        void DeletePostFromCategory(T item);
     }
 }

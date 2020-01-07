@@ -19,6 +19,11 @@ namespace API.Controllers
         private readonly IAccountService<UserBLL> _accountService;
         private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public AccountController( IOrganisationService<OrganisationBLL> organisationService, IAccountService<UserBLL> accountService )
         {      
             _organisationService = organisationService;

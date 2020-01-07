@@ -17,6 +17,11 @@ namespace API.Controllers
     {
         private readonly IAuthorizationService<UserBLL> _authorizationService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public AuthorizationController(IAuthorizationService<UserBLL> authorizationService)
         {
             _authorizationService = authorizationService;

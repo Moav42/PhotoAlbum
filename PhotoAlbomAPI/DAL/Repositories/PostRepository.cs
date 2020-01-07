@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Creates new post
         /// </summary>
         /// <param name="item"></param>
-        public void Create(Post item)
+        public void CreatePost(Post item)
         {
             DB.Posts.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Deletes post by id
         /// </summary>
         /// <param name="id"></param>
-        public void Delete(int id)
+        public void DeletePost(int id)
         {
             var item = DB.Posts.Find(id);
             if (item != null)
@@ -49,7 +49,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Post Read(int id)
+        public Post ReadPost(int id)
         {
             return DB.Posts.Find(id);
         }
@@ -58,7 +58,7 @@ namespace DAL.Repositories
         /// Gets all posts
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Post> ReadAll()
+        public IEnumerable<Post> ReadAllPosts()
         {
             return DB.Posts;
         }
@@ -67,7 +67,7 @@ namespace DAL.Repositories
         /// Update post
         /// </summary>
         /// <param name="item"></param>
-        public void Update(Post item)
+        public void UpdatePost(Post item)
         {
             DB.Posts.Update(item);
         }
@@ -83,7 +83,7 @@ namespace DAL.Repositories
             var posts = new List<Post>();
             foreach (var item in postCategories)
             {
-                posts.Add(Read(item.PostId));
+                posts.Add(ReadPost(item.PostId));
             }
             return posts;
         }

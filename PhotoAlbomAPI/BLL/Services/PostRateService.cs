@@ -27,16 +27,26 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task AddAsync(PostRateBLL item)
+        /// <summary>
+        /// Adds rate to post
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task AddRateToPostAsync(PostRateBLL item)
         {
             var itemDAL = _mapper.Map<PostRate>(item);
-            _unitOfWork.PostRateRepository.Create(itemDAL);
+            _unitOfWork.PostRateRepository.AddRateToPost(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(PostRateBLL item)
+        /// <summary>
+        /// Updates rate of post
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task UpdatePostRateAsync(PostRateBLL item)
         {
-            _unitOfWork.PostRateRepository.Update(_mapper.Map<PostRate>(item));
+            _unitOfWork.PostRateRepository.UpdatePostRate(_mapper.Map<PostRate>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 

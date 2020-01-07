@@ -27,9 +27,13 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CategoryBLL>> GetAllAsync()
+        /// <summary>
+        /// Gets all categories asynchronously
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<CategoryBLL>> GetAllCategoriesAsync()
         {
-            var itemsDAL = await Task.Run(() => _unitOfWork.CategorysRepository.ReadAll());           
+            var itemsDAL = await Task.Run(() => _unitOfWork.CategorysRepository.ReadAllCategories());           
             var iemsBLL = new List<CategoryBLL>();
 
             foreach (var item in itemsDAL)
@@ -39,34 +43,49 @@ namespace BLL.Services
 
             return iemsBLL;
         }
-        public CategoryBLL Get(int id)
+
+        /// <summary>
+        /// Gets category by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<CategoryBLL> GetCategoryAsync(int id)
         {
-            var item =  _unitOfWork.CategorysRepository.Read(id);
+            var item = await Task.Run(() => _unitOfWork.CategorysRepository.ReadCategory(id));
             return _mapper.Map<CategoryBLL>(item);
         }
 
-        public async Task<CategoryBLL> GetAsync(int id)
-        {
-            var item = await Task.Run(() => _unitOfWork.CategorysRepository.Read(id));
-            return _mapper.Map<CategoryBLL>(item);
-        }
-
-        public async Task AddAsync(CategoryBLL item)
+        /// <summary>
+        /// Creates new category
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task AddCategoryAsync(CategoryBLL item)
         {
             var itemDAL = _mapper.Map<Category>(item);
-            _unitOfWork.CategorysRepository.Create(itemDAL);
+            _unitOfWork.CategorysRepository.CreateCategory(itemDAL);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(CategoryBLL item)
+        /// <summary>
+        /// Udates category
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public async Task UpdateCategoryAsync(CategoryBLL item)
         {
-            _unitOfWork.CategorysRepository.Update(_mapper.Map<Category>(item));
+            _unitOfWork.CategorysRepository.UpdateCategory(_mapper.Map<Category>(item));
             await _unitOfWork.SaveChangesAsync();
         }
         
-        public async Task DeleteAsync(int id)
+        /// <summary>
+        /// Delets category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task DeleteCategoryAsync(int id)
         {
-            _unitOfWork.CategorysRepository.Delete(id);
+            _unitOfWork.CategorysRepository.DeleteCategory(id);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -78,7 +97,7 @@ namespace BLL.Services
         /// <returns></returns>
         public async Task AddCategoryToPostAsync(int postId, int categoryId)
         {
-            _unitOfWork.PostCategoriesRepository.Create(new PostCategories { PostId = postId, CategoryId = categoryId });
+            _unitOfWork.PostCategoriesRepository.AddPostToCategory(new PostCategories { PostId = postId, CategoryId = categoryId });
             await _unitOfWork.SaveChangesAsync();
         }
     }

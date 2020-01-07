@@ -23,6 +23,11 @@ namespace API.Controllers
         private readonly IAccountManagerService<UserBLL> _accountManagerService;
         private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
+        /// <summary>
+        /// Configures the controller with the appropriate services using the dependency injection 
+        /// </summary>
+        /// <param name="organisationService"></param>
+        /// <param name="accountService"></param>
         public AccountManagerController(IAccountManagerService<UserBLL> accountManagerService, IOrganisationService<OrganisationBLL> organisationService)
         {
             _accountManagerService = accountManagerService;
@@ -56,7 +61,7 @@ namespace API.Controllers
         [HttpGet("organisation")]
         public async Task<ActionResult<IEnumerable<OrganisationModel>>> GetAllOrganisation()
         {
-            var orgs = await _organisationService.GetAllAsync();
+            var orgs = await _organisationService.GetAllOrganisationAccountsAsync();
             var orgsModel = new List<OrganisationModel>();
             foreach (var item in orgs)
             {
@@ -178,11 +183,11 @@ namespace API.Controllers
             {            
                 try
                 {
-                    await _organisationService.UpdateAsync(model.Transform());
+                    await _organisationService.UpdateOrganisationAccountAsync(model.Transform());
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await _organisationService.GetAsync(model.Id) == null)
+                    if (await _organisationService.GetOrganisationAccountAsync(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -209,13 +214,13 @@ namespace API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var model = await _organisationService.GetAsync(orgId);
+                var model = await _organisationService.GetOrganisationAccountAsync(orgId);
                 if (model == null)
                 {
                     return NotFound();
                 }
 
-                await _organisationService.DeleteAsync(orgId);
+                await _organisationService.DeleteOrganisationAccountAsync(orgId);
 
                 return NoContent();
             }

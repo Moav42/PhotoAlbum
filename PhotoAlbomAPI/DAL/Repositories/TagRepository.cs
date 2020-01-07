@@ -26,7 +26,7 @@ namespace DAL.Repositories
         /// Create new tag
         /// </summary>
         /// <param name="item"></param>
-        public void Create(Tag item)
+        public void CreateTag(Tag item)
         {
             DB.Tags.Add(item);
         }
@@ -35,7 +35,7 @@ namespace DAL.Repositories
         /// Delete tag by id
         /// </summary>
         /// <param name="id"></param>
-        public void Delete(int id)
+        public void DeleteTag(int id)
         {
             var item = DB.Tags.Find(id);
             if (item != null)
@@ -49,7 +49,7 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Tag Read(int id)
+        public Tag ReadTag(int id)
         {
             return DB.Tags.Find(id);
         }
@@ -58,7 +58,7 @@ namespace DAL.Repositories
         /// Gets all tags
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Tag> ReadAll()
+        public IEnumerable<Tag> ReadAllTags()
         {
             return DB.Tags;
         }
@@ -67,7 +67,7 @@ namespace DAL.Repositories
         /// Update tag
         /// </summary>
         /// <param name="modeifayModel"></param>
-        public void Update( Tag modeifayModel)
+        public void UpdateTag( Tag modeifayModel)
         {
 
             DB.Update(modeifayModel);
@@ -78,13 +78,13 @@ namespace DAL.Repositories
         /// </summary>
         /// <param name="postId"></param>
         /// <returns></returns>
-        public IEnumerable<Tag> ReadAllByPost(int postId)
+        public IEnumerable<Tag> ReadAllTagsByPost(int postId)
         {
             var postTags = DB.PostTags.Where(pt => pt.PostId == postId);
             var tags = new List<Tag>();
             foreach (var item in postTags)
             {
-                tags.Add(Read(item.TagId));
+                tags.Add(ReadTag(item.TagId));
             }
             return tags;
         }
