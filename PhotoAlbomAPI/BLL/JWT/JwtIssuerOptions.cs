@@ -4,6 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BLL.JWT
 {
+    /// <summary>
+    /// Contains configuration data for Issuer Options of the JWT
+    /// </summary>
     public class JwtIssuerOptions
     {
         public string Issuer { get; set; }

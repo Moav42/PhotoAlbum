@@ -9,6 +9,14 @@ namespace BLL.Extensions
 {
     public static class JWTServicesConfigurationsExtension
     {
+        /// <summary>
+        /// Adds and configures the JWT support. 
+        /// Configure Issuer Options of token, validation of the token, Authentication and Jwt Bearer support.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="signingKey"> Symmetric Security kay for configuration jwt </param>
+        /// <param name="Configuration">Application configuration setting, passed from presentation layer</param>
+        /// <returns></returns>
         public static IServiceCollection AddJWT(this IServiceCollection services, SymmetricSecurityKey signingKey, IConfiguration Configuration)
         {
 

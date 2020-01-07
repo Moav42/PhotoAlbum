@@ -4,6 +4,9 @@ using AutoMapper;
 
 namespace BLL.Maping
 {
+    /// <summary>
+    /// Class containing profile for configuration AutoMapper
+    /// </summary>
     public class MapingProfiles : Profile
     {
         public MapingProfiles()

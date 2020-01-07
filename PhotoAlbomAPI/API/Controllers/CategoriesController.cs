@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// A controller representing functionality to manage the corresponding resource
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class CategoriesController : ControllerBase
@@ -24,6 +27,10 @@ namespace API.Controllers
             _postService = postService;
         }
 
+        /// <summary>
+        /// Gets all Categories
+        /// </summary>
+        /// <returns>If result success returns Categories, if it's not return NotFound</returns>
         [HttpGet]
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<IEnumerable<CategoryModel>>> GetCategories()
@@ -35,9 +42,17 @@ namespace API.Controllers
             {
                 models.Add(item.Transform());
             }
+            if(models.Count == 0)
+            {
+                return NotFound();
+            }
             return Ok(models);
         }
 
+        /// <summary>
+        /// Gets category by id
+        /// </summary>
+        /// <returns>If result success returns Category, if it's not return NotFound</returns>
         [HttpGet("{id}")]
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<CategoryModel>> GetCategory(int id)
@@ -46,7 +61,7 @@ namespace API.Controllers
 
             if (modelBLL == null)
             {
-                return BadRequest("Model doesn`t exicte");
+                return NotFound("Model doesn`t exicte");
             }
             else
             {
@@ -54,13 +69,21 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates new Category
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the created Created status code with the model
+        /// </returns>
         [HttpPost]
         [Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> PostCategory(CategoryModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                return BadRequest(ModelState);
             }
 
             await _categoryService.AddAsync(model.Transform());
@@ -68,6 +91,15 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetCategory), new { id = model.Id }, model);
         }
 
+        /// <summary>
+        /// Edits Category
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the Ok status code with edeted model
+        /// </returns>
         [HttpPut("{id}")]
         [Authorize(Policy = "Organisation")]
         public async Task<ActionResult<CategoryModel>> PutCategory(int id, CategoryModel model)
@@ -86,7 +118,7 @@ namespace API.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await _categoryService.GetAsync(id) == null)
+                    if (_categoryService.Get(id) == null)
                     {
                         return NotFound();
                     }
@@ -97,9 +129,17 @@ namespace API.Controllers
                 }
                 return Ok(model);
             }
-            return BadRequest("Not a valid model");
+            return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Delets Category by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// If category doesn't exist return  NotFound
+        /// If the result is successful return NoContent
+        /// </returns>
         [HttpDelete("{id}")]
         [Authorize(Policy = "Organisation")]
         public async Task<ActionResult> DeleteCategory(int id)
@@ -115,13 +155,21 @@ namespace API.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Add post to the category 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the Ok status code with edeted model
+        /// </returns>
         [HttpPost("post")]
         [Authorize(Policy = "Moderator")]
         public async Task<ActionResult<PostCategoryViewModel>> AddPostToCategory(PostCategoryViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                return BadRequest(ModelState);
             }
 
             await _categoryService.AddCategoryToPostAsync(int.Parse(model.PostId), int.Parse(model.CategoryId));
@@ -129,9 +177,13 @@ namespace API.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Gets all posts of given category
+        /// </summary>
+        /// <returns>If result success returns Posts, if it's not return NotFound</returns>
         [HttpGet("posts/{categoryId}")]
         [Authorize(Policy = "AllUsers")]
-        public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts(int categoryId)
+        public async Task<ActionResult<IEnumerable<PostModel>>> GetPostsByCategory(int categoryId)
         {
             var modelBLL = await _postService.GetAllByCategoryAsync(categoryId);
             var models = new List<PostModel>();
@@ -139,6 +191,11 @@ namespace API.Controllers
             foreach (var item in modelBLL)
             {
                 models.Add(item.Transform());
+            }
+
+            if (models.Count == 0)
+            {
+                return NotFound();
             }
 
             return models;

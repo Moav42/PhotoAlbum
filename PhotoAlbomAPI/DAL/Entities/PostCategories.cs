@@ -2,6 +2,9 @@
 
 namespace DAL.Entities
 {
+    /// <summary>
+    /// Represents a data model of business object, contains annotations for table fields and database relationships
+    /// </summary>
     public class PostCategories
     {
         [Key]

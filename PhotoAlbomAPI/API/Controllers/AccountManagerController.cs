@@ -11,6 +11,9 @@ using API.Extensions;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// The controller representing the resource for managing the users and orgonisations accounts
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "Admin")]
@@ -26,6 +29,10 @@ namespace API.Controllers
             _organisationService = organisationService;
         }
 
+        /// <summary>
+        /// Gets all application users accounts
+        /// </summary>
+        /// <returns>If result success returns users accounts, if it's not return NotFound</returns>
         [HttpGet("users")]
         public async Task<ActionResult<IEnumerable<UserViewModel>>> GetAllUsers()
         {
@@ -35,9 +42,17 @@ namespace API.Controllers
             {
                 userVM.Add(new UserViewModel { Email = item.Email, UserId = item.UserId, UserName = item.UserName });
             }
+            if(userVM.Count == 0)
+            {
+                return NotFound();
+            }
             return Ok(userVM);
         }
 
+        /// <summary>
+        /// Gets all orgonsiations accounts
+        /// </summary>
+        /// <returns>If result success returns orgonsiations accounts, if it's not return NotFound</returns>
         [HttpGet("organisation")]
         public async Task<ActionResult<IEnumerable<OrganisationModel>>> GetAllOrganisation()
         {
@@ -47,9 +62,23 @@ namespace API.Controllers
             {
                 orgsModel.Add(new OrganisationModel { Id = item.Id, Name = item.Name, Location = item.Location });
             }
+
+            if (orgsModel.Count == 0)
+            {
+                return NotFound();
+            }
+
             return Ok(orgsModel);
         }
 
+        /// <summary>
+        /// Register a new user account with given role
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the created model
+        /// </returns>
         [HttpPost("create")]    
         public async Task<IActionResult> CreacteAccount([FromBody]AccountCreateViewModel model)
         {
@@ -74,6 +103,14 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Edits user account
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the edits model
+        /// </returns>
         [HttpPut("users")]
         public async Task<IActionResult> EditUserAccount([FromBody] UserViewModel model)
         {
@@ -95,7 +132,14 @@ namespace API.Controllers
             }
             return BadRequest(ModelState);
         }
-
+        /// <summary>
+        /// Delets user account
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns NoContent, if user doesn't exist retunr NotFound
+        /// </returns>
         [HttpDelete("users")]
         [AllowAnonymous]
         public async Task<ActionResult> DeleteUserAccount([FromBody] DeleteUserViewModel model)
@@ -111,6 +155,16 @@ namespace API.Controllers
             }
             return BadRequest(ModelState);
         }
+
+        /// <summary>
+        /// Edits orgonistions account
+        /// </summary>
+        /// <param name="orgId"></param>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the edits model
+        /// </returns>
 
         [HttpPut("organisation/{orgId}")]
         public async Task<IActionResult> EditOrganisationAccount(int orgId, OrganisationModel model)
@@ -142,6 +196,14 @@ namespace API.Controllers
             return BadRequest("Not a valid model");
         }
 
+        /// <summary>
+        /// Delets orgonisation account
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns NoContent, if user doesn't exist retunr NotFound
+        /// </returns>
         [HttpDelete("organisation/{orgId}")]
         public async Task<ActionResult<OrganisationModel>> DeleteOrganisationAccount(int orgId)
         {

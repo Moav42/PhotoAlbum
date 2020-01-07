@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// Controller responsible for user authorization
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "AllUsers")]
@@ -19,6 +22,13 @@ namespace API.Controllers
             _authorizationService = authorizationService;
         }
 
+        /// <summary>
+        /// Authorizes the user by providing him JWT with claims based on the given credentials
+        /// </summary>
+        /// <param name="credentials">Login and Password of the user</param>
+        /// <returns>
+        /// If provided credentials are valid return JWT, else return  BadRequest.
+        /// </returns>
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]CredentialsViewModel credentials)

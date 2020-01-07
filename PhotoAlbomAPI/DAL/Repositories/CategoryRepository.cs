@@ -7,24 +7,34 @@ using System.Linq;
 namespace DAL.Repositories
 {
     /// <summary>
-    /// 
+    /// Represents an implementation of a repository pattern for the corresponding entity
     /// </summary>
     public class CategoryRepository : ICategoryRepository<Category>
     {
         private readonly DbContext DB;
-        private readonly IPostCategoriesRepository<PostCategories> _postCategories;
 
+        /// <summary>
+        /// Configure repository by DbContext, provides by UoF
+        /// </summary>
+        /// <param name="context"></param>
         public CategoryRepository(DbContext context)
         {
             DB = context;
-            _postCategories = new PostCategoriesRepository(context);
         }
 
+        /// <summary>
+        /// Create new category
+        /// </summary>
+        /// <param name="item"></param>
         public void Create(Category item)
         {
             DB.Categories.Add(item);
         }
 
+        /// <summary>
+        /// Delete category
+        /// </summary>
+        /// <param name="id"></param>
         public void Delete(int id)
         {
             Category category = DB.Categories.Find(id);
@@ -34,42 +44,32 @@ namespace DAL.Repositories
             }
         }
 
+        /// <summary>
+        /// Gets category by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Category Read(int id)
         {
             return DB.Categories.Find(id);
         }
 
+        /// <summary>
+        /// Gets all categies
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Category> ReadAll()
         {
             return DB.Categories;
         }
 
+        /// <summary>
+        /// Udates category
+        /// </summary>
+        /// <param name="item"></param>
         public void Update(Category item)
         {
             DB.Categories.Update(item);
-        }
-
-        public IEnumerable<Category> ReadAllByPost(int postId)
-        {
-            var postComments = DB.PostCategories.Where(pt => pt.PostId == postId);
-            var categories = new List<Category>();
-            foreach (var item in postComments)
-            {
-                categories.Add(Read(item.PostId));
-            }
-            return categories;
-        }
-
-        public void AddTagToPost(int categoryId, int postId)
-        {
-            var postCat = new PostCategories { PostId = postId, CategoryId = categoryId };
-            DB.PostCategories.Add(postCat);
-        }
-
-        public void DeleteTagFromPost(int categoryId, int postId)
-        {
-            var postCat = new PostCategories { PostId = postId, CategoryId = categoryId };
-            DB.PostCategories.Remove(postCat);
-        }
+        }     
     }
 }

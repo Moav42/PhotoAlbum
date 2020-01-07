@@ -11,6 +11,9 @@ using API.Models.ViewModels;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// A controller representing functionality to manage the corresponding resource
+    /// </summary>
     [Route("api/[controller]")]   
     [ApiController]
     public class TagsController : ControllerBase
@@ -23,6 +26,10 @@ namespace API.Controllers
 
         }
 
+        /// <summary>
+        /// Gets all tags
+        /// </summary>
+        /// <returns>If result success returns tags, if it's not return NotFound</returns>
         [Authorize(Policy = "AllUsers")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetTags()
@@ -34,9 +41,17 @@ namespace API.Controllers
             {
                 tagModels.Add(item.Transform());
             }
+            if (tagModels.Count == 0)
+            {
+                return NotFound();
+            }
             return Ok(tagModels);
         }
 
+        /// <summary>
+        /// Gets tag by id
+        /// </summary>
+        /// <returns>If result success returns tag, if it's not return NotFound</returns>
         [Authorize(Policy = "AllUsers")]
         [HttpGet("{id}")]
         public async Task<ActionResult<TagModel>> GetTag(int id)
@@ -45,7 +60,7 @@ namespace API.Controllers
 
             if(tagsBLL == null)
             {
-                return BadRequest("Model doesn`t exicte");
+                return NotFound("Model doesn`t exicte");
             }
             else
             {
@@ -53,13 +68,21 @@ namespace API.Controllers
             }           
         }
 
+        /// <summary>
+        /// Creates new tag
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the created Created status code with the model
+        /// </returns>
         [Authorize(Policy = "Organisation")]
         [HttpPost]
         public async Task<ActionResult<TagModel>> PostTag(TagModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                return BadRequest(ModelState);
             }
 
             await _tagService.AddAsync(model.Transform());
@@ -67,6 +90,15 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetTag), new { id = model.Id }, model);
         }
 
+        /// <summary>
+        /// Edits Tag
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the Ok status code with edeted model
+        /// </returns>
         [Authorize(Policy = "Organisation")]
         [HttpPut("{id}")]
         public async Task<ActionResult<TagModel>> PutTag(int id, TagModel model)
@@ -83,7 +115,7 @@ namespace API.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await _tagService.GetAsync(model.Id) == null)
+                    if (_tagService.Get(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -94,9 +126,17 @@ namespace API.Controllers
                 }
                 return Ok(model);
             }
-            return BadRequest("Not a valid model");
+            return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Delets Tags by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// If tag doesn't exist return  NotFound
+        /// If the result is successful return NoContent
+        /// </returns>
         [Authorize(Policy = "Organisation")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteTag(int id)
@@ -111,6 +151,15 @@ namespace API.Controllers
 
             return NoContent();
         }
+
+        /// <summary>
+        /// Add tag to  post 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the Ok status code with edeted model
+        /// </returns>
 
         [Authorize(Policy = "Moderator")]
         [HttpPost("post")]

@@ -7,6 +7,11 @@ using DAL.Repositories;
 
 namespace DAL
 {
+    /// <summary>
+    /// Represents a standard implementation of a pattern of UnitOfWork. 
+    /// Aggregates all repositories, and configures them with a database context, to make sure all repositories use the same context.
+    /// Contains properties for each application repository, methods for saving changes to the database, and implementation of Disposable pattern.
+    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
 
@@ -113,6 +118,16 @@ namespace DAL
             }
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
@@ -132,15 +147,6 @@ namespace DAL
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-
-        public async Task SaveChangesAsync()
-        {
-             await _context.SaveChangesAsync();
-        }
-
-        public void SaveChanges()
-        {
-            _context.SaveChanges();
-        }
+    
     }
 }

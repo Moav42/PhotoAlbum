@@ -7,16 +7,28 @@ using System.Threading.Tasks;
 
 namespace BLL.JWT
 {
+    /// <summary>
+    /// Class responsible for generating the encoded tokens
+    /// </summary>
     public class JwtFactory : IJwtFactory
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
+        /// <summary>
+        /// Confugurs Jwt Factory by Issuer Options, checks the validity of options
+        /// </summary>
+        /// <param name="jwtOptions"></param>
         public JwtFactory(IOptions<JwtIssuerOptions> jwtOptions)
         {
             _jwtOptions = jwtOptions.Value;
             ThrowIfInvalidOptions(_jwtOptions);
         }
-
+        /// <summary>
+        /// Generate Encoded Token for given  user based on his claims
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="identity"></param>
+        /// <returns></returns>
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
         {
             var claims = new[]
@@ -39,19 +51,22 @@ namespace BLL.JWT
             var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
 
             return encodedJwt;
-        }      
+        }
 
+        /// <summary>
+        /// Generate Claims Identity for given user based on his role
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <param name="id"></param>
+        /// <param name="role"></param>
+        /// <returns></returns>
         public ClaimsIdentity GenerateClaimsIdentity(string userName, string id, string role)
         {
-
             return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
             {
-
                  new Claim(Constants.Strings.JwtClaimIdentifiers.Id, id),
                  new Claim(Constants.Strings.JwtClaimIdentifiers.Rol, role)
-
             });
-
         }
 
         private static long ToUnixEpochDate(DateTime date)

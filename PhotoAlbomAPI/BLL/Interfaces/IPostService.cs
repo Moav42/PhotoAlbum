@@ -6,6 +6,7 @@ namespace BLL.Interfaces
 {
     public interface IPostService<T>
     {
+        T Get(int id);
         Task<T> GetAsync(int id);
         Task<IEnumerable<T>> GetAllAsync();
         Task<IEnumerable<T>> GetAllByCategoryAsync(int categoryId);

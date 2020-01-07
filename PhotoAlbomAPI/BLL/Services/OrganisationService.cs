@@ -9,12 +9,20 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// A service containing business logic that is responsible for a specific resource. Configurable by the UoF, implemented through the DI
+    /// </summary>
     public class OrganisationService : IOrganisationService<OrganisationBLL>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Configures the service with the parameters provided by the dependency injection system
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="mapper"></param>
         public OrganisationService(UserManager<User> userManager, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -22,6 +30,11 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
+        /// <summary>
+        /// Creates new orgonisations account
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<IdentityResult> RegisterOrganisation(OrganisationBLL model)
         {
             var userIdentity = new User { Email = model.Email, UserName = model.Email };
@@ -63,7 +76,7 @@ namespace BLL.Services
 
         public async Task UpdateAsync(OrganisationBLL item)
         {
-            _unitOfWork.OrganisationsRepository.Update(item.Id, _mapper.Map<Organisation>(item));
+            _unitOfWork.OrganisationsRepository.Update(_mapper.Map<Organisation>(item));
             await _unitOfWork.SaveChangesAsync();
         }
 

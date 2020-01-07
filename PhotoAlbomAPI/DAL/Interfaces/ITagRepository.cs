@@ -10,8 +10,6 @@ namespace DAL.Interfaces
         void Update(T item);
         void Delete(int id);
         public IEnumerable<T> ReadAllByPost(int postId);
-        public void AddTagToPost(int tagId, int postId);       
-        public void DeleteTagFromPost(int tagId, int postId);
 
     }
 }

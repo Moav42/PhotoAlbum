@@ -6,34 +6,47 @@ using System.Linq;
 
 namespace DAL.Repositories
 {
+    /// <summary>
+    /// Represents an implementation of a repository pattern for the corresponding entity
+    /// </summary>
     public class PostRateRepository : IPostRateRepository<PostRate>
     {
         private readonly DbContext DB;
 
+        /// <summary>
+        /// Configure repository by DbContext, provides by UoF
+        /// </summary>
+        /// <param name="context"></param>
         public PostRateRepository(DbContext context)
         {
             DB = context;
         }
 
+        /// <summary>
+        /// Adds rate to post
+        /// </summary>
+        /// <param name="item"></param>
         public void Create(PostRate item)
         {
             DB.PostRates.Add(item);
         }
 
+        /// <summary>
+        /// Updates rate of post
+        /// </summary>
+        /// <param name="item"></param>
         public void Update(PostRate item)
         {
             DB.PostRates.Update(item);
             DB.SaveChanges();
         }
 
-        public IEnumerable<PostRate> ReadAllByPost(int postID)
-        {
-            return DB.PostRates.Where(pr => pr.PostId == postID);
-        }
-        public IEnumerable<PostRate> ReadAllByUser(string userId)
-        {
-            return DB.PostRates.Where(pr => pr.UserId == userId);
-        }
+        /// <summary>
+        /// Determines if a user rated a post
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public bool GetPostsRate(int postId, string userId)
         {
             var rate = DB.PostRates.Where(pr => pr.PostId == postId && pr.UserId == userId).ToList();

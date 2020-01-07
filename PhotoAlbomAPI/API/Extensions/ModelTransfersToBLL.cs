@@ -3,6 +3,9 @@ using API.Models;
 
 namespace API.Extensions
 {
+    /// <summary>
+    /// A class containing extension methods for transfer model between the presentation layer and the business logic layer
+    /// </summary>
     public static class ModelTransfersToBLL
     {
         public static TagBLL Transform(this TagModel tagModel)

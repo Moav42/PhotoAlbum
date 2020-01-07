@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
+    /// <summary>
+    /// A controller representing functionality to manage the corresponding resource
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "AllUsers")]
@@ -22,6 +25,10 @@ namespace API.Controllers
             _commentService = commentService;
         }
 
+        /// <summary>
+        /// Gets all commenst of given post
+        /// </summary>
+        /// <returns>If result success returns comments, if it's not return NotFound</returns>
         [HttpGet("post/{postId}")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetCommentByPost(int postId)
@@ -33,22 +40,19 @@ namespace API.Controllers
             {
                 models.Add(item.Transform());
             }
-            return Ok(models);
-        }
 
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<CommentModel>>> GetCommentByUser(string userId)
-        {
-            var modelBLL = await _commentService.GetByUserAsync(userId);
-            var models = new List<CommentModel>();
-
-            foreach (var item in modelBLL)
+            if (models.Count == 0)
             {
-                models.Add(item.Transform());
+                return NotFound();
             }
+
             return Ok(models);
         }
 
+        /// <summary>
+        /// Gets comment by id
+        /// </summary>
+        /// <returns>If result success returns comment, if it's not return NotFound</returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<CommentModel>> GetComment(int id)
@@ -57,7 +61,7 @@ namespace API.Controllers
 
             if (modelBLL == null)
             {
-                return BadRequest("Model doesn`t exicte");
+                return NotFound("Model doesn`t exicte");
             }
             else
             {
@@ -65,12 +69,20 @@ namespace API.Controllers
             }
         }
 
+        /// <summary>
+        /// Creates new comment
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the created Created status code with the model
+        /// </returns>
         [HttpPost]
         public async Task<ActionResult<CommentModel>> PostComment(CommentModel model)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Not a valid model");
+                return BadRequest(ModelState);
             }
 
             await _commentService.AddAsync(model.Transform());
@@ -78,11 +90,19 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetComment), new { id = model.Id }, model);
         }
 
+        /// <summary>
+        /// Edits comments
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns>
+        /// If the provided model is not valid returns a BadRequest with the state of the model, 
+        /// If the result is successful, returns the Ok status code with edeted model
+        /// </returns>
         [HttpPut("{id}")]
         [Authorize(Policy = "Moderator")]
-        public async Task<ActionResult<CommentModel>> PutComment(CommentModel model)
+        public async Task<ActionResult<CommentModel>> PutComment(int id, CommentModel model)
         {
-
             if (ModelState.IsValid)
             {
                 try
@@ -91,7 +111,7 @@ namespace API.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (await _commentService.GetAsync(model.Id) == null)
+                    if (_commentService.Get(model.Id) == null)
                     {
                         return NotFound();
                     }
@@ -102,9 +122,17 @@ namespace API.Controllers
                 }
                 return Ok(model);
             }
-            return BadRequest("Not a valid model");
+            return BadRequest(ModelState);
         }
 
+        /// <summary>
+        /// Delets comment by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>
+        /// If category doesn't exist return  NotFound
+        /// If the result is successful return NoContent
+        /// </returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteComment(int id)
         {

@@ -9,11 +9,19 @@ using System;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// A service containing business logic that is responsible for a specific resource. Configurable by the UoF, implemented through the DI
+    /// </summary>
     public class PostService : IPostService<PostBLL>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Configures the service with the parameters provided by the dependency injection system
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="mapper"></param>
         public PostService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -47,6 +55,17 @@ namespace BLL.Services
             return _mapper.Map<PostBLL>(item);
         }
 
+        public PostBLL Get(int id)
+        {
+            var item = _unitOfWork.PostsRepository.Read(id);
+            return _mapper.Map<PostBLL>(item);
+        }
+
+        /// <summary>
+        /// Gets path for post image by post id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<string> GetPathByIdAsync(int id)
         {
             var item = await Task.Run(() => _unitOfWork.PostsRepository.Read(id));
@@ -72,6 +91,11 @@ namespace BLL.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// Gets all comments of given post
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<CommentBLL>> GetCommentsAsync(int postId)
         {
             var itemDAL = await Task.Run(() => _unitOfWork.CommentsRepository.ReadByPost(postId));
@@ -83,6 +107,11 @@ namespace BLL.Services
             return itemBLL;
         }
 
+        /// <summary>
+        /// Gets all tags of given post
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<TagBLL>> GetTagsAsync(int postId)
         {
             var itemDAL = await Task.Run(() => _unitOfWork.TagsRepository.ReadAllByPost(postId));
@@ -93,6 +122,12 @@ namespace BLL.Services
             }
             return itemBLL;
         }
+
+        /// <summary>
+        /// Gets all category of given post
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<PostBLL>> GetAllByCategoryAsync(int categoryId)
         {
             var itemsDAL = await Task.Run(() => _unitOfWork.PostsRepository.ReadAllPostsByCategory(categoryId));

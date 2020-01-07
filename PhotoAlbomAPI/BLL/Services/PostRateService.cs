@@ -8,11 +8,19 @@ using AutoMapper;
 
 namespace BLL.Services
 {
+    /// <summary>
+    /// A service containing business logic that is responsible for a specific resource. Configurable by the UoF, implemented through the DI
+    /// </summary>
     public class PostRateService : IPostRateService<PostRateBLL>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
+        /// <summary>
+        /// Configures the service with the parameters provided by the dependency injection system
+        /// </summary>
+        /// <param name="unitOfWork"></param>
+        /// <param name="mapper"></param>
         public PostRateService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
@@ -26,34 +34,18 @@ namespace BLL.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PostRateBLL>> GetAllByPostAsync(int postId)
-        {
-            var itemDAL = await Task.Run(() =>_unitOfWork.PostRateRepository.ReadAllByPost(postId));
-            var itemBLL = new List<PostRateBLL>();
-            foreach (var item in itemDAL)
-            {
-                itemBLL.Add(_mapper.Map<PostRateBLL>(item));
-            }
-            return itemBLL;
-        }
-
-        public async Task<IEnumerable<PostRateBLL>> GetAllByUserAsync(string usertId)
-        {
-            var itemDAL = await Task.Run(() => _unitOfWork.PostRateRepository.ReadAllByUser(usertId));
-            var itemBLL = new List<PostRateBLL>();
-            foreach (var item in itemDAL)
-            {
-                itemBLL.Add(_mapper.Map<PostRateBLL>(item));
-            }
-            return itemBLL;
-        }
-
         public async Task UpdateAsync(PostRateBLL item)
         {
             _unitOfWork.PostRateRepository.Update(_mapper.Map<PostRate>(item));
             await _unitOfWork.SaveChangesAsync();
-        } 
+        }
 
+        /// <summary>
+        /// Determines if a user rated a post
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> GetPostRate(int postId, string userId)
         {
             return await Task.Run(() => _unitOfWork.PostRateRepository.GetPostsRate(postId, userId));
