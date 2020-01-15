@@ -12,16 +12,8 @@ using Microsoft.OpenApi.Models;
 
 namespace BLL.Extensions
 {
-    /// <summary>
-    /// Static class, aggregating extension methods for dependency injection
-    /// </summary>
     public static class DIExtension
     {
-        /// <summary>
-        /// Configures dependency injection for UOF and application business logic services
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static IServiceCollection AddBllServices(this IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -39,23 +31,12 @@ namespace BLL.Extensions
             return services;
         }
 
-        /// <summary>
-        /// Configures dependency injection for context settings, adds a data provider and configures its by connection string.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <param name="Configuration">Application settings passed from the presentation layer</param>
-        /// <returns></returns>
         public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddDbContext<DAL.EF.DbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             return services;
         }
 
-        /// <summary>
-        /// Configures JWT Authorization, adds support for four access levels to the functionality of the service, based on roles of user.
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static IServiceCollection AddJWTAuthorization(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
@@ -69,11 +50,6 @@ namespace BLL.Extensions
             return services;
         }
 
-        /// <summary>
-        /// Adds and configures the identity system for application
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static IServiceCollection AddIdentity(this IServiceCollection services)
         {
             var builder = services.AddIdentityCore<DAL.Entities.User>(o =>
@@ -90,11 +66,6 @@ namespace BLL.Extensions
             return services;
         }
 
-        /// <summary>
-        /// Adds and configures the swwagger service support for application
-        /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>

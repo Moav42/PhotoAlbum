@@ -24,10 +24,6 @@ namespace API
         
         public IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// Configures application service dependency injection
-        /// </summary>
-        /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext(Configuration);
@@ -52,11 +48,6 @@ namespace API
             services.AddAutoMapper(c => c.AddProfile<MapingProfiles>(), typeof(Startup));
         }
 
-        /// <summary>
-        /// Configures a request processing pipeline
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSwagger();

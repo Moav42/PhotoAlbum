@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 
 namespace BLL.JWT
 {
-    /// <summary>
-    /// Contains constants for JWT configuration  
-    /// </summary>
     public class Constants
     {
         public static class Strings

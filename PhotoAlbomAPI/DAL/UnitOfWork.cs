@@ -7,11 +7,6 @@ using DAL.Repositories;
 
 namespace DAL
 {
-    /// <summary>
-    /// Represents a standard implementation of a pattern of UnitOfWork. 
-    /// Aggregates all repositories, and configures them with a database context, to make sure all repositories use the same context.
-    /// Contains properties for each application repository, methods for saving changes to the database, and implementation of Disposable pattern.
-    /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
 
@@ -33,10 +28,6 @@ namespace DAL
 
         private readonly DbContext _context;
 
-        /// <summary>
-        /// Configures Unit Of Work by DbContext using DI
-        /// </summary>
-        /// <param name="db"></param>
         public UnitOfWork(DbContext db)
         {
             _context = db;
@@ -122,18 +113,11 @@ namespace DAL
             }
         }
 
-        /// <summary>
-        /// Saved changes in the database asynchronously
-        /// </summary>
-        /// <returns></returns>
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// Saved changes in the database
-        /// </summary>
         public void SaveChanges()
         {
             _context.SaveChanges();

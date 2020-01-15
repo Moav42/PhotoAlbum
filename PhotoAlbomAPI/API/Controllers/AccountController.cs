@@ -8,9 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    /// <summary>
-    /// The controller representing the resource for managing the user account
-    /// </summary>
     [Route("api/[controller]")]
     [Authorize(Policy = "AllUsers")]
     [ApiController]
@@ -19,25 +16,12 @@ namespace API.Controllers
         private readonly IAccountService<UserBLL> _accountService;
         private readonly IOrganisationService<OrganisationBLL> _organisationService;
 
-        /// <summary>
-        /// Configures the controller with the appropriate services using the dependency injection 
-        /// </summary>
-        /// <param name="organisationService"></param>
-        /// <param name="accountService"></param>
         public AccountController( IOrganisationService<OrganisationBLL> organisationService, IAccountService<UserBLL> accountService )
         {      
             _organisationService = organisationService;
             _accountService = accountService;
         }
 
-        /// <summary>
-        /// Register a new application user
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the created model
-        /// </returns>
         [AllowAnonymous]
         [HttpPost("reg/user")]
         public async Task<IActionResult> RegisterUser([FromBody]UserRegisterViewModel model)
@@ -62,15 +46,6 @@ namespace API.Controllers
                 return Ok(model);
             }
         }
-        /// <summary>
-        /// Register a new application user with orgonisation role
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the created model
-        /// </returns>
-
         [AllowAnonymous]
         [HttpPost("reg/org")]
         public async Task<IActionResult> RegisterOrganisation([FromBody]OrganisationRegisterViewModel model)
@@ -96,14 +71,6 @@ namespace API.Controllers
             }
         }
 
-        /// <summary>
-        /// Changes password of given user
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns OK respons
-        /// </returns>
         [HttpPut("password")]
         public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
         {

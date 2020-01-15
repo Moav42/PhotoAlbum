@@ -7,9 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    /// <summary>
-    /// Controller responsible for user authorization
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "AllUsers")]
@@ -17,23 +14,11 @@ namespace API.Controllers
     {
         private readonly IAuthorizationService<UserBLL> _authorizationService;
 
-        /// <summary>
-        /// Configures the controller with the appropriate services using the dependency injection 
-        /// </summary>
-        /// <param name="organisationService"></param>
-        /// <param name="accountService"></param>
         public AuthorizationController(IAuthorizationService<UserBLL> authorizationService)
         {
             _authorizationService = authorizationService;
         }
 
-        /// <summary>
-        /// Authorizes the user by providing him JWT with claims based on the given credentials
-        /// </summary>
-        /// <param name="credentials">Login and Password of the user</param>
-        /// <returns>
-        /// If provided credentials are valid return JWT, else return  BadRequest.
-        /// </returns>
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]CredentialsViewModel credentials)

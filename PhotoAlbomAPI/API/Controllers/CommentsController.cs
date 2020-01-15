@@ -10,9 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    /// <summary>
-    /// A controller representing functionality to manage the corresponding resource
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Policy = "AllUsers")]
@@ -20,20 +17,11 @@ namespace API.Controllers
     {
         private readonly ICommentService<CommentBLL> _commentService;
 
-        /// <summary>
-        /// Configures the controller with the appropriate services using the dependency injection 
-        /// </summary>
-        /// <param name="organisationService"></param>
-        /// <param name="accountService"></param>
         public CommentsController(ICommentService<CommentBLL> commentService)
         {
             _commentService = commentService;
         }
 
-        /// <summary>
-        /// Gets all commenst of given post
-        /// </summary>
-        /// <returns>If result success returns comments, if it's not return NotFound</returns>
         [HttpGet("post/{postId}")]
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetCommentByPost(int postId)
@@ -54,10 +42,6 @@ namespace API.Controllers
             return Ok(models);
         }
 
-        /// <summary>
-        /// Gets comment by id
-        /// </summary>
-        /// <returns>If result success returns comment, if it's not return NotFound</returns>
         [HttpGet("{id}")]
         [AllowAnonymous]
         public async Task<ActionResult<CommentModel>> GetComment(int id)
@@ -74,14 +58,6 @@ namespace API.Controllers
             }
         }
 
-        /// <summary>
-        /// Creates new comment
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the created Created status code with the model
-        /// </returns>
         [HttpPost]
         public async Task<ActionResult<CommentModel>> PostComment(CommentModel model)
         {
@@ -95,15 +71,6 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetComment), new { id = model.Id }, model);
         }
 
-        /// <summary>
-        /// Edits comments
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the Ok status code with edeted model
-        /// </returns>
         [HttpPut("{id}")]
         [Authorize(Policy = "Moderator")]
         public async Task<ActionResult<CommentModel>> PutComment(int id, CommentModel model)
@@ -130,14 +97,6 @@ namespace API.Controllers
             return BadRequest(ModelState);
         }
 
-        /// <summary>
-        /// Delets comment by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        /// If category doesn't exist return  NotFound
-        /// If the result is successful return NoContent
-        /// </returns>
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteComment(int id)
         {

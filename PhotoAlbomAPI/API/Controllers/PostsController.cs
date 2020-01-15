@@ -14,9 +14,6 @@ using API.Models.ViewModels;
 
 namespace API.Controllers
 {
-    /// <summary>
-    /// A controller representing functionality to manage the corresponding resource
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [AllowAnonymous]
@@ -25,21 +22,12 @@ namespace API.Controllers
         private readonly IPostService<PostBLL> _postService;
         private readonly IPostRateService<PostRateBLL> _postRateService;
 
-        /// <summary>
-        /// Configures the controller with the appropriate services using the dependency injection 
-        /// </summary>
-        /// <param name="organisationService"></param>
-        /// <param name="accountService"></param>
         public PostsController(IPostService<PostBLL> postService, IPostRateService<PostRateBLL> postRateService)
         {
             _postService = postService;
             _postRateService = postRateService;
         }
 
-        /// <summary>
-        /// Gets all posts
-        /// </summary>
-        /// <returns>If result success returns posts, if it's not return NotFound</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<PostModel>>> GetPosts()
         {
@@ -58,10 +46,6 @@ namespace API.Controllers
             return Ok(models);
         }
 
-        /// <summary>
-        /// Gets post by id
-        /// </summary>
-        /// <returns>If result success returns post, if it's not return NotFound</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<PostModel>> GetPost(int id)
         {
@@ -77,11 +61,6 @@ namespace API.Controllers
             }
         }
 
-        /// <summary>
-        /// Gets image file by given post id
-        /// </summary>
-        /// <param name="postId"></param>
-        /// <returns></returns>
         [HttpGet("{postId}/image")]
         public async Task<ActionResult> GetPostImageById(int postId)
         {
@@ -97,14 +76,6 @@ namespace API.Controllers
             }      
         }
 
-        /// <summary>
-        /// Creates new Post
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the created Created status code with the model
-        /// </returns>
         [HttpPost]
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostModel>> PostPost(PostModel model)
@@ -118,13 +89,6 @@ namespace API.Controllers
             return CreatedAtAction(nameof(GetPost), new { id = model.Id }, model);
         }
 
-        /// <summary>
-        /// Uploads image to the server
-        /// </summary>
-        /// <returns>
-        /// If file wasn't attached return, or other errors occurred return status code 400 or 500
-        /// If result sucses return status code 200
-        /// </returns>
         [HttpPost("uplaodImage")]
         [Authorize(Policy = "AllUsers")]
         public IActionResult UplaodImage()
@@ -152,21 +116,13 @@ namespace API.Controllers
                     return BadRequest();
                 }
             }
+
             catch (Exception)
             {
                 return StatusCode(500, "Internal server error. Did you forget to attach the file?");
             }
         }
 
-        /// <summary>
-        /// Edits post
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the Ok status code with edeted model
-        /// </returns>
         [HttpPut("{id}")]
         [Authorize(Policy = "Moderator")]
         public async Task<ActionResult> PutPost(int id, PostModel model)
@@ -197,14 +153,6 @@ namespace API.Controllers
             return BadRequest(ModelState);
         }
 
-        /// <summary>
-        /// Delets Post by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns>
-        /// If category doesn't exist return  NotFound
-        /// If the result is successful return NoContent
-        /// </returns>
         [HttpDelete("{id}")]
         [Authorize(Policy = "Moderator")]
         public async Task<ActionResult> DeletePost(int id)
@@ -220,15 +168,6 @@ namespace API.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Adds a post rating from the user
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="model"></param>
-        /// <returns>
-        /// If the provided model is not valid returns a BadRequest with the state of the model, 
-        /// If the result is successful, returns the created Created status code with the model
-        /// </returns>
         [HttpPost("{id}/like")]
         [Authorize(Policy = "AllUsers")]
         public async Task<ActionResult<PostRateModel>> PostRate(int id, PostRateModel model)
@@ -248,10 +187,6 @@ namespace API.Controllers
             return Ok(model);
         }
 
-        /// <summary>
-        /// Gets all comments of given post
-        /// </summary>
-        /// <returns>If result success returns posts, if it's not return NotFound</returns>
         [HttpGet("{postId}/comments")]
         public async Task<ActionResult<IEnumerable<CommentModel>>> GetPostComments(int postId)
         {
@@ -271,10 +206,6 @@ namespace API.Controllers
             return models;
         }
 
-        /// <summary>
-        /// Gets all tags of given post
-        /// </summary>
-        /// <returns>If result success returns posts, if it's not return NotFound</returns>
         [HttpGet("{postId}/tags")]
         public async Task<ActionResult<IEnumerable<TagModel>>> GetPostTags(int postId)
         {
@@ -294,12 +225,6 @@ namespace API.Controllers
             return models;
         }
 
-        /// <summary>
-        /// Determines if a user rated a post
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="postRate"></param>
-        /// <returns>If the user rated the post returns true, else folse</returns>
         [HttpPost("{id}/rate")]
         public async Task<ActionResult<bool>> GetPostRateByUser(int id, PostRateViewModel postRate )
         {
