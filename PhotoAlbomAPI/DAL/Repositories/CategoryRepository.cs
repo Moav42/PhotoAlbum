@@ -2,7 +2,6 @@
 using DAL.Interfaces;
 using DAL.EF;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DAL.Repositories
 {
